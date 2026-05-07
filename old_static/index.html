@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universitas Ciputra Awarding Night</title>
+    <meta name="description" content="UCAN 2026: Shaping dreams, Honoring Excellence. An annual formal event recognizing student achievements.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <nav class="navbar">
+        <div class="logo">UCAN 2026</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#details">Details</a></li>
+            <li><a href="#performers">Performers</a></li>
+            <li><a href="#nominees">Nominees</a></li>
+            <li><a href="#rsvp" class="btn-rsvp">Registration</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="magic-text">Universitas Ciputra Awarding Night</h1>
+            <p class="subtitle">Shaping dreams, Honoring Excellence</p>
+            <a href="#rsvp" class="btn-primary">Register Now</a>
+        </div>
+    </header>
+
+    <section id="about" class="section glass">
+        <div class="container">
+            <h2>The Event</h2>
+            <p>The Universitas Ciputra Awarding Night is an annual formal event organized by Universitas Ciputra to recognize and celebrate the achievements of students. It serves as a prestigious event to honor individuals who have excelled in various fields such as academics, leadership, entrepreneurship, and creativity.</p>
+            <br>
+            <p>The purpose of the Awarding Night goes beyond recognition, it aims to inspire and motivate students by showcasing excellence and dedication. By highlighting success stories, the event encourages others to strive for their own achievements and contribute meaningfully to their community.</p>
+        </div>
+    </section>
+
+    <section id="details" class="section">
+        <div class="container details-grid">
+            <div class="detail-card glass">
+                <h3>Venue</h3>
+                <p>Dian Auditorium Lt.7, UC Main Building<br>Universitas Ciputra Surabaya</p>
+                <a href="https://maps.app.goo.gl/NDzTsk9A4draMqkk9?g_st=ic" target="_blank" class="link-map">View Map</a>
+            </div>
+            <div class="detail-card glass">
+                <h3>Date & Time</h3>
+                <p><strong>May 23rd, 2026</strong></p>
+                <p>Open Gate Time: 16:30 - 22:00</p>
+            </div>
+            <div class="detail-card glass">
+                <h3>Dress Code</h3>
+                <p><strong>Formal Earth Tone</strong></p>
+                <p>A touch of classic elegance. (Moodboard coming soon!)</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="performers" class="section glass">
+        <div class="container">
+            <h2>Performers</h2>
+            <div class="performers-list">
+                <p style="text-align: center;">To be announced. Stay tuned for a magical night of entertainment!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="nominees" class="section">
+        <div class="container">
+            <h2>Nominees</h2>
+            <div class="nominees-list">
+                <p style="text-align: center;">Celebrating the brightest stars of Universitas Ciputra. Nominees will be revealed soon.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="rsvp" class="section glass">
+        <div class="container">
+            <h2>Registration</h2>
+            <p class="login-notice">Please login with your student account to register.</p>
+            <form id="rsvp-form" class="form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="nim">Student ID (NIM)</label>
+                    <input type="text" id="nim" required placeholder="Enter your NIM">
+                </div>
+                <div class="form-group">
+                    <label for="major">Major</label>
+                    <input type="text" id="major" required placeholder="Enter your major">
+                </div>
+                <div class="form-group">
+                    <label for="organization">Organization Origin</label>
+                    <select id="organization" required>
+                        <option value="" disabled selected>Select Organization</option>
+                        <option value="BEM">BEM (Badan Eksekutif Mahasiswa)</option>
+                        <option value="SU">SU (Student Union)</option>
+                        <option value="UKM">UKM (Unit Kegiatan Mahasiswa)</option>
+                        <option value="Other">Other</option>
+                        <option value="None">None</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Registration</button>
+            </form>
+            <div id="success-message" class="hidden">
+                <h3>Registration Successful!</h3>
+                <p>See you at the Awarding Night!</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Universitas Ciputra Awarding Night</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
