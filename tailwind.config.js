@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class', // Only enable dark mode via explicit .dark class on <html> — OS dark mode is ignored
+
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -15,8 +17,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['"Playfair Display"', 'serif'],
+        sans: ['Montserrat', 'sans-serif'],
+        serif: ['Cinzel', 'serif'],
       },
       animation: {
         'twinkle': 'twinkle 3s ease-in-out infinite',

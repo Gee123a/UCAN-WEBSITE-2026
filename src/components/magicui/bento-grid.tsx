@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { cn } from "../../lib/utils";
@@ -7,16 +7,19 @@ import { cn } from "../../lib/utils";
 const BentoGrid = ({
   children,
   className,
+  style,
 }: {
   children: ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) => {
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
+        "grid w-full auto-rows-[25rem] grid-cols-1 md:grid-cols-3 gap-8",
         className,
       )}
+      style={style}
     >
       {children}
     </div>
@@ -45,36 +48,46 @@ const BentoCard = ({
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
+    whileHover={{ scale: 1.02, rotate: 0.5 }}
     className={cn(
-      "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
-      // light styles
-      "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
-      // dark styles
-      "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+      "group relative col-span-3 flex flex-col justify-between overflow-hidden",
+      "storybook-card",
       className,
     )}
   >
-    <div>{background}</div>
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
-      <Icon className="h-12 w-12 origin-left transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
-      <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
+    <div className="absolute inset-0 z-0">{background}</div>
+    
+    <div className="relative z-10 flex flex-col gap-3 p-10 transition-all duration-500 group-hover:-translate-y-4">
+      <div className="w-16 h-16 organic-blob flex items-center justify-center mb-6 transition-all duration-700 group-hover:scale-110 group-hover:rotate-12 bg-[#D96A1D]/10 border-2 border-dashed border-[#D96A1D]">
+        <Icon className="h-8 w-8" style={{ color: '#D96A1D' }} />
+      </div>
+      
+      <h3 className="font-cinzel text-3xl font-bold tracking-tight transition-colors" style={{ color: '#0B3A0A' }}>
         {name}
       </h3>
-      <p className="max-w-lg text-neutral-400">{description}</p>
+      <p className="font-montserrat text-base leading-relaxed max-w-sm group-hover:text-stone-900 transition-colors" style={{ color: '#4C7A1A' }}>
+        {description}
+      </p>
     </div>
 
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none absolute bottom-0 flex w-full translate-y-12 transform-gpu flex-row items-center p-8 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100",
       )}
     >
-      <button className="pointer-events-auto flex items-center gap-1 text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors">
+      <button className="pointer-events-auto flex items-center gap-3 font-montserrat text-xs tracking-[0.3em] uppercase font-bold transition-all hover:gap-5" style={{ color: '#D96A1D' }}>
         {cta}
-        <ArrowRight className="ml-2 h-4 w-4" />
+        <ArrowRight className="h-4 w-4" />
       </button>
     </div>
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
+    
+    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity duration-500">
+      <Star className="w-8 h-8 text-amber-400" />
+    </div>
+
+    <div className="pointer-events-none absolute inset-0 z-0 transition-all duration-500 group-hover:bg-amber-600/[0.02]" />
   </motion.div>
 );
 
 export { BentoCard, BentoGrid };
+
