@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Star, Heart, Sparkles } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 import fairytaleBorder from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/fairytale_border_white_bg_1778251907133.png';
 
@@ -10,9 +10,10 @@ interface RSVPFormProps {
   isLoggedIn: boolean;
   onLogin: () => void;
   showBorder?: boolean;
+  containerRef?: React.RefObject<HTMLDivElement>;
 }
 
-export function RSVPForm({ isLoggedIn, onLogin, showBorder }: RSVPFormProps) {
+export function RSVPForm({ isLoggedIn, onLogin, showBorder, containerRef }: RSVPFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     nim: '',
@@ -53,21 +54,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder }: RSVPFormProps) {
 
   if (isSubmitted) {
     return (
-      <div className="relative">
-        {showBorder && (
-          <motion.div
-            layoutId="fairytale-frame"
-            className="absolute -inset-8 pointer-events-none z-50 border-[20px] border-transparent"
-            style={{
-              borderImageSource: `url(${fairytaleBorder})`,
-              borderImageSlice: '150',
-              borderImageRepeat: 'round',
-              mixBlendMode: 'multiply',
-              opacity: 1,
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-          />
-        )}
+      <div className="relative" ref={containerRef}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -112,21 +99,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder }: RSVPFormProps) {
   }
 
   return (
-    <div className="relative">
-      {showBorder && (
-        <motion.div
-          layoutId="fairytale-frame"
-          className="absolute -inset-6 pointer-events-none z-50 border-[20px] border-transparent"
-          style={{
-            borderImageSource: `url(${fairytaleBorder})`,
-            borderImageSlice: '150',
-            borderImageRepeat: 'round',
-            mixBlendMode: 'multiply',
-            opacity: 1,
-          }}
-          transition={{ type: "spring", stiffness: 50, damping: 20 }}
-        />
-      )}
+    <div className="relative" ref={containerRef}>
       <div className="p-12 relative parchment-bg overflow-hidden" style={{
         borderRadius: '15px 225px 15px 255px/255px 15px 225px 15px',
         boxShadow: '12px 12px 0px rgba(217, 106, 29, 0.15)',
@@ -290,4 +263,3 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder }: RSVPFormProps) {
     </div>
   );
 }
-
