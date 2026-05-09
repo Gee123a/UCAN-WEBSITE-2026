@@ -1,40 +1,75 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Calendar, MapPin, Clock, Users, Award, Star, 
+import {
+  Calendar, MapPin, Clock, Users, Award, Star,
   Sparkles, Gift, ArrowRight, Heart, Music,
   ChevronRight, Instagram, Mail, Phone, Info
 } from 'lucide-react';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence, LayoutGroup } from 'motion/react';
 import { NomineesSection } from './components/NomineesSection';
 import { RSVPForm } from './components/RSVPForm';
 import { ImageWithFallback } from './components/ImageWithFallback';
 
-// Local Assets
+
 import fairytaleBorder from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/fairytale_border_white_bg_1778251907133.png';
 import vintageFloral from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/vintage_floral_white_bg_1778251860709.png';
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const heroRef = useRef(null);
+  const rsvpSectionRef = useRef<HTMLElement>(null);
   const { scrollY, scrollYProgress } = useScroll();
+
+  // Detect when we are near the RSVP section
+  const [isAtRSVP, setIsAtRSVP] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      setIsAtRSVP(latest > 0.85);
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
+
   const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
   const floralY1 = useTransform(scrollY, [0, 500], [0, -80]);
   const floralY2 = useTransform(scrollY, [0, 500], [0, 80]);
   const floralRotate = useTransform(scrollY, [0, 500], [0, 15]);
 
-  return (
-    <div className="min-h-screen relative overflow-x-hidden selection:bg-[#D96A1D]/30" style={{ background: '#F4E7CB' }}>
-      {/* Fairytale Border Frame - Fixed */}
-      <div className="fixed inset-0 pointer-events-none z-[100] border-[40px] border-transparent opacity-60" 
-           style={{ 
-             borderImageSource: `url(${fairytaleBorder})`,
-             borderImageSlice: '150',
-             borderImageRepeat: 'round',
-             mixBlendMode: 'multiply'
-           }} 
-      />
+  // State-driven flight animation for the border frame
+  const borderRevealValue = useTransform(scrollYProgress, [0, 0.8], [0, 1]);
+  const borderReveal = useSpring(borderRevealValue, { stiffness: 100, damping: 30 });
 
-      {/* Magical Fairy Dust particles from Original */}
+  const borderClip = useTransform(borderReveal, [0, 1], [
+    "inset(0 0 100% 0)",
+    "inset(0 0 0% 0)"
+  ]);
+
+  return (
+    <LayoutGroup>
+      {/* Global Fairytale Border Frame - Gradual Flight to RSVP */}
+      <AnimatePresence>
+        {!isAtRSVP && (
+          <motion.div
+            layoutId="fairytale-frame"
+            className="fixed inset-0 pointer-events-none z-[10000] border-[40px] border-transparent"
+            style={{
+              borderImageSource: `url(${fairytaleBorder})`,
+              borderImageSlice: '150',
+              borderImageRepeat: 'round',
+              mixBlendMode: 'multiply',
+              opacity: 0.8,
+              clipPath: borderClip,
+              position: 'fixed'
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.8 }}
+            exit={{ opacity: 1 }}
+            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="min-h-screen relative overflow-x-hidden selection:bg-[#D96A1D]/30" style={{ background: '#F4E7CB' }}>
+        {/* Magical Fairy Dust particles from Original */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -47,41 +82,41 @@ export default function UCANWebsite() {
             }}
           >
             {i % 4 === 0 ? (
-              <div 
-                className="w-3 h-3 organic-blob" 
-                style={{ 
+              <div
+                className="w-3 h-3 organic-blob"
+                style={{
                   background: i % 3 === 0 ? '#D96A1D' : '#F08A2B',
                   opacity: 0.5
-                }} 
+                }}
               />
             ) : i % 4 === 1 ? (
-              <Heart 
-                className="w-2.5 h-2.5" 
-                style={{ 
+              <Heart
+                className="w-2.5 h-2.5"
+                style={{
                   color: '#C93A1D',
                   fill: 'none',
                   strokeWidth: 2,
                   filter: 'drop-shadow(0 0 2px currentColor)'
-                }} 
+                }}
               />
             ) : i % 4 === 2 ? (
-              <div 
-                className="w-1.5 h-1.5 rounded-full" 
-                style={{ 
+              <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{
                   background: '#6B0F2C',
                   boxShadow: '0 0 3px #6B0F2C',
                   opacity: 0.6
-                }} 
+                }}
               />
             ) : (
-              <Star 
-                className="w-2.5 h-2.5" 
-                style={{ 
+              <Star
+                className="w-2.5 h-2.5"
+                style={{
                   color: i % 2 === 0 ? '#4C7A1A' : '#6D8F2B',
                   fill: 'none',
                   strokeWidth: 2,
                   filter: 'drop-shadow(0 0 2px currentColor)'
-                }} 
+                }}
               />
             )}
           </motion.div>
@@ -91,40 +126,24 @@ export default function UCANWebsite() {
       {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden py-32 px-6">
         {/* Large Organic Decorative Blobs from Original */}
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] organic-blob pointer-events-none" style={{ 
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] organic-blob pointer-events-none" style={{
           background: 'radial-gradient(circle, rgba(217, 106, 29, 0.18), transparent)',
           animation: 'float 12s ease-in-out infinite'
         }}></div>
-        
-        <div className="absolute top-20 right-0 w-[500px] h-[500px] organic-blob-2 pointer-events-none" style={{ 
+
+        <div className="absolute top-20 right-0 w-[500px] h-[500px] organic-blob-2 pointer-events-none" style={{
           background: 'radial-gradient(circle, rgba(76, 122, 26, 0.15), transparent)',
           animation: 'float 15s ease-in-out infinite',
           animationDelay: '3s'
         }}></div>
 
-        <div className="absolute bottom-0 left-1/4 w-[450px] h-[450px] organic-blob pointer-events-none" style={{ 
+        <div className="absolute bottom-0 left-1/4 w-[450px] h-[450px] organic-blob pointer-events-none" style={{
           background: 'radial-gradient(circle, rgba(240, 138, 43, 0.15), transparent)',
           animation: 'float 11s ease-in-out infinite',
           animationDelay: '1.5s'
         }}></div>
 
-        {/* Vintage Disney Floral Assets with Multiply Blending */}
-        <motion.img 
-          src={vintageFloral} 
-          className="absolute -top-20 -left-20 w-[40rem] h-[40rem] object-contain -rotate-12 pointer-events-none z-20 mix-blend-multiply opacity-80"
-          style={{ y: floralY1, rotate: floralRotate }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.8, scale: 1 }}
-          transition={{ duration: 2.5 }}
-        />
-        <motion.img 
-          src={vintageFloral} 
-          className="absolute -bottom-20 -right-20 w-[40rem] h-[40rem] object-contain rotate-[165deg] pointer-events-none z-20 mix-blend-multiply opacity-80"
-          style={{ y: floralY2 }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.8, scale: 1 }}
-          transition={{ duration: 2.5, delay: 0.3 }}
-        />
+
 
         {/* Floating Fairytale Bits */}
         <div className="absolute inset-0 pointer-events-none z-10">
@@ -132,8 +151,8 @@ export default function UCANWebsite() {
             <motion.div
               key={i}
               className="absolute w-12 h-12 flex items-center justify-center opacity-30"
-              initial={{ 
-                x: Math.random() * 100 + "%", 
+              initial={{
+                x: Math.random() * 100 + "%",
                 y: Math.random() * 100 + "%",
                 rotate: Math.random() * 360
               }}
@@ -148,9 +167,9 @@ export default function UCANWebsite() {
                 ease: "easeInOut"
               }}
             >
-              {i % 3 === 0 ? <Star className="text-[#F08A2B] fill-[#F08A2B]/20" /> : 
-               i % 3 === 1 ? <Heart className="text-[#C93A1D] fill-[#C93A1D]/20" /> :
-               <Sparkles className="text-[#6D8F2B]" />}
+              {i % 3 === 0 ? <Star className="text-[#F08A2B] fill-[#F08A2B]/20" /> :
+                i % 3 === 1 ? <Heart className="text-[#C93A1D] fill-[#C93A1D]/20" /> :
+                  <Sparkles className="text-[#6D8F2B]" />}
             </motion.div>
           ))}
         </div>
@@ -195,11 +214,11 @@ export default function UCANWebsite() {
             transition={{ duration: 1, delay: 0.9 }}
             className="mb-8 relative"
           >
-            <p className="font-cormorant text-3xl md:text-4xl tracking-wide italic mb-3 text-[#4C7A1A]">
+            <p className="font-cormorant text-3xl md:text-4xl tracking-wide italic mb-3 text-[#0B3A0A]">
               Universitas Ciputra
             </p>
             <svg className="mx-auto" width="180" height="8" viewBox="0 0 180 8">
-              <path d="M 5 4 Q 45 0, 90 4 T 175 4" stroke="#D96A1D" strokeWidth="2" fill="none" strokeLinecap="round"/>
+              <path d="M 5 4 Q 45 0, 90 4 T 175 4" stroke="#D96A1D" strokeWidth="2" fill="none" strokeLinecap="round" />
             </svg>
           </motion.div>
 
@@ -207,7 +226,7 @@ export default function UCANWebsite() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.1 }}
-            className="flex flex-col md:flex-row gap-6 justify-center items-center font-montserrat text-sm tracking-wider mb-10 text-[#6D8F2B]"
+            className="flex flex-col md:flex-row gap-6 justify-center items-center font-montserrat text-sm tracking-wider mb-10 text-[#4C7A1A]"
           >
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-[#D96A1D]" />
@@ -260,7 +279,7 @@ export default function UCANWebsite() {
 
         {/* Scattered Small Organic Blobs */}
         {[...Array(10)].map((_, i) => (
-          <div 
+          <div
             key={i}
             className="absolute w-6 h-6 organic-blob pointer-events-none z-10"
             style={{
@@ -288,28 +307,28 @@ export default function UCANWebsite() {
             >
               <div className="absolute -top-12 -left-12 w-24 h-24 organic-blob bg-[#F08A2B] opacity-30" />
               <div className="absolute -bottom-12 -right-12 w-28 h-28 organic-blob-2 bg-[#6D8F2B] opacity-25" />
-              
+
               <div className="storybook-card -rotate-[0.5deg] border-dashed border-[#4C7A1A]">
                 <div className="mb-6">
                   <span className="hand-drawn-border-sm px-5 py-2 inline-block font-montserrat text-xs tracking-[0.4em] uppercase text-[#D96A1D] bg-[#D96A1D]/10 rotate-1">
                     Annual Celebration
                   </span>
                 </div>
-                
+
                 <h3 className="text-5xl md:text-6xl mb-6 leading-tight text-[#0B3A0A] font-cinzel">
                   Shaping Dreams,<br />
                   Honoring Excellence
                 </h3>
-                
+
                 <svg className="mb-8" width="120" height="6" viewBox="0 0 120 6">
-                  <path d="M 2 3 Q 30 0, 60 3 T 118 3" stroke="#D96A1D" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  <path d="M 2 3 Q 30 0, 60 3 T 118 3" stroke="#D96A1D" strokeWidth="2" fill="none" strokeLinecap="round" />
                 </svg>
-                
+
                 <p className="font-montserrat text-lg leading-relaxed mb-6 text-[#4C7A1A]">
                   The Universitas Ciputra Awarding Night is an annual formal event recognizing students who have excelled in <span className="text-[#D96A1D] font-semibold">academics, leadership, entrepreneurship, and creativity</span>.
                 </p>
-                
-                <p className="font-cormorant text-xl leading-relaxed italic text-[#6D8F2B]">
+
+                <p className="font-cormorant text-xl leading-relaxed italic text-[#0B3A0A]">
                   Beyond recognition, we aim to inspire and motivate by showcasing excellence and dedication, encouraging others to strive for meaningful achievements within their community.
                 </p>
 
@@ -330,7 +349,7 @@ export default function UCANWebsite() {
               </div>
               <div className="relative z-10 overflow-hidden rounded-sm shadow-[15px_15px_30px_rgba(0,0,0,0.1)]">
                 <ImageWithFallback
-                  src="/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/ucan_excellence_hall_1778252558379.png"
+                  src="https://images.unsplash.com/photo-1541339907198-e08756ebafe1?auto=format&fit=crop&q=80&w=1000"
                   alt="University Excellence"
                   className="w-full h-[550px] object-cover vintage-image"
                 />
@@ -339,14 +358,8 @@ export default function UCANWebsite() {
                   <span className="font-cormorant text-2xl italic text-[#0B3A0A]">A Night of Excellence</span>
                 </div>
               </div>
-              
+
               <Sparkles className="absolute -top-6 -left-6 w-12 h-12 text-[#D96A1D] animate-twinkle -rotate-[25deg]" />
-              <motion.img 
-                src={vintageFloral} 
-                className="absolute -bottom-12 -right-12 w-48 h-48 object-contain opacity-80 floral-decoration-img pointer-events-none z-20"
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 10, repeat: Infinity }}
-              />
             </motion.div>
           </div>
         </div>
@@ -374,8 +387,8 @@ export default function UCANWebsite() {
               Everything You Need to Know
             </h3>
             <svg className="mx-auto" width="200" height="8" viewBox="0 0 200 8">
-              <path d="M 5 4 Q 50 0, 100 4 T 195 4" stroke="#D96A1D" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-              <circle cx="100" cy="4" r="3" fill="#F08A2B"/>
+              <path d="M 5 4 Q 50 0, 100 4 T 195 4" stroke="#D96A1D" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <circle cx="100" cy="4" r="3" fill="#F08A2B" />
             </svg>
           </motion.div>
 
@@ -389,12 +402,7 @@ export default function UCANWebsite() {
               className="lg:col-span-7 storybook-card -rotate-[0.3deg] border-[#4C7A1A] border-dashed"
             >
               <div className="absolute -top-4 -right-4 w-20 h-20 organic-blob bg-[#F08A2B] opacity-50" />
-              <img 
-                src={vintageFloral} 
-                className="absolute -top-16 -left-16 w-64 h-64 object-contain opacity-20 floral-decoration-img pointer-events-none -rotate-12"
-                alt=""
-              />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center gap-6 mb-8">
                   <div className="w-20 h-20 rounded-full flex items-center justify-center bg-[#D96A1D]/10 border-[3px] border-dotted border-[#D96A1D]">
@@ -407,7 +415,7 @@ export default function UCANWebsite() {
                 </div>
 
                 <svg className="mb-8 w-full" height="4" viewBox="0 0 400 4">
-                  <path d="M 2 2 L 398 2" stroke="#D96A1D" strokeWidth="2" strokeDasharray="8,5" strokeLinecap="round"/>
+                  <path d="M 2 2 L 398 2" stroke="#D96A1D" strokeWidth="2" strokeDasharray="8,5" strokeLinecap="round" />
                 </svg>
 
                 <div className="grid md:grid-cols-2 gap-8">
@@ -425,13 +433,13 @@ export default function UCANWebsite() {
                       <span className="font-montserrat text-xs tracking-widest uppercase">Venue</span>
                     </div>
                     <p className="text-3xl text-[#0B3A0A] font-cinzel">Dian Auditorium</p>
-                    <p className="font-montserrat text-sm text-[#6D8F2B]">Floor 7, UC Main Building</p>
+                    <p className="font-montserrat text-sm text-[#4C7A1A]">Floor 7, UC Main Building</p>
                   </div>
                 </div>
 
-                <a 
-                  href="https://maps.app.goo.gl/NDzTsk9A4draMqkk9" 
-                  target="_blank" 
+                <a
+                  href="https://maps.app.goo.gl/NDzTsk9A4draMqkk9"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="vintage-button mt-10 hover:rotate-1"
                   style={{ borderColor: '#4C7A1A' }}
@@ -471,7 +479,7 @@ export default function UCANWebsite() {
             >
               <div className="absolute inset-0">
                 <ImageWithFallback
-                  src="/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/ucan_musical_stage_1778252614593.png"
+                  src="https://images.unsplash.com/photo-1514525253344-f81bad393c0d?auto=format&fit=crop&q=80&w=1000"
                   alt="Performance"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 vintage-image"
                 />
@@ -520,7 +528,7 @@ export default function UCANWebsite() {
       </section>
 
       {/* RSVP Section */}
-      <section id="rsvp" className="relative py-24 px-6">
+      <section id="rsvp" ref={rsvpSectionRef} className="relative py-24 px-6">
         <div className="max-w-3xl mx-auto relative">
           <div className="mb-16 text-center">
             <div className="inline-block mb-6">
@@ -530,11 +538,11 @@ export default function UCANWebsite() {
             </div>
             <h3 className="text-5xl md:text-6xl mb-5 leading-tight text-[#0B3A0A] font-cinzel">RSVP</h3>
             <svg className="mx-auto mb-6" width="150" height="8" viewBox="0 0 150 8">
-              <path d="M 5 4 Q 37.5 0, 75 4 T 145 4" stroke="#D96A1D" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+              <path d="M 5 4 Q 37.5 0, 75 4 T 145 4" stroke="#D96A1D" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             </svg>
-            <p className="font-montserrat tracking-wide text-[#6D8F2B]">Login with your student account to reserve your seat</p>
+            <p className="font-montserrat tracking-wide text-[#0B3A0A]">Login with your student account to reserve your seat</p>
           </div>
-          <RSVPForm isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} />
+          <RSVPForm isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} showBorder={isAtRSVP} />
         </div>
       </section>
 
@@ -546,25 +554,25 @@ export default function UCANWebsite() {
               <h4 className="text-4xl mb-3 text-[#0B3A0A] font-cinzel">Universitas Ciputra</h4>
               <p className="font-cormorant text-2xl italic text-[#D96A1D]">Shaping Dreams, Honoring Excellence</p>
             </div>
-            
-            <div className="flex flex-col md:items-end gap-4 font-montserrat text-sm text-[#6D8F2B]">
-              <a 
-                href="https://maps.app.goo.gl/NDzTsk9A4draMqkk9" 
-                target="_blank" 
+
+            <div className="flex flex-col md:items-end gap-4 font-montserrat text-sm text-[#4C7A1A]">
+              <a
+                href="https://maps.app.goo.gl/NDzTsk9A4draMqkk9"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors flex items-center gap-2 hover:underline text-[#4C7A1A]"
               >
                 <MapPin className="w-5 h-5" />
                 Dian Auditorium, Floor 7
               </a>
-              <span className="tracking-wider text-[#6D8F2B]">May 29, 2026 · 16:30 - 22:00</span>
+              <span className="tracking-wider text-[#4C7A1A]">May 29, 2026 · 16:30 - 22:00</span>
             </div>
           </div>
 
           <div className="flex justify-center mb-10 text-[#D96A1D] opacity-40">
             <div className="vintage-ornament max-w-md mx-auto" />
           </div>
-          
+
           <div className="text-center">
             <p className="font-montserrat text-xs tracking-widest uppercase text-[#6D8F2B]">
               © 2026 Universitas Ciputra. All rights reserved.
@@ -576,5 +584,6 @@ export default function UCANWebsite() {
         </div>
       </footer>
     </div>
+    </LayoutGroup>
   );
 }

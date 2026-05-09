@@ -2,7 +2,6 @@ import React from 'react';
 import { BentoCard, BentoGrid } from './magicui/bento-grid';
 import { Award, Star, Users, Lightbulb, Heart, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
-import vintageFloral from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/vintage_floral_white_bg_1778251860709.png';
 
 const nominees = [
   {
@@ -55,24 +54,12 @@ export function NomineesSection() {
   return (
     <section id="nominees" className="relative py-32 px-6 overflow-hidden">
       {/* Watercolor Blooms in corners */}
-      <motion.img 
-        src={vintageFloral} 
-        className="absolute -top-12 -right-12 w-48 h-48 object-contain opacity-50 pointer-events-none mix-blend-multiply"
-        animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      />
-      <motion.img 
-        src={vintageFloral} 
-        className="absolute -bottom-12 -left-12 w-48 h-48 object-contain opacity-50 pointer-events-none rotate-180 mix-blend-multiply"
-        animate={{ y: [0, 10, 0], rotate: [180, 185, 180] }}
-        transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-      />
 
       <div className="absolute top-0 right-0 w-64 h-64 organic-blob opacity-[0.03] bg-[#D96A1D]"></div>
       <div className="absolute bottom-0 left-0 w-48 h-48 organic-blob-2 opacity-[0.03] bg-[#4C7A1A]"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -100,31 +87,18 @@ export function NomineesSection() {
         <div className="relative p-8 fairytale-frame bg-white/40 backdrop-blur-[2px] rounded-sm">
           <BentoGrid className="bg-transparent gap-10">
             {nominees.map((nominee, idx) => (
-              <BentoCard 
-                key={idx} 
-                {...nominee} 
+              <BentoCard
+                key={idx}
+                {...nominee}
                 className={`${nominee.className} bg-[#fffcf5]/80 hover:bg-white/95 transition-all duration-500`}
               />
             ))}
           </BentoGrid>
-          
+
           {/* Decorative Corner Florals */}
-          <motion.img
-            src={vintageFloral}
-            className="absolute -top-12 -right-12 w-56 h-56 object-contain opacity-60 floral-decoration-img pointer-events-none mix-blend-multiply"
-            animate={{ rotate: [0, 8, -8, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.img
-            src={vintageFloral}
-            className="absolute -bottom-12 -left-12 w-56 h-56 object-contain opacity-60 floral-decoration-img pointer-events-none mix-blend-multiply"
-            style={{ rotate: 180 }}
-            animate={{ rotate: [180, 188, 172, 180] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          />
         </div>
       </div>
-      
+
       {/* Floating Sparkles */}
       <Sparkles className="absolute top-24 left-12 w-8 h-8 opacity-40 text-[#F08A2B] animate-pulse" />
       <Sparkles className="absolute bottom-24 right-12 w-10 h-10 opacity-30 text-[#F08A2B] animate-pulse" />

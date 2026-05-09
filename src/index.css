@@ -12,7 +12,8 @@
     --color-burnt: #C93A1D;
     --color-olive: #6D8F2B;
     --color-gold: #F08A2B;
-    color-scheme: light; /* Force light mode — never inherit OS dark mode */
+    color-scheme: light;
+    /* Force light mode — never inherit OS dark mode */
   }
 
   html {
@@ -30,7 +31,7 @@
 
   .parchment-bg {
     background-color: #fcf5e5;
-    background-image: 
+    background-image:
       url("https://www.transparenttextures.com/patterns/natural-paper.png"),
       radial-gradient(circle at center, transparent 0%, rgba(217, 106, 29, 0.03) 100%);
   }
@@ -58,7 +59,12 @@
     background: radial-gradient(circle, transparent 70%, rgba(139, 69, 19, 0.1) 100%);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-cinzel;
   }
 }
@@ -67,11 +73,11 @@
   .font-cinzel {
     font-family: 'Cinzel', serif;
   }
-  
+
   .font-montserrat {
     font-family: 'Montserrat', sans-serif;
   }
-  
+
   .font-cormorant {
     font-family: 'Cormorant Garamond', serif;
   }
@@ -110,10 +116,8 @@
 
   /* Wavy/Torn Edges */
   .wavy-border {
-    clip-path: polygon(
-      0% 2%, 5% 0%, 10% 1%, 15% 0%, 20% 2%, 25% 1%, 30% 0%, 35% 1%, 40% 0%, 45% 2%, 50% 1%, 55% 0%, 60% 1%, 65% 0%, 70% 2%, 75% 1%, 80% 0%, 85% 2%, 90% 1%, 95% 0%, 100% 2%,
-      100% 98%, 95% 100%, 90% 99%, 85% 100%, 80% 98%, 75% 99%, 70% 100%, 65% 99%, 60% 100%, 55% 98%, 50% 99%, 45% 100%, 40% 99%, 35% 100%, 30% 98%, 25% 99%, 20% 100%, 15% 98%, 10% 99%, 5% 100%, 0% 98%
-    );
+    clip-path: polygon(0% 2%, 5% 0%, 10% 1%, 15% 0%, 20% 2%, 25% 1%, 30% 0%, 35% 1%, 40% 0%, 45% 2%, 50% 1%, 55% 0%, 60% 1%, 65% 0%, 70% 2%, 75% 1%, 80% 0%, 85% 2%, 90% 1%, 95% 0%, 100% 2%,
+        100% 98%, 95% 100%, 90% 99%, 85% 100%, 80% 98%, 75% 99%, 70% 100%, 65% 99%, 60% 100%, 55% 98%, 50% 99%, 45% 100%, 40% 99%, 35% 100%, 30% 98%, 25% 99%, 20% 100%, 15% 98%, 10% 99%, 5% 100%, 0% 98%);
   }
 
   /* Vintage Storybook Cards */
@@ -191,7 +195,7 @@
   .storybook-page {
     position: relative;
     background: #fffcf5;
-    box-shadow: 
+    box-shadow:
       2px 2px 0 #e8dcc4,
       4px 4px 0 #dfd1b8,
       6px 6px 0 #d6c6ac;
@@ -206,7 +210,8 @@
   /* Fairytale Frame */
   .fairytale-frame {
     border: 20px solid transparent;
-    border-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png') 30 stretch; /* Fallback texture */
+    border-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png') 30 stretch;
+    /* Fallback texture */
     border-image-source: url('https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&q=80&w=1000');
     border-image-slice: 100;
     border-image-repeat: stretch;
@@ -230,8 +235,17 @@
 
 /* Custom Keyframes */
 @keyframes sparkle {
-  0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
-  50% { transform: scale(1) rotate(180deg); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1) rotate(180deg);
+    opacity: 1;
+  }
 }
 
 .animate-sparkle {
@@ -239,7 +253,9 @@
 }
 
 @keyframes draw {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .animate-draw {
@@ -249,9 +265,19 @@
 }
 
 @keyframes fairytaleFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(2deg); }
-  66% { transform: translateY(5px) rotate(-1deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+
+  66% {
+    transform: translateY(5px) rotate(-1deg);
+  }
 }
 
 .animate-fairytale {
@@ -260,30 +286,71 @@
 
 /* Animations */
 @keyframes gentleFall {
-  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.7; }
-  90% { opacity: 0.7; }
-  100% { transform: translateY(110vh) translateX(15px) rotate(180deg); opacity: 0; }
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.7;
+  }
+
+  90% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateY(110vh) translateX(15px) rotate(180deg);
+    opacity: 0;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(5deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.5; transform: scale(1) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.3) rotate(180deg);
+  }
 }
 
 @keyframes sway {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
+
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+
+  50% {
+    transform: rotate(2deg);
+  }
 }
 
 @keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .marquee-content {
@@ -294,9 +361,11 @@
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: #F4E7CB;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #D96A1D;
   border-radius: 10px;
