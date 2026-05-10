@@ -1,10 +1,10 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import {
   Calendar, MapPin, Clock, Users, Award, Star,
   Sparkles, Gift, ArrowRight, Heart, Music,
   ChevronRight, Instagram, Mail, Phone, Info
 } from 'lucide-react';
-import { motion, useScroll, useTransform, useInView, useSpring } from 'motion/react';
+import { motion, useScroll, useTransform, useInView, useSpring, useMotionValueEvent } from 'motion/react';
 import { NomineesSection } from './components/NomineesSection';
 import { RSVPForm } from './components/RSVPForm';
 import { ImageWithFallback } from './components/ImageWithFallback';
@@ -19,8 +19,8 @@ export default function UCANWebsite() {
   const rsvpContainerRef = useRef<HTMLDivElement>(null);
   const { scrollY, scrollYProgress } = useScroll();
 
-  // Measure RSVP position relative to the document
-  const [rsvpRect, setRsvpRect] = useState({ top: 0, left: 0, width: 0, height: 0 });
+  // Measure RSVP position relative to the document (only on resize, NOT on scroll)
+  const [rsvpDocRect, setRsvpDocRect] = useState({ top: 0, left: 0, width: 0, height: 0 });
 
   useLayoutEffect(() => {
     const updateRect = () => {
@@ -28,7 +28,7 @@ export default function UCANWebsite() {
         const rect = rsvpContainerRef.current.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-        setRsvpRect({
+        setRsvpDocRect({
           top: rect.top + scrollTop,
           left: rect.left + scrollLeft,
           width: rect.width,
@@ -37,50 +37,74 @@ export default function UCANWebsite() {
       }
     };
 
-    // Delay slightly to ensure layout is settled
-    const timeoutId = setTimeout(updateRect, 100);
+    const timeoutId = setTimeout(updateRect, 200);
     window.addEventListener('resize', updateRect);
-    window.addEventListener('scroll', updateRect, { passive: true }); // Keep it fresh
-    
+    // Also re-measure after images load etc.
+    window.addEventListener('load', updateRect);
+
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener('resize', updateRect);
-      window.removeEventListener('scroll', updateRect);
+      window.removeEventListener('load', updateRect);
     };
   }, []);
 
-  // Track scroll specifically for the RSVP transition
-  // It starts morphing when the RSVP section starts coming up, and finishes when it's centered
+  // --- PHASE 1: Border Reveal (First 10% of scroll) ---
+  const borderRevealValue = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+  const borderReveal = useSpring(borderRevealValue, { stiffness: 80, damping: 25 });
+  
+  // Reveal from corners/center instead of just a slide
+  const borderClip = useTransform(borderReveal, [0, 0.2, 1], [
+    "inset(50% 50% 50% 50%)",
+    "inset(20% 20% 20% 20%)",
+    "inset(0% 0% 0% 0%)"
+  ]);
+  
+  // Opacity: fade in and slightly pulse
+  const borderOpacityBase = useTransform(borderReveal, [0, 1], [0, 0.8]);
+  const borderOpacity = useSpring(borderOpacityBase, { stiffness: 100, damping: 30 });
+
+  // --- PHASE 2: Morph to RSVP box ---
+  // Start the morphing process MUCH earlier (when RSVP is 2 viewports away)
+  // This ensures the border is "moving" throughout the scroll journey
   const { scrollYProgress: rsvpScrollProgress } = useScroll({
     target: rsvpContainerRef,
-    offset: ["start end", "center center"]
+    offset: ["start 150%", "center center"]
   });
 
-  // Smooth the scroll progress for a more "viscous" feel
-  const smoothRSVPProgress = useSpring(rsvpScrollProgress, { stiffness: 60, damping: 25, restDelta: 0.001 });
+  const smoothRSVPProgress = useSpring(rsvpScrollProgress, { stiffness: 45, damping: 25, restDelta: 0.001 });
 
-  // 1. Position: Interpolate between viewport top/left (0,0) and RSVP viewport coordinates
-  const viewportTop = useTransform([smoothRSVPProgress, scrollY], ([p, y]) => {
-    const targetViewportTop = rsvpRect.top - (y as number);
-    // Linear interpolation: start at 0, end at targetViewportTop
-    return (targetViewportTop * (p as number));
+  // Position: fixed element. At progress=0, it's at (0,0) covering viewport.
+  // At progress=1, it should be positioned so that it overlays the RSVP box.
+  // For a fixed element: top = rsvpDocRect.top - scrollY
+  const borderTop = useTransform([smoothRSVPProgress, scrollY], ([p, sy]) => {
+    const progress = p as number;
+    if (progress <= 0) return 0;
+    // Target: where the RSVP box is in viewport coords
+    const targetTop = rsvpDocRect.top - (sy as number);
+    return targetTop * progress;
   });
 
-  const viewportLeft = useTransform(smoothRSVPProgress, [0, 1], [0, rsvpRect.left]);
+  const borderLeft = useTransform(smoothRSVPProgress, (p) => {
+    if (p <= 0) return 0;
+    return rsvpDocRect.left * p;
+  });
 
-  // 2. Size: Interpolate between full viewport and RSVP box dimensions
-  const viewportWidth = useTransform(smoothRSVPProgress, [0, 1], ["100vw", `${rsvpRect.width}px`]);
-  const viewportHeight = useTransform(smoothRSVPProgress, [0, 1], ["100vh", `${rsvpRect.height}px`]);
+  // Size: interpolate between viewport and RSVP box size
+  const borderWidth = useTransform(smoothRSVPProgress, (p) => {
+    const vw = window.innerWidth;
+    const target = rsvpDocRect.width || vw;
+    return `${vw + (target - vw) * p}px`;
+  });
 
-  // 3. Initial Reveal: Scroll-linked border draw-on (top to bottom)
-  const borderRevealValue = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
-  const borderReveal = useSpring(borderRevealValue, { stiffness: 100, damping: 30 });
-  const borderClip = useTransform(borderReveal, [0, 1], [
-    "inset(0 0 100% 0)", 
-    "inset(0 0 0% 0)"    
-  ]);
+  const borderHeight = useTransform(smoothRSVPProgress, (p) => {
+    const vh = window.innerHeight;
+    const target = rsvpDocRect.height || vh;
+    return `${vh + (target - vh) * p}px`;
+  });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  // Hero content fade
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   return (
     <div className="relative">
@@ -88,19 +112,19 @@ export default function UCANWebsite() {
       <motion.div
         className="fixed pointer-events-none z-[10000]"
         style={{
-          top: viewportTop,
-          left: viewportLeft,
-          width: viewportWidth,
-          height: viewportHeight,
+          top: borderTop,
+          left: borderLeft,
+          width: borderWidth,
+          height: borderHeight,
           clipPath: borderClip,
-          borderWidth: '24px', // Compromise between mobile and desktop
+          borderWidth: '24px', 
           borderStyle: 'solid',
           borderColor: 'transparent',
           borderImageSource: `url(${fairytaleBorder})`,
           borderImageSlice: '150',
           borderImageRepeat: 'round',
           mixBlendMode: 'multiply',
-          opacity: 0.8,
+          opacity: borderOpacity,
         }}
       />
 
@@ -206,7 +230,7 @@ export default function UCANWebsite() {
             ))}
           </div>
 
-          <motion.div className="relative z-30 text-center max-w-5xl mx-auto" style={{ opacity }}>
+          <motion.div className="relative z-30 text-center max-w-5xl mx-auto" style={{ opacity: heroOpacity }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
