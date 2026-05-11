@@ -9,8 +9,8 @@ import { NomineesSection } from './components/NomineesSection';
 import { RSVPForm } from './components/RSVPForm';
 import { ImageWithFallback } from './components/ImageWithFallback';
 
-import fairytaleBorder from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/fairytale_border_white_bg_1778251907133.png';
-import vintageFloral from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/vintage_floral_white_bg_1778251860709.png';
+import fairytaleBorder from './assets/fairytale_border_1778243843272.png';
+import vintageFloral from './assets/vintage_disney_florals_1778230091006.png';
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,16 +28,20 @@ export default function UCANWebsite() {
         const rect = rsvpContainerRef.current.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-        setRsvpDocRect({
-          top: rect.top + scrollTop,
-          left: rect.left + scrollLeft,
-          width: rect.width,
-          height: rect.height
-        });
+        
+        // Only update if dimensions are non-zero to avoid initial flash issues
+        if (rect.width > 0 && rect.height > 0) {
+          setRsvpDocRect({
+            top: rect.top + scrollTop,
+            left: rect.left + scrollLeft,
+            width: rect.width,
+            height: rect.height
+          });
+        }
       }
     };
 
-    const timeoutId = setTimeout(updateRect, 200);
+    const timeoutId = setTimeout(updateRect, 500); // Wait for fonts/layout
     window.addEventListener('resize', updateRect);
     // Also re-measure after images load etc.
     window.addEventListener('load', updateRect);
@@ -49,55 +53,48 @@ export default function UCANWebsite() {
     };
   }, []);
 
-  // --- PHASE 1: Border Reveal (First 10% of scroll) ---
-  const borderRevealValue = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+  // --- PHASE 1: Border Reveal (Reveal from top to bottom over 25% of scroll) ---
+  // We want it to be invisible at exactly 0, but appear immediately upon scroll.
+  const borderRevealValue = useTransform(scrollYProgress, [0, 0.02, 0.25], [0, 0.1, 1]);
   const borderReveal = useSpring(borderRevealValue, { stiffness: 80, damping: 25 });
   
-  // Reveal from corners/center instead of just a slide
-  const borderClip = useTransform(borderReveal, [0, 0.2, 1], [
-    "inset(50% 50% 50% 50%)",
-    "inset(20% 20% 20% 20%)",
-    "inset(0% 0% 0% 0%)"
+  // Reveal from top to bottom using inset clip-path
+  const borderClip = useTransform(borderReveal, [0, 0.1, 1], [
+    "inset(0% 0% 99% 0%)",  // Show a tiny bit of the top edge even at 0
+    "inset(0% 0% 95% 0%)",  // Reveal quickly at the start
+    "inset(0% 0% 0% 0%)"    // Fully revealed
   ]);
   
-  // Opacity: fade in and slightly pulse
-  const borderOpacityBase = useTransform(borderReveal, [0, 1], [0, 0.8]);
+  // Opacity: fade in quickly but start with some visibility
+  const borderOpacityBase = useTransform(scrollYProgress, [0, 0.05], [0.4, 0.9]);
   const borderOpacity = useSpring(borderOpacityBase, { stiffness: 100, damping: 30 });
 
-  // --- PHASE 2: Morph to RSVP box ---
-  // Start the morphing process MUCH earlier (when RSVP is 2 viewports away)
-  // This ensures the border is "moving" throughout the scroll journey
-  const { scrollYProgress: rsvpScrollProgress } = useScroll({
-    target: rsvpContainerRef,
-    offset: ["start 150%", "center center"]
-  });
+  // --- PHASE 2: Morph to RSVP box (At the final stretch of scroll) ---
+  // Use a smaller window at the end to allow for "manual" feel
+  const morphProgressValue = useTransform(scrollYProgress, [0.94, 0.995], [0, 1]);
+  const smoothMorphProgress = useSpring(morphProgressValue, { stiffness: 60, damping: 25 });
 
-  const smoothRSVPProgress = useSpring(rsvpScrollProgress, { stiffness: 45, damping: 25, restDelta: 0.001 });
-
-  // Position: fixed element. At progress=0, it's at (0,0) covering viewport.
-  // At progress=1, it should be positioned so that it overlays the RSVP box.
-  // For a fixed element: top = rsvpDocRect.top - scrollY
-  const borderTop = useTransform([smoothRSVPProgress, scrollY], ([p, sy]) => {
+  // Position: fixed element.
+  const borderTop = useTransform([smoothMorphProgress, scrollY], ([p, sy]) => {
     const progress = p as number;
-    if (progress <= 0) return 0;
-    // Target: where the RSVP box is in viewport coords
-    const targetTop = rsvpDocRect.top - (sy as number);
+    const currentSY = sy as number;
+    // targetTop is where the RSVP box is currently in the viewport
+    const targetTop = rsvpDocRect.top - currentSY;
     return targetTop * progress;
   });
 
-  const borderLeft = useTransform(smoothRSVPProgress, (p) => {
-    if (p <= 0) return 0;
+  const borderLeft = useTransform(smoothMorphProgress, (p) => {
     return rsvpDocRect.left * p;
   });
 
   // Size: interpolate between viewport and RSVP box size
-  const borderWidth = useTransform(smoothRSVPProgress, (p) => {
-    const vw = window.innerWidth;
+  const borderWidth = useTransform(smoothMorphProgress, (p) => {
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1920;
     const target = rsvpDocRect.width || vw;
     return `${vw + (target - vw) * p}px`;
   });
 
-  const borderHeight = useTransform(smoothRSVPProgress, (p) => {
+  const borderHeight = useTransform(smoothMorphProgress, (p) => {
     const vh = window.innerHeight;
     const target = rsvpDocRect.height || vh;
     return `${vh + (target - vh) * p}px`;
@@ -108,7 +105,7 @@ export default function UCANWebsite() {
 
   return (
     <div className="relative">
-      {/* Global Fairytale Border Frame - Fully Scrubbable Morph */}
+      {/* Global Fairytale Border Frame - Top-to-Bottom Reveal + End-of-Scroll Morph */}
       <motion.div
         className="fixed pointer-events-none z-[10000]"
         style={{
@@ -117,14 +114,14 @@ export default function UCANWebsite() {
           width: borderWidth,
           height: borderHeight,
           clipPath: borderClip,
-          borderWidth: '24px', 
+          borderWidth: '80px', 
           borderStyle: 'solid',
           borderColor: 'transparent',
           borderImageSource: `url(${fairytaleBorder})`,
-          borderImageSlice: '150',
+          borderImageSlice: '220',
           borderImageRepeat: 'round',
-          mixBlendMode: 'multiply',
           opacity: borderOpacity,
+          filter: 'drop-shadow(0 0 15px rgba(217, 106, 29, 0.2))',
         }}
       />
 
@@ -313,6 +310,18 @@ export default function UCANWebsite() {
             >
               Every Story Begins with a Little Sparkle ✨
             </motion.p>
+
+            <motion.div
+              style={{ opacity: useTransform(scrollYProgress, [0, 0.05], [1, 0]) }}
+              className="mt-16 flex flex-col items-center gap-3"
+            >
+              <span className="font-montserrat text-[10px] tracking-[0.5em] text-[#D96A1D]/60 uppercase">Scroll to Begin Your Journey</span>
+              <motion.div 
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-px h-12 bg-gradient-to-b from-[#D96A1D] to-transparent"
+              />
+            </motion.div>
           </motion.div>
 
           <div className="absolute top-16 left-12 pointer-events-none z-10 hidden lg:block" style={{ animation: 'sway 4s ease-in-out infinite' }}>
@@ -636,6 +645,9 @@ export default function UCANWebsite() {
             <div className="absolute bottom-8 right-8 w-20 h-20 organic-blob-2 bg-[#4C7A1A] opacity-15" />
           </div>
         </footer>
+
+        {/* Scroll Spacer for Manual Border Morphing at the end */}
+        <div className="h-[40vh] pointer-events-none" />
       </div>
     </div>
   );

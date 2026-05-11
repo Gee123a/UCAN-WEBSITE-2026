@@ -4,7 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { motion } from 'motion/react';
 
-import fairytaleBorder from '/Users/mynamegee/.gemini/antigravity/brain/2e65533a-bc8e-45ad-aaff-b1c5c26d90e9/fairytale_border_white_bg_1778251907133.png';
+import fairytaleBorder from '../assets/fairytale_border_1778243843272.png';
 
 interface RSVPFormProps {
   isLoggedIn: boolean;
