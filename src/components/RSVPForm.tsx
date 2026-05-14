@@ -21,6 +21,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder, containerRef }: RSVP
     organization: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const organizations = [
@@ -36,13 +37,39 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder, containerRef }: RSVP
     'Other'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
       setError('Please login with your student account to RSVP');
       return;
     }
-    setIsSubmitted(true);
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to submit RSVP. Please try again.');
+        setIsLoading(false);
+        return;
+      }
+
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('RSVP submit error:', err);
+      setError('Network error. Unable to connect to server.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -250,11 +277,20 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder, containerRef }: RSVP
               </div>
             </div>
 
+            {error && (
+              <div className="p-4 rounded-md border border-red-200 bg-red-50/80 text-red-700 text-center font-montserrat text-sm animate-shake">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full mt-12 px-8 py-6 font-montserrat text-sm tracking-widest uppercase transition-all duration-500 hover:-translate-y-2 hover:rotate-1 vintage-button-primary flex justify-center items-center"
+              disabled={isLoading}
+              className={`w-full mt-12 px-8 py-6 font-montserrat text-sm tracking-widest uppercase transition-all duration-500 flex justify-center items-center ${
+                isLoading ? 'bg-amber-950/40 text-amber-100/50 cursor-not-allowed' : 'hover:-translate-y-2 hover:rotate-1 vintage-button-primary'
+              }`}
             >
-              <span className="relative z-10">SUBMIT RSVP</span>
+              <span className="relative z-10">{isLoading ? 'SUBMITTING...' : 'SUBMIT RSVP'}</span>
               <Sparkles className="w-5 h-5 relative z-10" />
             </button>
           </form>

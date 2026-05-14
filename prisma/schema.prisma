@@ -1,0 +1,17 @@
+datasource db {
+  provider = "sqlite" // For Hostinger deployment, change "sqlite" to "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Rsvp {
+  id           String   @id @default(uuid())
+  name         String
+  nim          String   @unique
+  major        String
+  organization String
+  createdAt    DateTime @default(now())
+}
