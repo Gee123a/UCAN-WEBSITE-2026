@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite" // For Hostinger deployment, change "sqlite" to "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
