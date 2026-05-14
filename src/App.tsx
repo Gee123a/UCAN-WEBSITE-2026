@@ -1,16 +1,14 @@
-import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import {
-  Calendar, MapPin, Clock, Users, Award, Star,
-  Sparkles, Gift, ArrowRight, Heart, Music,
-  ChevronRight, Instagram, Mail, Phone, Info
+  Calendar, MapPin, Clock, Users, Star,
+  Sparkles, Gift, ArrowRight, Heart
 } from 'lucide-react';
-import { motion, useScroll, useTransform, useInView, useSpring, useMotionValueEvent } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import { NomineesSection } from './components/NomineesSection';
 import { RSVPForm } from './components/RSVPForm';
 import { ImageWithFallback } from './components/ImageWithFallback';
 
-import fairytaleBorder from './assets/fairytale_border_1778243843272.png';
-import vintageFloral from './assets/vintage_disney_florals_1778230091006.png';
+
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -107,23 +105,50 @@ export default function UCANWebsite() {
     <div className="relative">
       {/* Global Fairytale Border Frame - Top-to-Bottom Reveal + End-of-Scroll Morph */}
       <motion.div
-        className="fixed pointer-events-none z-[10000]"
+        className="fixed pointer-events-none z-[10000] p-4 md:p-8 transition-all"
         style={{
           top: borderTop,
           left: borderLeft,
           width: borderWidth,
           height: borderHeight,
           clipPath: borderClip,
-          borderWidth: '80px', 
-          borderStyle: 'solid',
-          borderColor: 'transparent',
-          borderImageSource: `url(${fairytaleBorder})`,
-          borderImageSlice: '220',
-          borderImageRepeat: 'round',
           opacity: borderOpacity,
-          filter: 'drop-shadow(0 0 15px rgba(217, 106, 29, 0.2))',
+          filter: 'drop-shadow(0 0 20px rgba(217, 106, 29, 0.15))',
         }}
-      />
+      >
+        {/* Layer 1: Hand-drawn outer border with asymmetric scratchbook aesthetic */}
+        <div 
+          className="absolute inset-0 transition-all duration-300 pointer-events-none"
+          style={{
+            borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px',
+            border: '3px solid #D96A1D',
+            boxShadow: 'inset 0 0 30px rgba(217, 106, 29, 0.08)'
+          }}
+        />
+        
+        {/* Layer 2: Slightly inset inner dashed accent border */}
+        <div 
+          className="absolute inset-3 md:inset-5 transition-all duration-300 opacity-60 pointer-events-none"
+          style={{
+            borderRadius: '15px 255px 15px 225px/225px 15px 255px 15px',
+            border: '2px dashed #0B3A0A',
+          }}
+        />
+
+        {/* Layer 3: Elegant golden vintage corner stars */}
+        <div className="absolute top-6 left-6 text-[#D96A1D] opacity-80 animate-twinkle">
+          <Star className="w-5 h-5 fill-[#D96A1D]" />
+        </div>
+        <div className="absolute top-6 right-6 text-[#D96A1D] opacity-80 animate-twinkle" style={{ animationDelay: '1s' }}>
+          <Star className="w-5 h-5 fill-[#D96A1D]" />
+        </div>
+        <div className="absolute bottom-6 left-6 text-[#D96A1D] opacity-80 animate-twinkle" style={{ animationDelay: '1.5s' }}>
+          <Star className="w-5 h-5 fill-[#D96A1D]" />
+        </div>
+        <div className="absolute bottom-6 right-6 text-[#D96A1D] opacity-80 animate-twinkle" style={{ animationDelay: '0.5s' }}>
+          <Star className="w-5 h-5 fill-[#D96A1D]" />
+        </div>
+      </motion.div>
 
       <div className="min-h-screen relative overflow-x-hidden selection:bg-[#D96A1D]/30" style={{ background: '#F4E7CB' }}>
         {/* Magical Fairy Dust particles */}
@@ -406,9 +431,7 @@ export default function UCANWebsite() {
                 transition={{ duration: 0.9 }}
                 className="relative p-6 fairytale-frame"
               >
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                  <img src={fairytaleBorder} className="w-full h-full object-fill opacity-40 mix-blend-multiply" alt="" />
-                </div>
+                <div className="absolute inset-0 z-0 pointer-events-none rounded-lg border-2 border-dashed border-[#D96A1D]/40" />
                 <div className="relative z-10 overflow-hidden rounded-sm shadow-[15px_15px_30px_rgba(0,0,0,0.1)]">
                   <ImageWithFallback
                     src="https://images.unsplash.com/photo-1541339907198-e08756ebafe1?auto=format&fit=crop&q=80&w=1000"
@@ -646,8 +669,6 @@ export default function UCANWebsite() {
           </div>
         </footer>
 
-        {/* Scroll Spacer for Manual Border Morphing at the end */}
-        <div className="h-[40vh] pointer-events-none" />
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
-import React from 'react';
 import { BentoCard, BentoGrid } from './magicui/bento-grid';
-import { Award, Star, Users, Lightbulb, Heart, Sparkles } from 'lucide-react';
+import { Star, Users, Lightbulb, Heart, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const nominees = [

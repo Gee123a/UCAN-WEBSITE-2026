@@ -32,7 +32,7 @@ const BentoCard = ({
   background,
   Icon,
   description,
-  href,
+  href: _href,
   cta,
 }: {
   name: string;

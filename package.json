@@ -44,5 +44,10 @@
   "bugs": {
     "url": "https://github.com/Gee123a/UCAN-WEBSITE-2026/issues"
   },
-  "homepage": "https://github.com/Gee123a/UCAN-WEBSITE-2026#readme"
+  "homepage": "https://github.com/Gee123a/UCAN-WEBSITE-2026#readme",
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
 }

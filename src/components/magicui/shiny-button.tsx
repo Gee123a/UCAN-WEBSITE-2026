@@ -4,8 +4,7 @@ import React from "react";
 import {
   type AnimationProps,
   motion,
-  type TargetAndTransition,
-  type Transition,
+  type HTMLMotionProps,
 } from "framer-motion";
 
 import { cn } from "../../lib/utils";
@@ -31,9 +30,8 @@ const animationProps = {
   },
 } as AnimationProps;
 
-interface ShinyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  className?: string;
+interface ShinyButtonProps extends HTMLMotionProps<"button"> {
+  children?: React.ReactNode;
 }
 
 const ShinyButton = ({ children, className, onClick, ...props }: ShinyButtonProps) => {

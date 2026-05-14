@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { cn } from "../../lib/utils";
 
@@ -62,19 +62,7 @@ const Particles: React.FC<ParticlesProps> = ({
     initCanvas();
   }, [refresh]);
 
-  const onMouseMove = () => {
-    if (canvasRef.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
-      const { clientX, clientY } = mouse.current;
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-      const inside = x < canvasSize.current.w && x > 0 && y < canvasSize.current.h && y > 0;
-      if (inside) {
-        mouse.current.x = x;
-        mouse.current.y = y;
-      }
-    }
-  };
+
 
   const initCanvas = () => {
     resizeCanvas();
