@@ -9,12 +9,43 @@ const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
+const ADMIN_EXPORT_USER = process.env.ADMIN_EXPORT_USER;
+const ADMIN_EXPORT_PASSWORD = process.env.ADMIN_EXPORT_PASSWORD;
+
 app.use(cors());
 app.use(express.json());
 
 // Validate email domain
 function isValidCiputraEmail(email: string): boolean {
   return email.endsWith('.ciputra.ac.id');
+}
+
+function escapeCsvValue(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  const stringValue = String(value);
+  if (/[,"\n\r]/.test(stringValue)) {
+    return `"${stringValue.replace(/"/g, '""')}"`;
+  }
+  return stringValue;
+}
+
+function isAuthorizedAdminRequest(authHeader?: string): boolean {
+  if (!ADMIN_EXPORT_USER || !ADMIN_EXPORT_PASSWORD) return false;
+  if (!authHeader?.startsWith('Basic ')) return false;
+
+  try {
+    const base64Credentials = authHeader.slice('Basic '.length).trim();
+    const decoded = Buffer.from(base64Credentials, 'base64').toString('utf8');
+    const separatorIndex = decoded.indexOf(':');
+    if (separatorIndex === -1) return false;
+
+    const username = decoded.slice(0, separatorIndex);
+    const password = decoded.slice(separatorIndex + 1);
+
+    return username === ADMIN_EXPORT_USER && password === ADMIN_EXPORT_PASSWORD;
+  } catch {
+    return false;
+  }
 }
 
 // Endpoint to handle RSVP submission
@@ -79,6 +110,41 @@ app.get('/api/rsvp', async (req, res) => {
   } catch (error) {
     console.error('Error fetching RSVPs:', error);
     return res.status(500).json({ error: 'Internal server error fetching stats' });
+  }
+});
+
+// Protected endpoint for CSV export (Basic Auth)
+app.get('/api/admin/rsvp/export.csv', async (req, res) => {
+  const authHeader = req.headers.authorization;
+
+  if (!isAuthorizedAdminRequest(authHeader)) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="RSVP Export"');
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const rsvps = await prisma.rsvp.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+
+    const header = ['id', 'name', 'nim', 'major', 'organization', 'createdAt'];
+    const rows = rsvps.map((rsvp) => [
+      escapeCsvValue(rsvp.id),
+      escapeCsvValue(rsvp.name),
+      escapeCsvValue(rsvp.nim),
+      escapeCsvValue(rsvp.major),
+      escapeCsvValue(rsvp.organization),
+      escapeCsvValue(rsvp.createdAt.toISOString())
+    ].join(','));
+
+    const csv = [header.join(','), ...rows].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="rsvp-export.csv"');
+    return res.status(200).send(csv);
+  } catch (error) {
+    console.error('Error exporting RSVPs as CSV:', error);
+    return res.status(500).json({ error: 'Internal server error while exporting RSVP data' });
   }
 });
 
