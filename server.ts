@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -41,7 +41,19 @@ app.post('/api/rsvp', async (req, res) => {
 
     return res.status(201).json({ success: true, rsvp });
   } catch (error: any) {
-    console.error('Error saving RSVP:', error);
+    // Enhanced logging to surface Prisma errors in production logs
+    console.error('Error saving RSVP:', {
+      message: error?.message,
+      code: error?.code,
+      meta: error?.meta,
+      stack: error?.stack,
+    });
+
+    // If it's a known Prisma unique constraint error, return 409
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      return res.status(409).json({ error: 'Student ID (NIM) has already registered for RSVP' });
+    }
+
     return res.status(500).json({ error: 'Internal server error while saving RSVP' });
   }
 });
