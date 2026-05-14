@@ -12,13 +12,23 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Validate email domain
+function isValidCiputraEmail(email: string): boolean {
+  return email.endsWith('.ciputra.ac.id');
+}
+
 // Endpoint to handle RSVP submission
 app.post('/api/rsvp', async (req, res) => {
   try {
-    const { name, nim, major, organization } = req.body;
+    const { name, nim, major, organization, email } = req.body;
 
-    if (!name || !nim || !major || !organization) {
+    if (!name || !nim || !major || !organization || !email) {
       return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Validate email domain
+    if (!isValidCiputraEmail(email)) {
+      return res.status(403).json({ error: 'Only @ciputra.ac.id email addresses are allowed' });
     }
 
     // Check if user already RSVP'd

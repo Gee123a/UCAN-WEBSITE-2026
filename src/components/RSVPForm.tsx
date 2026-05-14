@@ -50,7 +50,10 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          email: (window as any).__ciputraEmail
+        })
       });
 
       const data = await response.json();
@@ -239,13 +242,25 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
                     if (credentialResponse.credential) {
                       try {
                         const decoded = jwtDecode(credentialResponse.credential);
+                        const email = (decoded as any).email;
+                        
+                        // Validate email domain
+                        if (!email || (!email.endsWith('@student.ciputra.ac.id') && !email.endsWith('@staff.ciputra.ac.id') && !email.endsWith('.ciputra.ac.id'))) {
+                          setError('Please use your ciputra.ac.id email account ');
+                          return;
+                        }
+                        
                         if (decoded && (decoded as any).name) {
                           setFormData(prev => ({ ...prev, name: (decoded as any).name }));
                         }
+                        // Store email for form submission
+                        (window as any).__ciputraEmail = email;
+                        setError('');
+                        onLogin();
                       } catch (e) {
                         console.error("Error decoding JWT", e);
+                        setError('Failed to verify account. Please try again.');
                       }
-                      onLogin();
                     }
                   }}
                   onError={() => {
