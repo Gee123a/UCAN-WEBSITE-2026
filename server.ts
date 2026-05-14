@@ -99,19 +99,7 @@ app.post('/api/rsvp', async (req, res) => {
   }
 });
 
-// Endpoint to retrieve RSVP stats
-app.get('/api/rsvp', async (req, res) => {
-  try {
-    const count = await prisma.rsvp.count();
-    const rsvps = await prisma.rsvp.findMany({
-      orderBy: { createdAt: 'desc' }
-    });
-    return res.json({ count, rsvps });
-  } catch (error) {
-    console.error('Error fetching RSVPs:', error);
-    return res.status(500).json({ error: 'Internal server error fetching stats' });
-  }
-});
+
 
 // Protected endpoint for CSV export (Basic Auth)
 app.get('/api/admin/rsvp/export.csv', async (req, res) => {
