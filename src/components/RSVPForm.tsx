@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Star, Heart, Sparkles } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface RSVPFormProps {
   isLoggedIn: boolean;
@@ -178,7 +178,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
   }
 
   return (
-    <div className="relative max-w-4xl mx-auto" ref={containerRef}>
+    <div className={`relative mx-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLoggedIn ? 'max-w-4xl' : 'max-w-xl'}`} ref={containerRef}>
       <motion.div 
         layout
         initial={{ opacity: 0, y: 20 }}

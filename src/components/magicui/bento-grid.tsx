@@ -16,7 +16,7 @@ const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[25rem] grid-cols-1 md:grid-cols-3 gap-8",
+        "grid w-full auto-rows-auto md:auto-rows-[22rem] grid-cols-1 md:grid-cols-3 gap-6 md:gap-8",
         className,
       )}
       style={style}
@@ -57,7 +57,7 @@ const BentoCard = ({
   >
     <div className="absolute inset-0 z-0">{background}</div>
     
-    <div className="relative z-10 flex flex-col gap-3 p-10 transition-all duration-500 group-hover:-translate-y-4">
+    <div className="relative z-10 flex flex-col gap-3 p-6 md:p-10 transition-all duration-500 md:group-hover:-translate-y-4">
       <div className="w-16 h-16 organic-blob flex items-center justify-center mb-6 transition-all duration-700 group-hover:scale-110 group-hover:rotate-12 bg-[#D96A1D]/10 border-2 border-dashed border-[#D96A1D]">
         <Icon className="h-8 w-8" style={{ color: '#D96A1D' }} />
       </div>
@@ -72,7 +72,7 @@ const BentoCard = ({
 
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-12 transform-gpu flex-row items-center p-8 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none absolute bottom-0 flex w-full flex-row items-center p-6 md:p-8 opacity-100 md:opacity-0 md:translate-y-10 transform-gpu transition-all duration-500 md:group-hover:translate-y-0 md:group-hover:opacity-100",
       )}
     >
       <button className="pointer-events-auto flex items-center gap-3 font-montserrat text-xs tracking-[0.3em] uppercase font-bold transition-all hover:gap-5" style={{ color: '#D96A1D' }}>

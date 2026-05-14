@@ -1,6 +1,6 @@
 import { BentoCard, BentoGrid } from './magicui/bento-grid';
 import { Star, Users, Lightbulb, Heart, Sparkles } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 const nominees = [
   {
@@ -51,7 +51,7 @@ const nominees = [
 
 export function NomineesSection() {
   return (
-    <section id="nominees" className="relative py-32 px-6 overflow-hidden">
+    <section id="nominees" className="relative py-16 md:py-32 px-4 md:px-6 overflow-hidden">
       {/* Watercolor Blooms in corners */}
 
       <div className="absolute top-0 right-0 w-64 h-64 organic-blob opacity-[0.03] bg-[#D96A1D]"></div>
@@ -70,7 +70,7 @@ export function NomineesSection() {
               Recognizing Talent
             </span>
           </div>
-          <h2 className="text-6xl md:text-7xl mb-8 leading-tight text-[#0B3A0A]">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-8 leading-tight text-[#0B3A0A]">
             2026 Nominees
           </h2>
           <div className="flex justify-center mb-8 gap-2">
@@ -78,13 +78,13 @@ export function NomineesSection() {
             <Sparkles className="w-6 h-6 text-[#F08A2B] animate-sparkle" />
             <div className="w-16 h-px bg-[#D96A1D] self-center opacity-40"></div>
           </div>
-          <p className="font-cormorant text-2xl md:text-3xl italic max-w-2xl mx-auto leading-relaxed" style={{ color: '#4C7A1A' }}>
+          <p className="font-cormorant text-lg md:text-2xl lg:text-3xl italic max-w-2xl mx-auto leading-relaxed" style={{ color: '#4C7A1A' }}>
             Discover the exceptional individuals and organizations nominated for this year's prestigious awards.
           </p>
         </motion.div>
 
-        <div className="relative p-8 fairytale-frame bg-white/40 backdrop-blur-[2px] rounded-sm">
-          <BentoGrid className="bg-transparent gap-10">
+        <div className="relative p-4 md:p-8 fairytale-frame bg-white/40 backdrop-blur-[2px] rounded-sm">
+          <BentoGrid className="bg-transparent gap-6 md:gap-10">
             {nominees.map((nominee, idx) => (
               <BentoCard
                 key={idx}
