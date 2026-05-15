@@ -7,7 +7,7 @@ const nominees = [
     name: "Best Organization",
     className: "md:col-span-2",
     background: (
-      <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #D96A1D, transparent)' }} />
+      <div aria-hidden="true" className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #D96A1D, transparent)' }} />
     ),
     Icon: Users,
     description: "Honoring the organization that has shown exceptional teamwork and impact.",
@@ -18,7 +18,7 @@ const nominees = [
     name: "Outstanding Student",
     className: "md:col-span-1",
     background: (
-      <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #4C7A1A, transparent)' }} />
+      <div aria-hidden="true" className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #4C7A1A, transparent)' }} />
     ),
     Icon: Star,
     description: "Recognizing individual excellence in academics and leadership.",
@@ -29,7 +29,7 @@ const nominees = [
     name: "Innovation Award",
     className: "md:col-span-1",
     background: (
-      <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #F08A2B, transparent)' }} />
+      <div aria-hidden="true" className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #F08A2B, transparent)' }} />
     ),
     Icon: Lightbulb,
     description: "Celebrating creative solutions and forward-thinking projects.",
@@ -40,7 +40,7 @@ const nominees = [
     name: "Community Service",
     className: "md:col-span-2",
     background: (
-      <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #C93A1D, transparent)' }} />
+      <div aria-hidden="true" className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle, #C93A1D, transparent)' }} />
     ),
     Icon: Heart,
     description: "For those who have gone above and beyond to serve the community.",
@@ -54,8 +54,8 @@ export function NomineesSection() {
     <section id="nominees" className="relative py-16 md:py-32 px-4 md:px-6 overflow-hidden">
       {/* Watercolor Blooms in corners */}
 
-      <div className="absolute top-0 right-0 w-64 h-64 organic-blob opacity-[0.03] bg-[#D96A1D]"></div>
-      <div className="absolute bottom-0 left-0 w-48 h-48 organic-blob-2 opacity-[0.03] bg-[#4C7A1A]"></div>
+      <div aria-hidden="true" className="absolute top-0 right-0 w-64 h-64 organic-blob opacity-[0.03] bg-[#D96A1D]"></div>
+      <div aria-hidden="true" className="absolute bottom-0 left-0 w-48 h-48 organic-blob-2 opacity-[0.03] bg-[#4C7A1A]"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
@@ -74,9 +74,9 @@ export function NomineesSection() {
             2026 Nominees
           </h2>
           <div className="flex justify-center mb-8 gap-2">
-            <div className="w-16 h-px bg-[#D96A1D] self-center opacity-40"></div>
-            <Sparkles className="w-6 h-6 text-[#F08A2B] animate-sparkle" />
-            <div className="w-16 h-px bg-[#D96A1D] self-center opacity-40"></div>
+            <div aria-hidden="true" className="w-16 h-px bg-[#D96A1D] self-center opacity-40"></div>
+            <Sparkles aria-hidden="true" className="w-6 h-6 text-[#F08A2B] animate-sparkle" />
+            <div aria-hidden="true" className="w-16 h-px bg-[#D96A1D] self-center opacity-40"></div>
           </div>
           <p className="font-cormorant text-lg md:text-2xl lg:text-3xl italic max-w-2xl mx-auto leading-relaxed" style={{ color: '#4C7A1A' }}>
             Discover the exceptional individuals and organizations nominated for this year's prestigious awards.
@@ -99,8 +99,8 @@ export function NomineesSection() {
       </div>
 
       {/* Floating Sparkles */}
-      <Sparkles className="absolute top-24 left-12 w-8 h-8 opacity-40 text-[#F08A2B] animate-pulse" />
-      <Sparkles className="absolute bottom-24 right-12 w-10 h-10 opacity-30 text-[#F08A2B] animate-pulse" />
+      <Sparkles aria-hidden="true" className="absolute top-24 left-12 w-8 h-8 opacity-40 text-[#F08A2B] animate-pulse" />
+      <Sparkles aria-hidden="true" className="absolute bottom-24 right-12 w-10 h-10 opacity-30 text-[#F08A2B] animate-pulse" />
     </section>
   );
 }

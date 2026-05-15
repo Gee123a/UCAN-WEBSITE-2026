@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, Heart, Sparkles } from 'lucide-react';
+import { Star, Heart, Sparkles, ArrowRight, Lock, ShieldCheck } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const organizations = [
     'BEM UC',
@@ -35,12 +36,39 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
     'Other'
   ];
 
+  const validateField = (name: string, value: string) => {
+    let errorMsg = '';
+    if (name === 'name' && value.trim().length < 3) {
+      errorMsg = 'Your true name is too brief for the scrolls';
+    } else if (name === 'nim' && !/^\d{8,12}$/.test(value)) {
+      errorMsg = 'The royal ID must be 8 to 12 mystical digits';
+    } else if (name === 'major' && value.trim().length < 2) {
+      errorMsg = 'Pray, tell us which field of study you pursue';
+    } else if (name === 'organization' && !value) {
+      errorMsg = 'Choose the guild you represent in this quest';
+    }
+    setValidationErrors(prev => ({ ...prev, [name]: errorMsg }));
+    return !errorMsg;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
       setError('Please login with your student account to RSVP');
       return;
     }
+
+    // Validate all fields
+    const isNameValid = validateField('name', formData.name);
+    const isNimValid = validateField('nim', formData.nim);
+    const isMajorValid = validateField('major', formData.major);
+    const isOrgValid = validateField('organization', formData.organization);
+
+    if (!isNameValid || !isNimValid || !isMajorValid || !isOrgValid) {
+      setError('Please fix the errors in the form before submitting.');
+      return;
+    }
+
     setError('');
     setIsLoading(true);
 
@@ -74,10 +102,15 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear validation error when typing
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   // Animation variants for staggered form fields
@@ -120,20 +153,15 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4, type: "spring" }}
-            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 relative" 
-            style={{
-              background: 'rgba(217, 106, 29, 0.12)',
-              border: '3px dotted #D96A1D'
-            }}
+            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 relative bg-brand-orange/10 border-2 border-dashed border-brand-orange" 
           >
-            <Star className="w-12 h-12 absolute" style={{ color: '#D96A1D', fill: '#D96A1D' }} />
+            <Star className="w-12 h-12 absolute text-brand-orange fill-brand-orange" />
           </motion.div>
           <motion.h4 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="font-cinzel text-5xl mb-6" 
-            style={{ color: '#0B3A0A' }}
+            className="font-cinzel text-5xl mb-6 text-brand-green" 
           >
             RSVP Confirmed
           </motion.h4>
@@ -141,8 +169,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="font-cormorant text-3xl mb-3 italic" 
-            style={{ color: '#D96A1D' }}
+            className="font-cormorant text-3xl mb-3 italic text-brand-orange" 
           >
             {formData.name}
           </motion.p>
@@ -150,8 +177,7 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
-            className="font-montserrat mb-2" 
-            style={{ color: '#6D8F2B' }}
+            className="font-montserrat mb-2 text-brand-green-accent" 
           >
             We look forward to celebrating with you
           </motion.p>
@@ -159,285 +185,337 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="font-montserrat text-sm tracking-wider" 
-            style={{ color: '#4C7A1A' }}
+            className="font-montserrat text-sm tracking-wider text-brand-green-accent" 
           >
             May 29, 2026 · Dian Auditorium
           </motion.p>
 
           <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.2 }}>
-            <Heart className="absolute -top-4 -left-4 w-10 h-10" style={{ color: '#C93A1D', fill: '#C93A1D', transform: 'rotate(25deg)' }} />
+            <Heart className="absolute -top-4 -left-4 w-10 h-10 text-brand-red fill-brand-red rotate-[25deg]" />
           </motion.div>
           <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 }}>
-            <Star className="absolute -top-4 -right-4 w-10 h-10 animate-twinkle" style={{ color: '#F08A2B', fill: '#F08A2B', transform: 'rotate(-20deg)' }} />
+            <Star className="absolute -top-4 -right-4 w-10 h-10 animate-twinkle text-brand-orange fill-brand-orange -rotate-[20deg]" />
           </motion.div>
           <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.6 }}>
-            <Sparkles className="absolute -bottom-4 -left-4 w-10 h-10" style={{ color: '#4C7A1A', transform: 'rotate(-10deg)' }} />
+            <Sparkles className="absolute -bottom-4 -left-4 w-10 h-10 text-brand-green-accent -rotate-[10deg]" />
           </motion.div>
-          <div className="absolute -bottom-4 -right-4 w-12 h-12 organic-blob" style={{ background: '#D96A1D', opacity: 0.6 }}></div>
+          <div className="absolute -bottom-4 -right-4 w-12 h-12 organic-blob bg-brand-orange/60"></div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className={`relative mx-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLoggedIn ? 'max-w-4xl' : 'max-w-xl'}`} ref={containerRef}>
-      <motion.div 
-        layout
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="p-8 md:p-14 relative parchment-bg overflow-hidden" 
-        style={{
-          borderRadius: '8px 32px 8px 32px / 32px 8px 32px 8px',
-          boxShadow: '0 10px 40px -10px rgba(109, 143, 43, 0.15), inset 0 0 60px rgba(217, 106, 29, 0.05)',
-          border: '1px solid rgba(217, 106, 29, 0.2)'
-        }}
-      >
-        <div className="absolute inset-0 sketch-line opacity-[0.03] pointer-events-none" />
-        
-        {/* Softened Decorative Flourishes */}
-        <Star className="absolute top-4 left-4 w-8 h-8 opacity-40 animate-twinkle" style={{ color: '#F08A2B', fill: '#F08A2B', transform: 'rotate(20deg)' }} />
-        <Heart className="absolute top-4 right-4 w-7 h-7 opacity-40" style={{ color: '#C93A1D', fill: '#C93A1D', transform: 'rotate(-15deg)' }} />
-        <Sparkles className="absolute bottom-4 left-4 w-8 h-8 opacity-40 animate-twinkle" style={{ color: '#4C7A1A', transform: 'rotate(10deg)' }} />
-        <div className="absolute -bottom-4 -right-4 w-24 h-24 organic-blob blur-2xl" style={{ background: '#D96A1D', opacity: 0.15 }}></div>
+    <div className="relative mx-auto max-w-4xl" ref={containerRef}>
+      <AnimatePresence mode="wait">
+        {!isLoggedIn ? (
+          <motion.div 
+            key="login-portal"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -50, filter: "blur(20px)" }}
+            transition={{ type: "spring", stiffness: 80, damping: 20 }}
+            className="p-10 md:p-20 text-center relative overflow-hidden flex flex-col items-center bg-white/80 backdrop-blur-3xl shadow-[0_40px_120px_-20px_rgba(11,58,10,0.3)] border-t-2 border-brand-orange/30"
+            style={{
+              borderRadius: '4px',
+              border: '12px double rgba(217, 106, 29, 0.4)',
+              outline: '1px solid rgba(217, 106, 29, 0.1)',
+              outlineOffset: '8px'
+            }}
+          >
+            {/* Animated Particles */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ 
+                  opacity: [0, 1, 0],
+                  y: [-20, -100],
+                  x: Math.random() * 200 - 100
+                }}
+                transition={{ 
+                  duration: 3 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: i * 0.8
+                }}
+                className="absolute w-1 h-1 bg-brand-orange rounded-full pointer-events-none"
+                style={{ bottom: '20%', left: `${20 + i * 15}%` }}
+              />
+            ))}
 
-        <AnimatePresence mode="wait">
-          {!isLoggedIn ? (
-            <motion.div 
-              key="login"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, y: -20, filter: "blur(4px)" }}
-              transition={{ duration: 0.4 }}
-              className="text-center py-12 md:py-20 flex flex-col items-center relative z-10"
+            {/* Ornate Corner Decorations */}
+            <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-brand-orange/40 rounded-tl-sm -m-2" />
+            <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-brand-orange/40 rounded-tr-sm -m-2" />
+            <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-brand-orange/40 rounded-bl-sm -m-2" />
+            <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-brand-orange/40 rounded-br-sm -m-2" />
+
+            <div className="absolute inset-0 sketch-line opacity-5 pointer-events-none" />
+            
+            <motion.div
+              animate={{ 
+                scale: [1, 1.1, 1],
+                rotateY: [0, 15, -15, 0]
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              className="mb-10 relative perspective-[1000px]"
             >
-              <motion.h2 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="font-cinzel text-4xl md:text-5xl mb-3" 
-                style={{ color: '#0B3A0A' }}
-              >
-                Reserve Your Seat
-              </motion.h2>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="font-montserrat mb-12 tracking-wider text-sm md:text-base italic" 
-                style={{ color: '#6D8F2B' }}
-              >
-                Student authentication required to proceed
-              </motion.p>
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, type: "spring" }}
-                whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.9)", boxShadow: "0 10px 25px -5px rgba(217, 106, 29, 0.2)" }}
-                className="bg-white/70 backdrop-blur-md border border-white/60 shadow-sm rounded-2xl p-8 flex flex-col items-center gap-4 transition-all duration-300"
-              >
-                <GoogleLogin
-                  onSuccess={(credentialResponse) => {
-                    if (credentialResponse.credential) {
-                      try {
-                        const decoded = jwtDecode(credentialResponse.credential);
-                        const email = (decoded as any).email;
-                        
-                        // Validate email domain
-                        if (!email || (!email.endsWith('@student.ciputra.ac.id') && !email.endsWith('@staff.ciputra.ac.id') && !email.endsWith('.ciputra.ac.id'))) {
-                          setError('Please use your ciputra.ac.id email account ');
-                          return;
-                        }
-                        
-                        if (decoded && (decoded as any).name) {
-                          setFormData(prev => ({ ...prev, name: (decoded as any).name }));
-                        }
-                        // Store email for form submission
-                        (window as any).__ciputraEmail = email;
-                        setError('');
-                        onLogin();
-                      } catch (e) {
-                        console.error("Error decoding JWT", e);
-                        setError('Failed to verify account. Please try again.');
-                      }
-                    }
-                  }}
-                  onError={() => {
-                    setError('Google Login Failed');
-                  }}
-                  useOneTap
-                />
-              </motion.div>
-              
-              <AnimatePresence>
-                {error && (
-                  <motion.p 
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="text-red-600 mt-6 font-montserrat text-sm"
-                  >
-                    {error}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="mt-8 font-cormorant text-sm opacity-80" 
-                style={{ color: '#4C7A1A' }}
-              >
-                Please use your @ciputra.ac.id account
-              </motion.p>
+              <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-brand-orange via-brand-gold to-brand-orange flex items-center justify-center shadow-[0_15px_40px_rgba(217,106,29,0.4)] border-4 border-white/20">
+                <Lock className="w-12 h-12 text-white animate-pulse" />
+              </div>
+              <div className="absolute -inset-6 bg-brand-orange/20 blur-2xl rounded-full -z-10 animate-pulse" />
+              <div className="absolute -top-4 -right-4">
+                <Sparkles className="w-8 h-8 text-brand-orange animate-twinkle" />
+              </div>
             </motion.div>
-          ) : (
+
+            <span className="font-montserrat text-[10px] tracking-[0.6em] uppercase text-brand-orange mb-6 font-bold flex items-center gap-4">
+              <div className="w-8 h-px bg-brand-orange/40" />
+              The Royal Gate
+              <div className="w-8 h-px bg-brand-orange/40" />
+            </span>
+
+            <h2 className="font-cinzel text-4xl md:text-7xl mb-8 text-brand-green leading-tight">
+              Unlock the <br/><span className="text-brand-orange italic drop-shadow-sm">Grand Invitation</span>
+            </h2>
+            
+            <p className="font-cormorant italic text-2xl md:text-3xl mb-14 text-brand-green-accent max-w-2xl leading-relaxed">
+              "Only the chosen of Ciputra may pass these golden gates. Present your magical student credentials to proceed to the royal guestbook."
+            </p>
+            
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative z-10 group"
+            >
+              <div className="absolute -inset-4 bg-brand-orange/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="p-1 rounded-2xl bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-2xl">
+                <div className="bg-white rounded-[14px] p-2 overflow-hidden">
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      if (credentialResponse.credential) {
+                        try {
+                          const decoded = jwtDecode(credentialResponse.credential);
+                          const email = (decoded as any).email;
+                          
+                          if (!email || (!email.endsWith('@student.ciputra.ac.id') && !email.endsWith('@staff.ciputra.ac.id') && !email.endsWith('.ciputra.ac.id'))) {
+                            setError('Only official @ciputra.ac.id accounts possess the magic to enter');
+                            return;
+                          }
+                          
+                          if (decoded && (decoded as any).name) {
+                            setFormData(prev => ({ ...prev, name: (decoded as any).name }));
+                          }
+                          (window as any).__ciputraEmail = email;
+                          setError('');
+                          onLogin();
+                        } catch (e) {
+                          console.error("Error decoding JWT", e);
+                          setError('The portal magic flickered. Please try again.');
+                        }
+                      }
+                    }}
+                    onError={() => {
+                      setError('The golden portal is momentarily closed. Try again later.');
+                    }}
+                    theme="filled_blue"
+                    shape="pill"
+                    size="large"
+                    text="signin_with"
+                    width="340"
+                  />
+                </div>
+              </div>
+            </motion.div>
+            
+            <AnimatePresence>
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 15, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="mt-10 px-8 py-4 bg-red-50 border border-red-200 text-red-600 font-montserrat text-xs rounded-full flex items-center gap-4 shadow-sm"
+                >
+                  <ShieldCheck className="w-5 h-5 text-red-500" />
+                  <span className="tracking-wide">{error}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="mt-20 flex items-center gap-8 opacity-40">
+              <div className="h-px w-20 bg-brand-green" />
+              <Star className="w-5 h-5 text-brand-orange" />
+              <div className="h-px w-20 bg-brand-green" />
+            </div>
+          </motion.div>
+
+        ) : (
+          <motion.div 
+            key="rsvp-form"
+            layout
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+            className="p-8 md:p-14 relative parchment-bg overflow-hidden shadow-[0_20px_50px_rgba(11,58,10,0.15)]" 
+            style={{
+              borderRadius: '4px',
+              border: '2px solid rgba(217, 106, 29, 0.2)',
+              backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png"), radial-gradient(circle at center, transparent 0%, rgba(217, 106, 29, 0.03) 100%)'
+            }}
+          >
+            <div className="absolute inset-0 sketch-line opacity-[0.03] pointer-events-none" />
+            
+            <div className="flex flex-col items-center text-center mb-12 relative">
+              <div className="absolute -top-10 flex gap-2">
+                {[...Array(3)].map((_, i) => (
+                  <Star key={i} className={`w-3 h-3 text-brand-orange/40 animate-twinkle`} style={{ animationDelay: `${i * 0.5}s` }} />
+                ))}
+              </div>
+              <span className="px-6 py-1.5 mb-6 font-montserrat text-[10px] tracking-[0.5em] uppercase text-brand-orange bg-brand-orange/5 border border-brand-orange/20 rounded-full">
+                Identity Verified
+              </span>
+              <h2 className="font-cinzel text-4xl md:text-6xl text-brand-green mb-3">Royal Guestbook</h2>
+              <p className="font-cormorant italic text-2xl text-brand-green-accent">Sign your name in the eternal scrolls</p>
+              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-brand-orange/30 to-transparent mt-6 rounded-full" />
+            </div>
+
             <motion.form 
-              key="form"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               onSubmit={handleSubmit} 
-              className="space-y-10 relative z-10"
+              className="grid md:grid-cols-2 gap-x-10 gap-y-8 relative z-10"
             >
               <motion.div variants={itemVariants}>
-                <label className="block font-montserrat text-xs tracking-widest uppercase mb-4" style={{ color: '#D96A1D' }}>Full Name</label>
-                <motion.div whileTap={{ scale: 0.995 }} className="relative group">
+                <label htmlFor="rsvp-name" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">Full Name</label>
+                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
                   <input
+                    id="rsvp-name"
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    onBlur={() => validateField('name', formData.name)}
                     required
-                    className="w-full px-6 py-4 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-2xl transition-all duration-300 shadow-sm focus:shadow-md"
-                    placeholder="Enter your full name"
-                    style={{
-                      borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px',
-                      border: '2px solid rgba(238, 221, 186, 0.8)',
-                      color: '#0B3A0A'
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.borderColor = '#D96A1D')}
-                    onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(238, 221, 186, 0.8)')}
+                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 ${validationErrors.name ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
+                    placeholder="Enter your name"
                   />
-                  <Star className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-20 group-focus-within:opacity-100 group-focus-within:text-[#D96A1D] transition-all duration-500" style={{ color: '#D96A1D' }} />
+                  <Star className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 opacity-20 group-focus-within:opacity-100 text-brand-orange" />
                 </motion.div>
+                <AnimatePresence>
+                  {validationErrors.name && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.name}</motion.p>
+                  )}
+                </AnimatePresence>
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label className="block font-montserrat text-xs tracking-widest uppercase mb-4" style={{ color: '#D96A1D' }}>NIM (Student ID)</label>
-                <motion.div whileTap={{ scale: 0.995 }} className="relative group">
+                <label htmlFor="rsvp-nim" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">NIM (Student ID)</label>
+                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
                   <input
+                    id="rsvp-nim"
                     type="text"
                     name="nim"
                     value={formData.nim}
                     onChange={handleChange}
+                    onBlur={() => validateField('nim', formData.nim)}
                     required
-                    className="w-full px-6 py-4 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-2xl transition-all duration-300 shadow-sm focus:shadow-md"
+                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 ${validationErrors.nim ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
                     placeholder="Enter your NIM"
-                    style={{
-                      borderRadius: '15px 255px 15px 225px/225px 15px 255px 15px',
-                      border: '2px solid rgba(238, 221, 186, 0.8)',
-                      color: '#0B3A0A'
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.borderColor = '#D96A1D')}
-                    onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(238, 221, 186, 0.8)')}
                   />
-                  <Heart className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-20 group-focus-within:opacity-100 group-focus-within:text-[#C93A1D] transition-all duration-500" style={{ color: '#C93A1D' }} />
+                  <Heart className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 opacity-20 group-focus-within:opacity-100 text-brand-red" />
                 </motion.div>
+                <AnimatePresence>
+                  {validationErrors.nim && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.nim}</motion.p>
+                  )}
+                </AnimatePresence>
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label className="block font-montserrat text-xs tracking-widest uppercase mb-4" style={{ color: '#D96A1D' }}>Major / Program Studi</label>
-                <motion.div whileTap={{ scale: 0.995 }} className="relative group">
+                <label htmlFor="rsvp-major" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">Major / Program Studi</label>
+                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
                   <input
+                    id="rsvp-major"
                     type="text"
                     name="major"
                     value={formData.major}
                     onChange={handleChange}
+                    onBlur={() => validateField('major', formData.major)}
                     required
-                    className="w-full px-6 py-4 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-2xl transition-all duration-300 shadow-sm focus:shadow-md"
+                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 ${validationErrors.major ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
                     placeholder="Enter your major"
-                    style={{
-                      borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px',
-                      border: '2px solid rgba(238, 221, 186, 0.8)',
-                      color: '#0B3A0A'
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.borderColor = '#D96A1D')}
-                    onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(238, 221, 186, 0.8)')}
                   />
-                  <Sparkles className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-20 group-focus-within:opacity-100 group-focus-within:text-[#4C7A1A] transition-all duration-500" style={{ color: '#4C7A1A' }} />
+                  <Sparkles className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 opacity-20 group-focus-within:opacity-100 text-brand-green-accent" />
                 </motion.div>
+                <AnimatePresence>
+                  {validationErrors.major && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.major}</motion.p>
+                  )}
+                </AnimatePresence>
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label className="block font-montserrat text-xs tracking-widest uppercase mb-4" style={{ color: '#D96A1D' }}>Organization</label>
-                <motion.div whileTap={{ scale: 0.995 }} className="relative group">
+                <label htmlFor="rsvp-organization" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">Organization</label>
+                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
                   <select
+                    id="rsvp-organization"
                     name="organization"
                     value={formData.organization}
                     onChange={handleChange}
+                    onBlur={() => validateField('organization', formData.organization)}
                     required
-                    className="w-full px-6 py-4 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-2xl transition-all duration-300 shadow-sm focus:shadow-md appearance-none cursor-pointer"
-                    style={{
-                      borderRadius: '15px 255px 15px 225px/225px 15px 255px 15px',
-                      border: '2px solid rgba(238, 221, 186, 0.8)',
-                      color: '#0B3A0A'
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.borderColor = '#D96A1D')}
-                    onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(238, 221, 186, 0.8)')}
+                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 appearance-none cursor-pointer ${validationErrors.organization ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
                   >
-                    <option value="" style={{ background: '#F4E7CB', color: '#6D8F2B' }}>Select your organization</option>
+                    <option value="" className="bg-parchment">Select your guild</option>
                     {organizations.map((org, index) => (
-                      <option key={index} value={org} style={{ background: '#F4E7CB', color: '#0B3A0A' }}>{org}</option>
+                      <option key={index} value={org} className="bg-parchment">{org}</option>
                     ))}
                   </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-focus-within:opacity-100 transition-all duration-500">
-                    <Star className="w-5 h-5" style={{ color: '#F08A2B' }} />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-focus-within:opacity-100">
+                    <Star className="w-4 h-4 text-brand-orange" />
                   </div>
                 </motion.div>
+                <AnimatePresence>
+                  {validationErrors.organization && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.organization}</motion.p>
+                  )}
+                </AnimatePresence>
               </motion.div>
 
-              <AnimatePresence>
-                {error && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0, y: -10 }}
-                    animate={{ opacity: 1, height: 'auto', y: 0 }}
-                    exit={{ opacity: 0, height: 0, y: -10 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-4 rounded-md border border-red-200 bg-red-50/80 text-red-700 text-center font-montserrat text-sm">
+              <div className="md:col-span-2 mt-8">
+                <AnimatePresence>
+                  {error && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="p-4 mb-6 rounded-lg bg-red-50 border border-red-100 text-red-700 text-center font-montserrat text-sm"
+                    >
                       {error}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-              <motion.div variants={itemVariants} className="mt-12">
                 <motion.button
-                  whileHover={{ scale: 1.02, rotate: 1 }}
+                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full px-8 py-6 font-montserrat text-sm tracking-widest uppercase transition-colors duration-300 flex justify-center items-center relative overflow-hidden ${
-                    isLoading ? 'bg-amber-950/40 text-amber-100/50 cursor-not-allowed' : 'vintage-button-primary'
+                  className={`w-full py-5 font-montserrat text-xs tracking-[0.3em] uppercase transition-all duration-500 flex justify-center items-center relative overflow-hidden rounded-xl shadow-lg ${
+                    isLoading ? 'bg-brand-green/40 text-white/50 cursor-not-allowed' : 'bg-brand-green text-white hover:bg-brand-green-accent'
                   }`}
                 >
-                  {/* Subtle shine effect on hover */}
-                  <motion.div 
-                    className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12"
-                    initial={{ x: '-200%' }}
-                    whileHover={{ x: '300%' }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                  />
-                  <span className="relative z-10 font-semibold">{isLoading ? 'SUBMITTING...' : 'SUBMIT RSVP'}</span>
-                  <Sparkles className="w-5 h-5 relative z-10 ml-3" />
+                  <span className="relative z-10 font-bold">{isLoading ? 'Sealing the Scroll...' : 'Sign the Guestbook'}</span>
+                  {!isLoading && <ArrowRight className="w-5 h-5 relative z-10 ml-3 animate-bounce-x" />}
                 </motion.button>
-              </motion.div>
+              </div>
             </motion.form>
-          )}
-        </AnimatePresence>
-      </motion.div>
+            
+            <Star className="absolute top-4 left-4 w-8 h-8 opacity-20 animate-twinkle text-brand-orange fill-brand-orange" />
+            <Heart className="absolute bottom-4 right-4 w-8 h-8 opacity-20 text-brand-red fill-brand-red" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

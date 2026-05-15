@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@prisma/client": "^5.13.0",
     "@react-oauth/google": "^0.13.5",
     "clsx": "^2.1.0",
@@ -19,6 +20,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "framer-motion": "^11.0.0",
+    "gsap": "^3.15.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.360.0",
     "motion": "^11.0.0",

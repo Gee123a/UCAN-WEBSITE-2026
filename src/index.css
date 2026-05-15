@@ -12,6 +12,7 @@
     --color-burnt: #C93A1D;
     --color-olive: #6D8F2B;
     --color-gold: #F08A2B;
+    --color-cream: #fffcf5;
     color-scheme: light;
     /* Force light mode — never inherit OS dark mode */
   }
@@ -365,15 +366,76 @@
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
   background: #F4E7CB;
+  box-shadow: inset 0 0 5px rgba(109, 143, 43, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
   background: #D96A1D;
-  border-radius: 10px;
-  border: 3px solid #F4E7CB;
+  border-radius: 20px;
+  border: 4px solid #F4E7CB;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C93A1D;
+  border-width: 3px;
+}
+
+/* Ink Bleed Effect */
+.ink-bleed {
+  filter: url('#ink-filter');
+}
+
+/* Page Curl/Fold */
+.page-fold {
+  position: relative;
+}
+
+.page-fold::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 40px 40px;
+  border-color: transparent transparent #e8dcc4 transparent;
+  box-shadow: -5px -5px 10px rgba(0,0,0,0.05);
+  transition: all 0.5s ease;
+}
+
+.page-fold:hover::after {
+  border-width: 0 0 60px 60px;
+}
+
+/* Floating Animation with different speeds */
+.animate-float-slow {
+  animation: float 12s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Enhanced Twinkle */
+.animate-twinkle-delayed {
+  animation: twinkle 4s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+/* Book Opening Keyframes */
+@keyframes bookOpenLeft {
+  0% { transform: perspective(1000px) rotateY(0deg); transform-origin: left; }
+  100% { transform: perspective(1000px) rotateY(-90deg); transform-origin: left; }
+}
+
+@keyframes bookOpenRight {
+  0% { transform: perspective(1000px) rotateY(0deg); transform-origin: right; }
+  100% { transform: perspective(1000px) rotateY(90deg); transform-origin: right; }
 }

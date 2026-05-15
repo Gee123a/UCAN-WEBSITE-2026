@@ -3,145 +3,167 @@ import {
   Calendar, MapPin, Clock, Users, Star,
   Sparkles, Gift, ArrowRight, Heart
 } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { NomineesSection } from './components/NomineesSection';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { RSVPForm } from './components/RSVPForm';
 import { ImageWithFallback } from './components/ImageWithFallback';
+import { StoryJourney } from './components/StoryJourney';
+import Particles from './components/magicui/particles';
 
 
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isOpening, setIsOpening] = useState(true);
   const heroRef = useRef(null);
   const rsvpSectionRef = useRef<HTMLElement>(null);
   const rsvpContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
-  // Hero content fade
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  // Hero content fade and parallax
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
+  const heroTranslateY = useTransform(scrollYProgress, [0, 0.15], [0, -50]);
+  
+  // Parallax elements
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const blob1Y = useTransform(smoothProgress, [0, 1], [0, -200]);
+  const blob2Y = useTransform(smoothProgress, [0, 1], [0, -350]);
+  const blob3Y = useTransform(smoothProgress, [0, 1], [0, -150]);
+  const decorationY = useTransform(smoothProgress, [0, 1], [0, -400]);
+
+  const handleOpenBook = () => {
+    setIsOpening(false);
+  };
 
   return (
     <div className="relative">
-      <div className="min-h-screen relative overflow-x-hidden selection:bg-[#D96A1D]/30" style={{ background: '#F4E7CB' }}>
-        {/* Main Book Page Container: hosts the outer border frame so it seamlessly joins at the bottom without crashing into the footer */}
-        <div className="relative pb-12">
-          {/* Permanent Elegant Storybook Page Frame wrapper spanning the main content layout flow */}
-          <div className="absolute inset-3 md:inset-6 pointer-events-none z-50">
-          {/* Layer 1: Hand-drawn outer border with cohesive asymmetric scratchbook aesthetic */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px',
-              border: '3px solid #D96A1D',
-              boxShadow: 'inset 0 0 30px rgba(217, 106, 29, 0.08)'
-            }}
-          />
-          
-          {/* Layer 2: Synchronized inner dashed accent border nesting parallelly without ugly intersection */}
-          <div 
-            className="absolute inset-2 md:inset-3 opacity-60 pointer-events-none"
-            style={{
-              borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px',
-              border: '2px dashed #0B3A0A',
-            }}
-          />
-
-          {/* Elegant golden vintage corner stars */}
-          <div className="absolute top-4 left-4 text-[#D96A1D] opacity-80 animate-twinkle">
-            <Star className="w-5 h-5 fill-[#D96A1D]" />
-          </div>
-          <div className="absolute top-4 right-4 text-[#D96A1D] opacity-80 animate-twinkle" style={{ animationDelay: '1s' }}>
-            <Star className="w-5 h-5 fill-[#D96A1D]" />
-          </div>
-          <div className="absolute bottom-4 left-4 text-[#D96A1D] opacity-80 animate-twinkle" style={{ animationDelay: '1.5s' }}>
-            <Star className="w-5 h-5 fill-[#D96A1D]" />
-          </div>
-          <div className="absolute bottom-4 right-4 text-[#D96A1D] opacity-80 animate-twinkle" style={{ animationDelay: '0.5s' }}>
-            <Star className="w-5 h-5 fill-[#D96A1D]" />
-          </div>
-        </div>
-        {/* Magical Fairy Dust particles */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
-          {[...Array(20)].map((_, i) => (
+      <AnimatePresence>
+        {isOpening && (
+          <motion.div
+            key="book-loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B3A0A] overflow-hidden"
+          >
+            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/p6.png')]"></div>
+            
             <motion.div
-              key={i}
-              className="absolute"
-              style={{
-                left: `${Math.random() * 100}%`,
-                animation: `gentleFall ${15 + Math.random() * 20}s linear infinite`,
-                animationDelay: `${Math.random() * 20}s`,
-              }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="relative z-10 flex flex-col items-center"
             >
-              {i % 4 === 0 ? (
-                <div
-                  className="w-3 h-3 organic-blob"
-                  style={{
-                    background: i % 3 === 0 ? '#D96A1D' : '#F08A2B',
-                    opacity: 0.5
-                  }}
-                />
-              ) : i % 4 === 1 ? (
-                <Heart
-                  className="w-2.5 h-2.5"
-                  style={{
-                    color: '#C93A1D',
-                    fill: 'none',
-                    strokeWidth: 2,
-                    filter: 'drop-shadow(0 0 2px currentColor)'
-                  }}
-                />
-              ) : i % 4 === 2 ? (
-                <div
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{
-                    background: '#6B0F2C',
-                    boxShadow: '0 0 3px #6B0F2C',
-                    opacity: 0.6
-                  }}
-                />
-              ) : (
-                <Star
-                  className="w-2.5 h-2.5"
-                  style={{
-                    color: i % 2 === 0 ? '#4C7A1A' : '#6D8F2B',
-                    fill: 'none',
-                    strokeWidth: 2,
-                    filter: 'drop-shadow(0 0 2px currentColor)'
-                  }}
-                />
-              )}
+              <div className="w-64 h-80 relative perspective-1000 group">
+                <motion.div 
+                  className="absolute inset-0 bg-[#D96A1D] rounded-r-lg shadow-2xl border-2 border-white/20 flex flex-col items-center justify-center p-6 text-center"
+                  style={{ transformOrigin: "left", rotateY: 0 }}
+                >
+                  <Star className="w-12 h-12 text-white mb-4 animate-twinkle" />
+                  <h2 className="font-cinzel text-2xl text-white font-bold">UCAN 2026</h2>
+                  <div className="w-12 h-0.5 bg-white/40 my-4"></div>
+                  <p className="font-montserrat text-[10px] tracking-[0.3em] text-white/80 uppercase">The Royal Invitation</p>
+                </motion.div>
+                
+                {/* Book Spine */}
+                <div className="absolute left-0 top-0 bottom-0 w-4 bg-[#C93A1D] rounded-l-sm shadow-inner"></div>
+              </div>
+              
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(240, 138, 43, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleOpenBook}
+                className="mt-12 px-8 py-3 bg-white text-[#0B3A0A] font-montserrat text-xs tracking-[0.4em] uppercase font-bold rounded-full shadow-lg transition-all"
+              >
+                Open the Scroll
+              </motion.button>
+              
+              <p className="mt-6 font-cormorant text-white/60 italic text-lg">A magical evening awaits...</p>
             </motion.div>
-          ))}
-        </div>
+
+            <Particles
+              className="absolute inset-0"
+              quantity={100}
+              staticity={30}
+              ease={50}
+              color="#F08A2B"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="min-h-screen relative overflow-x-hidden selection:bg-[#D96A1D]/30" style={{ background: '#F4E7CB' }}>
+        {/* Main Book Page Container */}
+        <div className="relative pb-8 md:pb-12">
+          {/* Permanent Elegant Storybook Page Frame */}
+          <div className="absolute inset-2 sm:inset-3 md:inset-6 pointer-events-none z-50">
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                borderRadius: '120px 15px 100px 15px/15px 100px 15px 120px',
+                border: '2px md:border-3 solid #D96A1D',
+                boxShadow: 'inset 0 0 30px rgba(217, 106, 29, 0.08)'
+              }}
+            />
+            <div 
+              className="absolute inset-1.5 md:inset-3 opacity-60 pointer-events-none"
+              style={{
+                borderRadius: '120px 15px 100px 15px/15px 100px 15px 120px',
+                border: '1.5px md:border-2 dashed #0B3A0A',
+              }}
+            />
+          </div>
+
+          {/* Particles Replacement for manual Fairy Dust */}
+          <Particles
+            className="fixed inset-0 pointer-events-none z-0"
+            quantity={60}
+            staticity={50}
+            ease={50}
+            color="#D96A1D"
+          />
 
         {/* Hero Section */}
-        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden py-32 px-6">
-          <div className="absolute top-0 left-0 w-[600px] h-[600px] organic-blob pointer-events-none" style={{
-            background: 'radial-gradient(circle, rgba(217, 106, 29, 0.18), transparent)',
-            animation: 'float 12s ease-in-out infinite'
-          }}></div>
+        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 md:py-32 px-4 md:px-6">
+          <motion.div 
+            className="absolute top-0 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] organic-blob pointer-events-none" 
+            style={{
+              background: 'radial-gradient(circle, rgba(217, 106, 29, 0.18), transparent)',
+              animation: 'float 12s ease-in-out infinite',
+              y: blob1Y
+            }}
+          />
 
-          <div className="absolute top-20 right-0 w-[500px] h-[500px] organic-blob-2 pointer-events-none" style={{
-            background: 'radial-gradient(circle, rgba(76, 122, 26, 0.15), transparent)',
-            animation: 'float 15s ease-in-out infinite',
-            animationDelay: '3s'
-          }}></div>
+          <motion.div 
+            className="absolute top-20 right-0 w-[250px] md:w-[500px] h-[250px] md:h-[500px] organic-blob-2 pointer-events-none" 
+            style={{
+              background: 'radial-gradient(circle, rgba(76, 122, 26, 0.15), transparent)',
+              animation: 'float 15s ease-in-out infinite',
+              animationDelay: '3s',
+              y: blob2Y
+            }}
+          />
 
-          <div className="absolute bottom-0 left-1/4 w-[450px] h-[450px] organic-blob pointer-events-none" style={{
-            background: 'radial-gradient(circle, rgba(240, 138, 43, 0.15), transparent)',
-            animation: 'float 11s ease-in-out infinite',
-            animationDelay: '1.5s'
-          }}></div>
+          <motion.div 
+            className="absolute bottom-0 left-1/4 w-[225px] md:w-[450px] h-[225px] md:h-[450px] organic-blob pointer-events-none" 
+            style={{
+              background: 'radial-gradient(circle, rgba(240, 138, 43, 0.15), transparent)',
+              animation: 'float 11s ease-in-out infinite',
+              animationDelay: '1.5s',
+              y: blob3Y
+            }}
+          />
 
           <div className="absolute inset-0 pointer-events-none z-10">
-            {[...Array(12)].map((_, i) => (
+            {[...Array(15)].map((_, i) => (
               <motion.div
                 key={i}
+                aria-hidden="true"
                 className="absolute w-12 h-12 flex items-center justify-center opacity-30"
-                initial={{
-                  x: Math.random() * 100 + "%",
-                  y: Math.random() * 100 + "%",
-                  rotate: Math.random() * 360
+                style={{
+                  x: `${(i * 137) % 100}%`,
+                  y: `${(i * 223) % 100}%`,
+                  top: 0,
+                  left: 0,
                 }}
                 animate={{
                   y: [0, -40, 40, 0],
@@ -161,7 +183,14 @@ export default function UCANWebsite() {
             ))}
           </div>
 
-          <motion.div className="relative z-30 text-center max-w-5xl mx-auto" style={{ opacity: heroOpacity }}>
+          <motion.div 
+            className="relative z-30 text-center max-w-5xl mx-auto" 
+            style={{ 
+              opacity: heroOpacity,
+              scale: heroScale,
+              y: heroTranslateY
+            }}
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -181,17 +210,17 @@ export default function UCANWebsite() {
               transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
               className="relative mb-12"
             >
-              <h1 className="text-4xl min-[375px]:text-5xl sm:text-8xl md:text-9xl lg:text-[12rem] tracking-tight sm:tracking-tighter leading-[0.85] sm:leading-[0.8] mb-4 text-[#0B3A0A] font-extrabold drop-shadow-[4px_4px_0px_rgba(217,106,29,0.1)] font-cinzel">
+              <h1 className="text-[12vw] sm:text-8xl md:text-9xl lg:text-[12rem] tracking-tight sm:tracking-tighter leading-[0.85] sm:leading-[0.8] mb-4 text-[#0B3A0A] font-extrabold drop-shadow-[4px_4px_0px_rgba(217,106,29,0.1)] font-cinzel">
                 AWARDING
               </h1>
-              <h2 className="text-3xl min-[375px]:text-4xl sm:text-7xl md:text-8xl lg:text-[9rem] tracking-tight sm:tracking-tighter leading-none text-[#D96A1D] font-bold italic drop-shadow-[2px_2px_0px_rgba(11,58,10,0.05)] font-cinzel">
+              <h2 className="text-[10vw] sm:text-7xl md:text-8xl lg:text-[9rem] tracking-tight sm:tracking-tighter leading-none text-[#D96A1D] font-bold italic drop-shadow-[2px_2px_0px_rgba(11,58,10,0.05)] font-cinzel">
                 NIGHT 2026
               </h2>
 
-              <Star className="absolute -top-8 left-[8%] w-10 h-10 text-[#F08A2B] fill-none stroke-[2.5] animate-twinkle rotate-[15deg]" />
-              <Star className="absolute top-[15%] right-[12%] w-7 h-7 text-[#C93A1D] fill-none stroke-[2.5] animate-twinkle [animation-delay:0.5s] -rotate-[20deg]" />
-              <Heart className="absolute bottom-[5%] left-[3%] w-9 h-9 text-[#C93A1D]/60 fill-none stroke-[2] animate-float rotate-[10deg]" />
-              <Sparkles className="absolute top-[45%] right-[5%] w-10 h-10 text-[#6D8F2B] stroke-[2] animate-twinkle [animation-delay:1s] -rotate-[15deg]" />
+              <Star aria-hidden="true" className="absolute -top-8 left-[8%] w-10 h-10 text-[#F08A2B] fill-none stroke-[2.5] animate-twinkle rotate-[15deg]" />
+              <Star aria-hidden="true" className="absolute top-[15%] right-[12%] w-7 h-7 text-[#C93A1D] fill-none stroke-[2.5] animate-twinkle [animation-delay:0.5s] -rotate-[20deg]" />
+              <Heart aria-hidden="true" className="absolute bottom-[5%] left-[3%] w-9 h-9 text-[#C93A1D]/60 fill-none stroke-[2] animate-float rotate-[10deg]" />
+              <Sparkles aria-hidden="true" className="absolute top-[45%] right-[5%] w-10 h-10 text-[#6D8F2B] stroke-[2] animate-twinkle [animation-delay:1s] -rotate-[15deg]" />
             </motion.div>
 
             <motion.div
@@ -200,10 +229,10 @@ export default function UCANWebsite() {
               transition={{ duration: 1, delay: 0.9 }}
               className="mb-8 relative"
             >
-              <p className="font-cormorant text-2xl min-[375px]:text-3xl md:text-4xl tracking-wide italic mb-3 text-[#0B3A0A]">
+              <p className="font-cormorant text-xl min-[375px]:text-2xl md:text-4xl tracking-wide italic mb-3 text-[#0B3A0A]">
                 Universitas Ciputra
               </p>
-              <svg className="mx-auto" width="180" height="8" viewBox="0 0 180 8">
+              <svg className="mx-auto w-[120px] md:w-[180px]" height="8" viewBox="0 0 180 8">
                 <path d="M 5 4 Q 45 0, 90 4 T 175 4" stroke="#D96A1D" strokeWidth="2" fill="none" strokeLinecap="round" />
               </svg>
             </motion.div>
@@ -258,13 +287,19 @@ export default function UCANWebsite() {
             </motion.div>
           </motion.div>
 
-          <div className="absolute top-16 left-12 pointer-events-none z-10 hidden lg:block" style={{ animation: 'sway 4s ease-in-out infinite' }}>
+          <motion.div 
+            className="absolute top-16 left-12 pointer-events-none z-10 hidden lg:block" 
+            style={{ 
+              animation: 'sway 4s ease-in-out infinite',
+              y: decorationY
+            }}
+          >
             <div className="relative">
               <div className="w-20 h-20 rounded-full" style={{ background: '#D96A1D', opacity: 0.3 }}></div>
               <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full" style={{ background: '#F08A2B', opacity: 0.5 }}></div>
               <div className="absolute -bottom-1 -left-1 w-6 h-6 rounded-full" style={{ background: '#C93A1D', opacity: 0.4 }}></div>
             </div>
-          </div>
+          </motion.div>
 
           <div className="absolute top-32 right-24 pointer-events-none z-10 hidden lg:block" style={{ animation: 'sway 5s ease-in-out infinite', animationDelay: '1s' }}>
             <Star className="w-12 h-12" style={{ color: '#F08A2B', fill: '#F08A2B', opacity: 0.4, animation: 'twinkle 3s ease-in-out infinite' }} />
@@ -359,8 +394,8 @@ export default function UCANWebsite() {
           </div>
         </section>
 
-        {/* Nominees Section */}
-        <NomineesSection />
+        {/* Nominees Story Journey Section */}
+        <StoryJourney />
 
         {/* Event Details */}
         <section className="relative py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-[#EDE0D4]/30 to-transparent">
@@ -524,21 +559,11 @@ export default function UCANWebsite() {
         {/* RSVP Section */}
         <section id="rsvp" ref={rsvpSectionRef} className="relative py-12 md:py-24 px-4 md:px-6">
           <div className="max-w-3xl mx-auto relative">
-            <div className="mb-16 text-center">
-              <div className="inline-block mb-6">
-                <span className="hand-drawn-border-sm px-6 py-2 inline-block font-montserrat text-xs tracking-[0.4em] uppercase text-[#D96A1D] bg-white/95 -rotate-[0.5deg]">
-                  Confirm Attendance
-                </span>
-              </div>
-              <h3 className="text-4xl md:text-5xl lg:text-6xl mb-5 leading-tight text-[#0B3A0A] font-cinzel">RSVP</h3>
-              <svg className="mx-auto mb-6" width="150" height="8" viewBox="0 0 150 8">
-                <path d="M 5 4 Q 37.5 0, 75 4 T 145 4" stroke="#D96A1D" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              </svg>
-              <p className="font-montserrat tracking-wide text-[#0B3A0A]">Login with your student account to reserve your seat</p>
-            </div>
+            <p className="font-montserrat tracking-wide text-[#0B3A0A] mb-8">Login with your student account to reserve your seat</p>
             <RSVPForm isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} containerRef={rsvpContainerRef} />
           </div>
         </section>
+
         </div>
 
         {/* Footer */}
