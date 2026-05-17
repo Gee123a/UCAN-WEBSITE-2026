@@ -1,8 +1,8 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
-import { Star, Sparkles, Trophy, User, Users, Lightbulb, ArrowRight } from 'lucide-react';
+import { Star, Sparkles, Trophy, Users, Lightbulb, ArrowRight } from 'lucide-react';
 import { ImageWithFallback } from './ImageWithFallback';
 
 // Assets
@@ -16,7 +16,6 @@ import MirrorFrame from '../assets/assets UCAN/Ballroom/Mirror/Mirror.png';
 import MirrorGenerated from '../assets/assets UCAN/Ballroom/Mirror/Gemini_Generated_Image_zae898zae898zae8.png';
 import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
 import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
-import ExcellenceHall from '../assets/ucan_excellence_hall_1778252558379.png';
 import Ballroom1 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.png';
 import Ballroom2 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.png';
 import Ballroom3 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom3.png';
@@ -221,7 +220,7 @@ export function StoryJourney() {
 
       // Category Room Background Cross-fades
       const rooms = [Ballroom1, Ballroom2, Ballroom3];
-      nomineeCategories.forEach((category, i) => {
+      nomineeCategories.forEach((_, i) => {
         gsap.to(`.ballroom-room-${i % rooms.length}`, {
           opacity: 0.3,
           ease: "power1.inOut",
