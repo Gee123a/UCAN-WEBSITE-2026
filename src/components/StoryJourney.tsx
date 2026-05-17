@@ -13,8 +13,6 @@ import Wall2 from '../assets/assets UCAN/Ballroom/wall /Wall2.png';
 import Pillar1 from '../assets/assets UCAN/Ballroom/Pillar/Pillar.png';
 import Pillar2 from '../assets/assets UCAN/Ballroom/Pillar/Pillar (1).png';
 import MirrorFrame from '../assets/assets UCAN/Ballroom/Mirror/Mirror.png';
-import MirrorGenerated from '../assets/assets UCAN/Ballroom/Mirror/Gemini_Generated_Image_zae898zae898zae8.png';
-import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
 import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
 import Ballroom1 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.png';
 import Ballroom2 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.png';
@@ -523,37 +521,30 @@ export function StoryJourney() {
         ))}
 
         {/* Final Slide */}
-        <div className="flex-shrink-0 w-[100vw] sm:w-[60vw] flex flex-col justify-center items-center text-center px-10 relative">
-          <div className="relative mb-12 group">
-            <img 
-              src={MirrorGenerated} 
-              className="absolute -inset-20 w-[calc(100%+160px)] h-[calc(100%+160px)] object-contain opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-1000"
-              alt=""
-            />
-            <img 
-              src={DoorAsset} 
-              className="w-48 h-48 sm:w-80 sm:h-80 object-contain animate-float group-hover:scale-110 transition-transform duration-700" 
-              alt="Grand Door"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
+        <div className="flex-shrink-0 w-[100vw] flex flex-col justify-center items-center text-center px-[10vw] relative">
+          <div className="relative mb-12">
+            <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-brand-gold/10 border-2 border-dashed border-brand-orange/40 flex items-center justify-center backdrop-blur-sm shadow-[0_0_50px_rgba(217,106,29,0.2)]">
               <Trophy className="w-16 h-16 sm:w-24 sm:h-24 text-brand-orange drop-shadow-[0_0_15px_rgba(217,106,29,0.5)]" />
             </div>
             <div className="absolute -inset-10 bg-brand-orange/20 blur-[80px] rounded-full -z-10 animate-pulse" />
+            <Sparkles className="absolute -top-4 -right-4 w-10 h-10 text-brand-orange animate-twinkle" />
           </div>
           
-          <h3 className="text-4xl sm:text-7xl text-brand-green font-cinzel mb-6 tracking-tight">The Journey <br/><span className="text-brand-orange italic">Continues</span></h3>
-          <p className="font-cormorant text-2xl sm:text-3xl italic text-brand-green-accent max-w-lg mb-12 leading-relaxed">
-            "Your presence is the final brushstroke in this masterpiece of achievement."
-          </p>
-          
-          <button 
-            onClick={() => document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-            className="vintage-button scale-125 group overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-brand-orange opacity-0 group-hover:opacity-10 transition-opacity" />
-            <span className="relative z-10 font-bold">RESERVE YOUR SEAT</span>
-            <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-3 transition-transform duration-500" />
-          </button>
+          <div className="bg-white/10 backdrop-blur-md p-8 sm:p-12 rounded-3xl border border-white/20 shadow-2xl">
+            <h3 className="text-4xl sm:text-7xl text-brand-green font-cinzel mb-6 tracking-tight">The Journey <br/><span className="text-brand-orange italic drop-shadow-md">Continues</span></h3>
+            <p className="font-cormorant text-2xl sm:text-3xl italic text-brand-green-accent max-w-lg mx-auto mb-12 leading-relaxed font-medium">
+              "Your presence is the final brushstroke in this masterpiece of achievement."
+            </p>
+            
+            <button 
+              onClick={() => document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })}
+              className="vintage-button scale-110 sm:scale-125 group overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-brand-orange opacity-0 group-hover:opacity-10 transition-opacity" />
+              <span className="relative z-10 font-bold">RESERVE YOUR SEAT</span>
+              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-3 transition-transform duration-500" />
+            </button>
+          </div>
         </div>
       </div>
     </section>
