@@ -1,12 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient, Prisma } from '@prisma/client';
+import { withAccelerate } from '@prisma/extension-accelerate';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends(withAccelerate());
 const PORT = process.env.PORT || 3001;
 
 const ADMIN_EXPORT_USER = process.env.ADMIN_EXPORT_USER;

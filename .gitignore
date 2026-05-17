@@ -4,3 +4,8 @@
 .vercel
 /dist
 .DS_Store
+
+.gemini/
+gha-creds-*.json
+/.github
+GEMINI.md

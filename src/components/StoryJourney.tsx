@@ -456,10 +456,10 @@ export function StoryJourney() {
         </div>
 
         {/* Category Sections */}
-        {nomineeCategories.map((category) => (
+        {nomineeCategories.map((category, i) => (
           <div 
             key={category.id} 
-            className="flex-shrink-0 flex items-center gap-[5vw] pr-[5vw] border-l border-dashed border-brand-orange/20 pl-[5vw]"
+            className={`category-section-${i} flex-shrink-0 flex items-center gap-[5vw] pr-[5vw] border-l border-dashed border-brand-orange/20 pl-[5vw]`}
           >
             {/* Category Header Slide */}
             <div className="category-header w-[80vw] sm:w-[35vw] flex flex-col justify-center items-center text-center relative group">
