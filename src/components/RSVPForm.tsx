@@ -4,7 +4,6 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
 import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
-import MirrorFrame from '../assets/assets UCAN/Ballroom/Mirror/Mirror.png';
 import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
 
 interface RSVPFormProps {
@@ -169,38 +168,38 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 0.6 }}
-            className="fairytale-frame p-8 md:p-12 text-center overflow-hidden flex flex-col items-center bg-white/90 backdrop-blur-md max-w-2xl mx-auto shadow-2xl"
+            className="fairytale-frame p-6 md:p-10 text-center overflow-hidden flex flex-col items-center bg-white/90 backdrop-blur-md max-w-xl mx-auto shadow-2xl"
           >
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-30" />
             
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="mb-8 relative"
+              className="mb-6 relative"
             >
-              <div className="w-32 h-32 sm:w-48 sm:h-48 relative flex items-center justify-center">
-                <img 
-                  src={MirrorFrame} 
-                  alt="Magic Mirror Frame" 
-                  className="absolute inset-0 w-full h-full object-contain mix-blend-multiply z-20 pointer-events-none"
-                />
-                <div className="w-[82%] h-[82%] rounded-full overflow-hidden bg-brand-gold/20 shadow-inner relative group">
+              <div className="w-32 h-40 sm:w-40 sm:h-48 relative flex items-end justify-center p-2 group">
+                {/* Magical Arched Frame */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange to-brand-gold rounded-t-full rounded-b-xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                <div className="absolute inset-[2px] border-2 border-dashed border-brand-orange rounded-t-full rounded-b-lg opacity-50" />
+                
+                {/* Door Container */}
+                <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden relative shadow-inner bg-brand-orange/5">
                   <img 
                     src={DoorAsset} 
                     alt="Royal Door" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-[#D96A1D]/30 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-green/40 via-transparent to-transparent pointer-events-none" />
                 </div>
-                <Sparkles className="absolute -top-2 -right-2 w-8 h-8 text-brand-orange animate-twinkle z-30" />
+                <Sparkles className="absolute -top-2 -right-2 w-8 h-8 text-brand-orange animate-twinkle z-30 drop-shadow-md" />
               </div>
             </motion.div>
 
-            <h2 className="font-cinzel text-4xl md:text-6xl text-brand-green mb-6 leading-[0.9]">
+            <h2 className="font-cinzel text-3xl md:text-5xl text-brand-green mb-4 leading-[0.9]">
               Enter the <br/><span className="text-brand-orange italic drop-shadow-sm font-black">Ballroom</span>
             </h2>
             
-            <p className="font-cormorant italic text-xl md:text-2xl text-brand-green-accent mb-10 max-w-lg leading-relaxed">
+            <p className="font-cormorant italic text-lg md:text-xl text-brand-green-accent mb-8 max-w-md leading-relaxed">
               "A magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook."
             </p>
             
