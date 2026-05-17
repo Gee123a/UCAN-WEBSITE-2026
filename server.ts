@@ -62,19 +62,26 @@ app.post('/api/rsvp', async (req, res) => {
       return res.status(403).json({ error: 'Only @ciputra.ac.id email addresses are allowed' });
     }
 
-    // Check if user already RSVP'd
-    const existing = await prisma.rsvp.findUnique({
-      where: { nim }
+    // Check if user already RSVP'd (by NIM or Email)
+    const existing = await prisma.rsvp.findFirst({
+      where: {
+        OR: [
+          { nim },
+          { email }
+        ]
+      }
     });
 
     if (existing) {
-      return res.status(409).json({ error: 'Student ID (NIM) has already registered for RSVP' });
+      const field = existing.nim === nim ? 'Student ID (NIM)' : 'Email';
+      return res.status(409).json({ error: `${field} has already registered for RSVP` });
     }
 
     const rsvp = await prisma.rsvp.create({
       data: {
         name,
         nim,
+        email,
         major,
         organization
       }

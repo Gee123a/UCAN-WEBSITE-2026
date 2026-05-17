@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Star, Heart, Sparkles, ArrowRight, Lock, ShieldCheck } from 'lucide-react';
+import { Star, Heart, Sparkles, ArrowRight, ShieldCheck, Mail, User, GraduationCap, Building2 } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
+import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
+import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
 
 interface RSVPFormProps {
   isLoggedIn: boolean;
@@ -11,13 +13,14 @@ interface RSVPFormProps {
   containerRef?: React.RefObject<HTMLDivElement>;
 }
 
-export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, containerRef }: RSVPFormProps) {
+export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     nim: '',
     major: '',
     organization: ''
   });
+  const [userEmail, setUserEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -39,13 +42,13 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
   const validateField = (name: string, value: string) => {
     let errorMsg = '';
     if (name === 'name' && value.trim().length < 3) {
-      errorMsg = 'Your true name is too brief for the scrolls';
+      errorMsg = 'Your name must be at least 3 characters';
     } else if (name === 'nim' && !/^\d{8,12}$/.test(value)) {
-      errorMsg = 'The royal ID must be 8 to 12 mystical digits';
+      errorMsg = 'NIM must be 8-12 digits';
     } else if (name === 'major' && value.trim().length < 2) {
-      errorMsg = 'Pray, tell us which field of study you pursue';
+      errorMsg = 'Please specify your major';
     } else if (name === 'organization' && !value) {
-      errorMsg = 'Choose the guild you represent in this quest';
+      errorMsg = 'Please select your organization';
     }
     setValidationErrors(prev => ({ ...prev, [name]: errorMsg }));
     return !errorMsg;
@@ -54,18 +57,17 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      setError('Please login with your student account to RSVP');
+      setError('Please login first');
       return;
     }
 
-    // Validate all fields
     const isNameValid = validateField('name', formData.name);
     const isNimValid = validateField('nim', formData.nim);
     const isMajorValid = validateField('major', formData.major);
     const isOrgValid = validateField('organization', formData.organization);
 
     if (!isNameValid || !isNimValid || !isMajorValid || !isOrgValid) {
-      setError('Please fix the errors in the form before submitting.');
+      setError('Please fill all fields correctly');
       return;
     }
 
@@ -75,27 +77,21 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
     try {
       const response = await fetch('/api/rsvp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...formData,
-          email: (window as any).__ciputraEmail
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, email: userEmail })
       });
 
       const data = await response.json();
-
       if (!response.ok) {
-        setError(data.error || 'Failed to submit RSVP. Please try again.');
+        setError(data.error || 'Submission failed');
         setIsLoading(false);
         return;
       }
 
       setIsSubmitted(true);
     } catch (err) {
-      console.error('RSVP submit error:', err);
-      setError('Network error. Unable to connect to server.');
+      console.error('RSVP error:', err);
+      setError('Connection lost. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -103,416 +99,258 @@ export function RSVPForm({ isLoggedIn, onLogin, showBorder: _showBorder, contain
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear validation error when typing
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (validationErrors[name]) {
       setValidationErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
-  // Animation variants for staggered form fields
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
-  };
-
   if (isSubmitted) {
     return (
-      <div className="relative" ref={containerRef}>
+      <div className="relative mx-auto max-w-2xl px-4" ref={containerRef}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, rotate: -2 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-          className="p-16 text-center relative parchment-bg overflow-hidden"
-          style={{
-            borderRadius: '255px 25px 225px 25px/25px 225px 25px 255px',
-            boxShadow: '12px 12px 0px rgba(217, 106, 29, 0.15)',
-            border: '2px solid rgba(217, 106, 29, 0.3)'
-          }}
+          initial={{ opacity: 0, y: 50, rotateX: 45 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ duration: 1, type: "spring", bounce: 0.3 }}
+          className="p-12 sm:p-20 text-center relative parchment-bg shadow-[0_50px_100px_-20px_rgba(217,106,29,0.3)] border-4 border-brand-orange/30 overflow-hidden"
+          style={{ borderRadius: '40px 10px 40px 10px / 10px 40px 10px 40px' }}
         >
-          <div className="absolute inset-0 sketch-line opacity-5 pointer-events-none" />
-          <motion.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.4, type: "spring" }}
-            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 relative bg-brand-orange/10 border-2 border-dashed border-brand-orange" 
-          >
-            <Star className="w-12 h-12 absolute text-brand-orange fill-brand-orange" />
-          </motion.div>
-          <motion.h4 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="font-cinzel text-5xl mb-6 text-brand-green" 
-          >
-            RSVP Confirmed
-          </motion.h4>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="font-cormorant text-3xl mb-3 italic text-brand-orange" 
-          >
-            {formData.name}
-          </motion.p>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
-            className="font-montserrat mb-2 text-brand-green-accent" 
-          >
-            We look forward to celebrating with you
-          </motion.p>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="font-montserrat text-sm tracking-wider text-brand-green-accent" 
-          >
-            May 29, 2026 · Dian Auditorium
-          </motion.p>
+          {/* Filigree corners */}
+          <div className="filigree-corner filigree-top-left" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+          <div className="filigree-corner filigree-top-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+          <div className="filigree-corner filigree-bottom-left" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+          <div className="filigree-corner filigree-bottom-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+          
+          <div className="relative z-10">
+            <motion.div 
+              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, type: "spring" }}
+              className="w-24 h-24 rounded-full bg-brand-orange/10 border-2 border-dashed border-brand-orange flex items-center justify-center mx-auto mb-10"
+            >
+              <Star className="w-12 h-12 text-brand-orange fill-brand-orange animate-twinkle" />
+            </motion.div>
+            
+            <h2 className="font-cinzel text-5xl sm:text-6xl mb-6 text-brand-green leading-tight">Seal of Approval</h2>
+            <p className="font-cormorant text-3xl mb-8 italic text-brand-orange">Honored guest, {formData.name}</p>
+            
+            <div className="h-px w-32 bg-brand-orange/30 mx-auto mb-8" />
+            
+            <p className="font-montserrat text-sm tracking-widest text-brand-green-accent mb-4">YOUR SCROLL HAS BEEN RECORDED</p>
+            <p className="font-cormorant text-xl text-brand-green-accent/80 italic mb-10">
+              "We await your arrival at the grand celebration of excellence."
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-sm mx-auto p-6 bg-white/40 rounded-2xl border border-brand-orange/10">
+              <div>
+                <p className="text-[10px] uppercase tracking-tighter text-brand-orange mb-1">Date</p>
+                <p className="font-cinzel text-sm">May 29, 2026</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-tighter text-brand-orange mb-1">Location</p>
+                <p className="font-cinzel text-sm">Dian Auditorium</p>
+              </div>
+            </div>
+          </div>
 
-          <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.2 }}>
-            <Heart className="absolute -top-4 -left-4 w-10 h-10 text-brand-red fill-brand-red rotate-[25deg]" />
-          </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 }}>
-            <Star className="absolute -top-4 -right-4 w-10 h-10 animate-twinkle text-brand-orange fill-brand-orange -rotate-[20deg]" />
-          </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.6 }}>
-            <Sparkles className="absolute -bottom-4 -left-4 w-10 h-10 text-brand-green-accent -rotate-[10deg]" />
-          </motion.div>
-          <div className="absolute -bottom-4 -right-4 w-12 h-12 organic-blob bg-brand-orange/60"></div>
+          <Sparkles className="absolute top-10 right-10 w-8 h-8 text-brand-orange/30 animate-twinkle" />
+          <Heart className="absolute bottom-10 left-10 w-8 h-8 text-brand-red/20 rotate-12" />
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="relative mx-auto max-w-4xl" ref={containerRef}>
+    <div className="relative mx-auto max-w-5xl px-4" ref={containerRef}>
       <AnimatePresence mode="wait">
         {!isLoggedIn ? (
           <motion.div 
-            key="login-portal"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: -50, filter: "blur(20px)" }}
-            transition={{ type: "spring", stiffness: 80, damping: 20 }}
-            className="p-10 md:p-20 text-center relative overflow-hidden flex flex-col items-center bg-white/80 backdrop-blur-3xl shadow-[0_40px_120px_-20px_rgba(11,58,10,0.3)] border-t-2 border-brand-orange/30"
-            style={{
-              borderRadius: '4px',
-              border: '12px double rgba(217, 106, 29, 0.4)',
-              outline: '1px solid rgba(217, 106, 29, 0.1)',
-              outlineOffset: '8px'
-            }}
+            key="login-view"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+            transition={{ duration: 0.6 }}
+            className="fairytale-frame p-10 md:p-24 text-center overflow-hidden flex flex-col items-center bg-white/90 backdrop-blur-md"
           >
-            {/* Animated Particles */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 0 }}
-                animate={{ 
-                  opacity: [0, 1, 0],
-                  y: [-20, -100],
-                  x: Math.random() * 200 - 100
-                }}
-                transition={{ 
-                  duration: 3 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: i * 0.8
-                }}
-                className="absolute w-1 h-1 bg-brand-orange rounded-full pointer-events-none"
-                style={{ bottom: '20%', left: `${20 + i * 15}%` }}
-              />
-            ))}
-
-            {/* Ornate Corner Decorations */}
-            <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-brand-orange/40 rounded-tl-sm -m-2" />
-            <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-brand-orange/40 rounded-tr-sm -m-2" />
-            <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-brand-orange/40 rounded-bl-sm -m-2" />
-            <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-brand-orange/40 rounded-br-sm -m-2" />
-
-            <div className="absolute inset-0 sketch-line opacity-5 pointer-events-none" />
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-30" />
             
             <motion.div
-              animate={{ 
-                scale: [1, 1.1, 1],
-                rotateY: [0, 15, -15, 0]
-              }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-              className="mb-10 relative perspective-[1000px]"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="mb-12 relative"
             >
-              <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-brand-orange via-brand-gold to-brand-orange flex items-center justify-center shadow-[0_15px_40px_rgba(217,106,29,0.4)] border-4 border-white/20">
-                <Lock className="w-12 h-12 text-white animate-pulse" />
-              </div>
-              <div className="absolute -inset-6 bg-brand-orange/20 blur-2xl rounded-full -z-10 animate-pulse" />
-              <div className="absolute -top-4 -right-4">
-                <Sparkles className="w-8 h-8 text-brand-orange animate-twinkle" />
-              </div>
-            </motion.div>
-
-            <span className="font-montserrat text-[10px] tracking-[0.6em] uppercase text-brand-orange mb-6 font-bold flex items-center gap-4">
-              <div className="w-8 h-px bg-brand-orange/40" />
-              The Royal Gate
-              <div className="w-8 h-px bg-brand-orange/40" />
-            </span>
-
-            <h2 className="font-cinzel text-4xl md:text-7xl mb-8 text-brand-green leading-tight">
-              Unlock the <br/><span className="text-brand-orange italic drop-shadow-sm">Grand Invitation</span>
-            </h2>
-            
-            <p className="font-cormorant italic text-2xl md:text-3xl mb-14 text-brand-green-accent max-w-2xl leading-relaxed">
-              "Only the chosen of Ciputra may pass these golden gates. Present your magical student credentials to proceed to the royal guestbook."
-            </p>
-            
-            <motion.div 
-              whileHover={{ scale: 1.05, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative z-10 group"
-            >
-              <div className="absolute -inset-4 bg-brand-orange/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="p-1 rounded-2xl bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-2xl">
-                <div className="bg-white rounded-[14px] p-2 overflow-hidden">
-                  <GoogleLogin
-                    onSuccess={(credentialResponse) => {
-                      if (credentialResponse.credential) {
-                        try {
-                          const decoded = jwtDecode(credentialResponse.credential);
-                          const email = (decoded as any).email;
-                          
-                          if (!email || (!email.endsWith('@student.ciputra.ac.id') && !email.endsWith('@staff.ciputra.ac.id') && !email.endsWith('.ciputra.ac.id'))) {
-                            setError('Only official @ciputra.ac.id accounts possess the magic to enter');
-                            return;
-                          }
-                          
-                          if (decoded && (decoded as any).name) {
-                            setFormData(prev => ({ ...prev, name: (decoded as any).name }));
-                          }
-                          (window as any).__ciputraEmail = email;
-                          setError('');
-                          onLogin();
-                        } catch (e) {
-                          console.error("Error decoding JWT", e);
-                          setError('The portal magic flickered. Please try again.');
-                        }
-                      }
-                    }}
-                    onError={() => {
-                      setError('The golden portal is momentarily closed. Try again later.');
-                    }}
-                    theme="filled_blue"
-                    shape="pill"
-                    size="large"
-                    text="signin_with"
-                    width="340"
-                  />
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-brand-orange via-brand-gold to-brand-orange p-1 shadow-2xl">
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center p-4">
+                  <img src={DoorAsset} alt="Royal Door" className="w-full h-full object-contain" />
                 </div>
               </div>
+              <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-brand-orange animate-twinkle" />
             </motion.div>
+
+            <h2 className="font-cinzel text-5xl md:text-8xl text-brand-green mb-8 leading-[0.9]">
+              Enter the <br/><span className="text-brand-orange italic drop-shadow-sm font-black">Ballroom</span>
+            </h2>
             
-            <AnimatePresence>
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 15, filter: "blur(10px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="mt-10 px-8 py-4 bg-red-50 border border-red-200 text-red-600 font-montserrat text-xs rounded-full flex items-center gap-4 shadow-sm"
-                >
-                  <ShieldCheck className="w-5 h-5 text-red-500" />
-                  <span className="tracking-wide">{error}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="mt-20 flex items-center gap-8 opacity-40">
-              <div className="h-px w-20 bg-brand-green" />
-              <Star className="w-5 h-5 text-brand-orange" />
-              <div className="h-px w-20 bg-brand-green" />
+            <p className="font-cormorant italic text-2xl md:text-4xl text-brand-green-accent mb-16 max-w-2xl leading-relaxed">
+              "A magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook."
+            </p>
+            
+            <div className="relative p-1 rounded-full bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-[0_20px_50px_rgba(217,106,29,0.3)] hover:scale-105 transition-transform duration-500">
+              <div className="bg-white rounded-full px-2 py-2 overflow-hidden min-w-[300px]">
+                <GoogleLogin
+                  onSuccess={(res) => {
+                    if (res.credential) {
+                      const decoded = jwtDecode(res.credential) as any;
+                      const email = decoded.email;
+                      if (!email?.includes('.ciputra.ac.id')) {
+                        setError('Only Ciputra magical accounts may pass');
+                        return;
+                      }
+                      setUserEmail(email);
+                      setFormData(prev => ({ ...prev, name: decoded.name || '' }));
+                      setError('');
+                      onLogin();
+                    }
+                  }}
+                  onError={() => setError('Portal failed to open. Try again.')}
+                  theme="filled_blue"
+                  shape="pill"
+                  size="large"
+                  text="signin_with"
+                  width="100%"
+                />
+              </div>
             </div>
-          </motion.div>
 
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className="mt-10 px-8 py-3 bg-red-50 text-red-600 border border-red-100 rounded-full text-xs font-montserrat flex items-center gap-3"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                {error}
+              </motion.div>
+            )}
+          </motion.div>
         ) : (
           <motion.div 
-            key="rsvp-form"
-            layout
-            initial={{ opacity: 0, y: 40, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
-            className="p-8 md:p-14 relative parchment-bg overflow-hidden shadow-[0_20px_50px_rgba(11,58,10,0.15)]" 
-            style={{
-              borderRadius: '4px',
-              border: '2px solid rgba(217, 106, 29, 0.2)',
-              backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png"), radial-gradient(circle at center, transparent 0%, rgba(217, 106, 29, 0.03) 100%)'
-            }}
+            key="form-view"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, type: "spring" }}
+            className="parchment-bg p-8 md:p-16 relative shadow-2xl border-2 border-brand-orange/20 overflow-hidden"
+            style={{ borderRadius: '2px' }}
           >
-            <div className="absolute inset-0 sketch-line opacity-[0.03] pointer-events-none" />
+            {/* Background Texture Layers */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }} />
             
-            <div className="flex flex-col items-center text-center mb-12 relative">
-              <div className="absolute -top-10 flex gap-2">
-                {[...Array(3)].map((_, i) => (
-                  <Star key={i} className={`w-3 h-3 text-brand-orange/40 animate-twinkle`} style={{ animationDelay: `${i * 0.5}s` }} />
-                ))}
-              </div>
-              <span className="px-6 py-1.5 mb-6 font-montserrat text-[10px] tracking-[0.5em] uppercase text-brand-orange bg-brand-orange/5 border border-brand-orange/20 rounded-full">
+            <div className="text-center mb-16 relative">
+              <span className="inline-block px-4 py-1 mb-6 font-montserrat text-[10px] tracking-[0.5em] uppercase text-brand-orange border border-brand-orange/20 rounded-full bg-brand-orange/5">
                 Identity Verified
               </span>
-              <h2 className="font-cinzel text-4xl md:text-6xl text-brand-green mb-3">Royal Guestbook</h2>
-              <p className="font-cormorant italic text-2xl text-brand-green-accent">Sign your name in the eternal scrolls</p>
-              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-brand-orange/30 to-transparent mt-6 rounded-full" />
+              <h2 className="font-cinzel text-5xl md:text-7xl text-brand-green mb-4">Royal Guestbook</h2>
+              <p className="font-cormorant italic text-2xl text-brand-green-accent">Sign the eternal scroll of excellence</p>
+              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-brand-orange/30 to-transparent mx-auto mt-8" />
             </div>
 
-            <motion.form 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              onSubmit={handleSubmit} 
-              className="grid md:grid-cols-2 gap-x-10 gap-y-8 relative z-10"
-            >
-              <motion.div variants={itemVariants}>
-                <label htmlFor="rsvp-name" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">Full Name</label>
-                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
+            <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-10 relative z-10">
+              <div className="space-y-8">
+                <div className="relative group">
+                  <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
+                    <User className="w-3 h-3" /> Full Name
+                  </label>
                   <input
-                    id="rsvp-name"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    onBlur={() => validateField('name', formData.name)}
-                    required
-                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 ${validationErrors.name ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
-                    placeholder="Enter your name"
+                    type="text" name="name" value={formData.name} onChange={handleChange} required
+                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none ${validationErrors.name ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
+                    placeholder="Thy true name..."
                   />
-                  <Star className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 opacity-20 group-focus-within:opacity-100 text-brand-orange" />
-                </motion.div>
-                <AnimatePresence>
-                  {validationErrors.name && (
-                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.name}</motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                  {validationErrors.name && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{validationErrors.name}</p>}
+                </div>
 
-              <motion.div variants={itemVariants}>
-                <label htmlFor="rsvp-nim" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">NIM (Student ID)</label>
-                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
+                <div className="relative group">
+                  <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
+                    <ShieldCheck className="w-3 h-3" /> Student ID (NIM)
+                  </label>
                   <input
-                    id="rsvp-nim"
-                    type="text"
-                    name="nim"
-                    value={formData.nim}
-                    onChange={handleChange}
-                    onBlur={() => validateField('nim', formData.nim)}
-                    required
-                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 ${validationErrors.nim ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
-                    placeholder="Enter your NIM"
+                    type="text" name="nim" value={formData.nim} onChange={handleChange} required
+                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none ${validationErrors.nim ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
+                    placeholder="The royal identifier..."
                   />
-                  <Heart className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 opacity-20 group-focus-within:opacity-100 text-brand-red" />
-                </motion.div>
-                <AnimatePresence>
-                  {validationErrors.nim && (
-                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.nim}</motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                  {validationErrors.nim && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{validationErrors.nim}</p>}
+                </div>
+              </div>
 
-              <motion.div variants={itemVariants}>
-                <label htmlFor="rsvp-major" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">Major / Program Studi</label>
-                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
+              <div className="space-y-8">
+                <div className="relative group">
+                  <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
+                    <GraduationCap className="w-3 h-3" /> Major / Study
+                  </label>
                   <input
-                    id="rsvp-major"
-                    type="text"
-                    name="major"
-                    value={formData.major}
-                    onChange={handleChange}
-                    onBlur={() => validateField('major', formData.major)}
-                    required
-                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 ${validationErrors.major ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
-                    placeholder="Enter your major"
+                    type="text" name="major" value={formData.major} onChange={handleChange} required
+                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none ${validationErrors.major ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
+                    placeholder="Field of pursuit..."
                   />
-                  <Sparkles className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 opacity-20 group-focus-within:opacity-100 text-brand-green-accent" />
-                </motion.div>
-                <AnimatePresence>
-                  {validationErrors.major && (
-                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.major}</motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                  {validationErrors.major && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{validationErrors.major}</p>}
+                </div>
 
-              <motion.div variants={itemVariants}>
-                <label htmlFor="rsvp-organization" className="block font-montserrat text-[10px] tracking-widest uppercase mb-3 text-brand-orange font-semibold">Organization</label>
-                <motion.div whileTap={{ scale: 0.99 }} className="relative group">
+                <div className="relative group">
+                  <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
+                    <Building2 className="w-3 h-3" /> Organization
+                  </label>
                   <select
-                    id="rsvp-organization"
-                    name="organization"
-                    value={formData.organization}
-                    onChange={handleChange}
-                    onBlur={() => validateField('organization', formData.organization)}
-                    required
-                    className={`w-full px-5 py-3 bg-white/60 focus:bg-white/90 focus:outline-none font-cormorant text-xl transition-all duration-300 border-b-2 appearance-none cursor-pointer ${validationErrors.organization ? 'border-red-400' : 'border-brand-orange/20 focus:border-brand-orange'}`}
+                    name="organization" value={formData.organization} onChange={handleChange} required
+                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none cursor-pointer appearance-none ${validationErrors.organization ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
                   >
-                    <option value="" className="bg-parchment">Select your guild</option>
-                    {organizations.map((org, index) => (
-                      <option key={index} value={org} className="bg-parchment">{org}</option>
-                    ))}
+                    <option value="">Select thy guild...</option>
+                    {organizations.map(org => <option key={org} value={org}>{org}</option>)}
                   </select>
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-focus-within:opacity-100">
+                  <div className="absolute right-4 bottom-5 pointer-events-none opacity-20 group-focus-within:opacity-100 transition-opacity">
                     <Star className="w-4 h-4 text-brand-orange" />
                   </div>
-                </motion.div>
-                <AnimatePresence>
-                  {validationErrors.organization && (
-                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[10px] mt-2 font-montserrat">{validationErrors.organization}</motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                </div>
+              </div>
 
-              <div className="md:col-span-2 mt-8">
-                <AnimatePresence>
-                  {error && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="p-4 mb-6 rounded-lg bg-red-50 border border-red-100 text-red-700 text-center font-montserrat text-sm"
-                    >
-                      {error}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              <div className="md:col-span-2 pt-10">
+                <div className="flex items-center gap-4 p-4 bg-brand-green/5 border border-brand-green/10 rounded-2xl mb-8">
+                  <div className="w-10 h-10 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-brand-green/60 uppercase tracking-widest">Authenticated Email</p>
+                    <p className="font-montserrat text-sm font-medium text-brand-green">{userEmail}</p>
+                  </div>
+                </div>
 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  type="submit"
                   disabled={isLoading}
-                  className={`w-full py-5 font-montserrat text-xs tracking-[0.3em] uppercase transition-all duration-500 flex justify-center items-center relative overflow-hidden rounded-xl shadow-lg ${
+                  className={`w-full py-6 font-cinzel text-xl tracking-widest transition-all duration-500 relative overflow-hidden rounded-2xl shadow-xl ${
                     isLoading ? 'bg-brand-green/40 text-white/50 cursor-not-allowed' : 'bg-brand-green text-white hover:bg-brand-green-accent'
                   }`}
                 >
-                  <span className="relative z-10 font-bold">{isLoading ? 'Sealing the Scroll...' : 'Sign the Guestbook'}</span>
-                  {!isLoading && <ArrowRight className="w-5 h-5 relative z-10 ml-3 animate-bounce-x" />}
+                  <span className="relative z-10 flex items-center justify-center gap-4">
+                    {isLoading ? 'Sealing the Scroll...' : 'Sign the Guestbook'}
+                    {!isLoading && <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />}
+                  </span>
+                  
+                  {/* Subtle shimmer effect on button */}
+                  <motion.div 
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none"
+                  />
                 </motion.button>
+                
+                {error && (
+                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-6 text-center text-red-500 font-montserrat text-xs tracking-wide">
+                    {error}
+                  </motion.p>
+                )}
               </div>
-            </motion.form>
+            </form>
             
-            <Star className="absolute top-4 left-4 w-8 h-8 opacity-20 animate-twinkle text-brand-orange fill-brand-orange" />
-            <Heart className="absolute bottom-4 right-4 w-8 h-8 opacity-20 text-brand-red fill-brand-red" />
+            {/* Corner Details */}
+            <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-brand-orange/20 rounded-tl-2xl" />
+            <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-brand-orange/20 rounded-br-2xl" />
           </motion.div>
         )}
       </AnimatePresence>

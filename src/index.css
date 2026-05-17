@@ -125,7 +125,7 @@
     @apply p-8 transition-all duration-500 relative overflow-hidden;
     background-color: #fffcf5;
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-    box-shadow: 8px 8px 0px rgba(217, 106, 29, 0.12);
+    box-shadow: 10px 10px 0px rgba(217, 106, 29, 0.15);
     border: 2px solid rgba(217, 106, 29, 0.2);
   }
 
@@ -140,8 +140,8 @@
   }
 
   .storybook-card:hover {
-    box-shadow: 12px 12px 0px rgba(217, 106, 29, 0.18);
-    transform: rotate(0.3deg) translateY(-4px);
+    box-shadow: 16px 16px 0px rgba(217, 106, 29, 0.2);
+    transform: rotate(0.5deg) translateY(-8px);
     border-color: rgba(217, 106, 29, 0.4);
   }
 
@@ -237,6 +237,117 @@
     filter: sepia(0.3) saturate(0.8) contrast(1.1);
     mix-blend-mode: multiply;
     opacity: 0.9;
+  }
+
+  /* Ballroom Utilities */
+  .ballroom-wall {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .ballroom-overlay {
+    mix-blend-mode: soft-light;
+    opacity: 0.3;
+  }
+
+  .mirror-frame {
+    mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+    @apply relative overflow-hidden;
+  }
+
+  .mirror-sheen {
+    position: absolute;
+    inset: -100%;
+    background: linear-gradient(
+      45deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.2) 45%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0.2) 55%,
+      transparent 60%
+    );
+    z-index: 40;
+    pointer-events: none;
+    transition: transform 0.5s ease-out;
+  }
+
+  .golden-bloom {
+    box-shadow: 0 0 30px rgba(240, 138, 43, 0.3), inset 0 0 20px rgba(240, 138, 43, 0.1);
+  }
+
+  .filigree-corner {
+    width: 60px;
+    height: 60px;
+    background-image: url('./assets/assets UCAN/invitation filigri/filigri_invitation card.png');
+    background-size: 200%;
+    position: absolute;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .filigree-top-left { top: 0; left: 0; background-position: top left; }
+  .filigree-top-right { top: 0; right: 0; background-position: top right; transform: scaleX(-1); }
+  .filigree-bottom-left { bottom: 0; left: 0; background-position: bottom left; transform: scaleY(-1); }
+  .filigree-bottom-right { bottom: 0; right: 0; background-position: bottom right; transform: scale(-1); }
+
+  .ballroom-lighting {
+    background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(217, 106, 29, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Navigation Bar Styles */
+  .nav-glass {
+    background: rgba(244, 231, 203, 0.7);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-bottom: 1px solid rgba(217, 106, 29, 0.15);
+  }
+
+  .nav-link {
+    @apply relative font-cinzel text-xs tracking-widest transition-colors duration-300;
+    color: #0B3A0A;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute left-0 -bottom-1 w-0 h-[1px] bg-[#D96A1D] transition-all duration-300;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  /* Back to Top Styles */
+  .back-to-top {
+    @apply fixed bottom-8 right-8 z-[100] p-4 rounded-full transition-all duration-500 scale-0 opacity-0;
+    background: #fffcf5;
+    border: 2px solid #D96A1D;
+    color: #D96A1D;
+    box-shadow: 4px 4px 0px rgba(217, 106, 29, 0.1);
+  }
+
+  .back-to-top.visible {
+    @apply scale-100 opacity-100;
+  }
+
+  .back-to-top:hover {
+    @apply -translate-y-2;
+    box-shadow: 6px 6px 0px rgba(217, 106, 29, 0.2);
+    background: #D96A1D;
+    color: #fffcf5;
+  }
+
+  /* Gallery Room Indicators */
+  .room-indicator {
+    @apply w-3 h-3 rounded-full border-2 border-[#D96A1D] transition-all duration-500 cursor-pointer;
+    background: transparent;
+  }
+
+  .room-indicator.active {
+    @apply w-8 bg-[#D96A1D];
   }
 }
 

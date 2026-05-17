@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -10,6 +10,7 @@ generator client {
 model Rsvp {
   id           String   @id @default(uuid())
   name         String
+  email        String   @unique
   nim          String   @unique
   major        String
   organization String

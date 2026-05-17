@@ -1,12 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Calendar, MapPin, Clock, Users, Star,
-  Sparkles, Gift, ArrowRight, Heart
+  Sparkles, Gift, ArrowRight, Heart, ArrowUp
 } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { RSVPForm } from './components/RSVPForm';
 import { ImageWithFallback } from './components/ImageWithFallback';
 import { StoryJourney } from './components/StoryJourney';
+import NavigationBar from './components/NavigationBar';
 import Particles from './components/magicui/particles';
 
 
@@ -14,10 +15,19 @@ import Particles from './components/magicui/particles';
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpening, setIsOpening] = useState(true);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef(null);
   const rsvpSectionRef = useRef<HTMLElement>(null);
   const rsvpContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Hero content fade and parallax
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
@@ -92,6 +102,17 @@ export default function UCANWebsite() {
       </AnimatePresence>
 
       <div className="min-h-screen relative overflow-x-hidden selection:bg-[#D96A1D]/30" style={{ background: '#F4E7CB' }}>
+        {!isOpening && <NavigationBar />}
+        
+        {/* Back to Top */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
+          aria-label="Back to top"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+
         {/* Main Book Page Container */}
         <div className="relative pb-8 md:pb-12">
           {/* Permanent Elegant Storybook Page Frame */}
@@ -123,7 +144,7 @@ export default function UCANWebsite() {
           />
 
         {/* Hero Section */}
-        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 md:py-32 px-4 md:px-6">
+        <section id="hero" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 md:py-32 px-4 md:px-6">
           <motion.div 
             className="absolute top-0 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] organic-blob pointer-events-none" 
             style={{
@@ -325,77 +346,11 @@ export default function UCANWebsite() {
           ))}
         </section>
 
-        {/* About Section */}
-        <section className="relative py-12 md:py-24 px-4 md:px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.9 }}
-                className="relative"
-              >
-                <div className="absolute -top-12 -left-12 w-24 h-24 organic-blob bg-[#F08A2B] opacity-30" />
-                <div className="absolute -bottom-12 -right-12 w-28 h-28 organic-blob-2 bg-[#6D8F2B] opacity-25" />
-
-                <div className="storybook-card -rotate-[0.5deg] border-dashed border-[#4C7A1A]">
-                  <div className="mb-6">
-                    <span className="hand-drawn-border-sm px-5 py-2 inline-block font-montserrat text-xs tracking-[0.4em] uppercase text-[#D96A1D] bg-[#D96A1D]/10 rotate-1">
-                      Annual Celebration
-                    </span>
-                  </div>
-
-                  <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 leading-tight text-[#0B3A0A] font-cinzel">
-                    Shaping Dreams,<br />
-                    Honoring Excellence
-                  </h3>
-
-                  <svg className="mb-8" width="120" height="6" viewBox="0 0 120 6">
-                    <path d="M 2 3 Q 30 0, 60 3 T 118 3" stroke="#D96A1D" strokeWidth="2" fill="none" strokeLinecap="round" />
-                  </svg>
-
-                  <p className="font-montserrat text-base md:text-lg leading-relaxed mb-6 text-[#4C7A1A]">
-                    The Universitas Ciputra Awarding Night is an annual formal event recognizing students who have excelled in <span className="text-[#D96A1D] font-semibold">academics, leadership, entrepreneurship, and creativity</span>.
-                  </p>
-
-                  <p className="font-cormorant text-xl leading-relaxed italic text-[#0B3A0A]">
-                    Beyond recognition, we aim to inspire and motivate by showcasing excellence and dedication, encouraging others to strive for meaningful achievements within their community.
-                  </p>
-
-                  <Star className="absolute -top-4 -right-4 w-10 h-10 text-[#F08A2B] fill-[#F08A2B] rotate-[20deg] animate-twinkle" />
-                  <Heart className="absolute -bottom-4 -left-4 w-8 h-8 text-[#C93A1D] fill-[#C93A1D] -rotate-[15deg]" />
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.9 }}
-                className="relative p-6 fairytale-frame"
-              >
-                <div className="absolute inset-0 z-0 pointer-events-none rounded-lg border-2 border-dashed border-[#D96A1D]/40" />
-                <div className="relative z-10 overflow-hidden rounded-sm shadow-[15px_15px_30px_rgba(0,0,0,0.1)]">
-                  <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1541339907198-e08756ebafe1?auto=format&fit=crop&q=80&w=1000"
-                    alt="University Excellence"
-                    className="w-full h-52 sm:h-72 md:h-[450px] lg:h-[550px] object-cover vintage-image"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#F4E7CB]/40 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-8 bg-[#F4E7CB]/90 backdrop-blur-sm border-t-2 border-dashed border-[#D96A1D]/30">
-                    <span className="font-cormorant text-2xl italic text-[#0B3A0A]">A Night of Excellence</span>
-                  </div>
-                </div>
-
-                <Sparkles className="absolute -top-6 -left-6 w-12 h-12 text-[#D96A1D] animate-twinkle -rotate-[25deg]" />
-              </motion.div>
-            </div>
-          </div>
+        {/* Nominees & Story Journey Section */}
+        <section id="nominees" className="relative">
+          <StoryJourney />
         </section>
 
-        {/* Nominees Story Journey Section */}
-        <StoryJourney />
 
         {/* Event Details */}
         <section className="relative py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-[#EDE0D4]/30 to-transparent">
