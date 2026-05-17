@@ -4,6 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
 import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
+import MirrorFrame from '../assets/assets UCAN/Ballroom/Mirror/Mirror.png';
 import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
 
 interface RSVPFormProps {
@@ -177,12 +178,22 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               className="mb-12 relative"
             >
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-brand-orange via-brand-gold to-brand-orange p-1 shadow-2xl">
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center p-4">
-                  <img src={DoorAsset} alt="Royal Door" className="w-full h-full object-contain" />
+              <div className="w-40 h-40 sm:w-56 sm:h-56 relative flex items-center justify-center">
+                <img 
+                  src={MirrorFrame} 
+                  alt="Magic Mirror Frame" 
+                  className="absolute inset-0 w-full h-full object-contain mix-blend-multiply z-20"
+                />
+                <div className="w-[70%] h-[70%] rounded-full overflow-hidden bg-brand-gold/10 shadow-inner relative group">
+                  <img 
+                    src={DoorAsset} 
+                    alt="Royal Door" 
+                    className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-110" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 to-transparent pointer-events-none" />
                 </div>
+                <Sparkles className="absolute -top-4 -right-4 w-10 h-10 text-brand-orange animate-twinkle z-30" />
               </div>
-              <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-brand-orange animate-twinkle" />
             </motion.div>
 
             <h2 className="font-cinzel text-5xl md:text-8xl text-brand-green mb-8 leading-[0.9]">

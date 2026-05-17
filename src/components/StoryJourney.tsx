@@ -169,7 +169,7 @@ export function StoryJourney() {
         scrollTrigger: {
           trigger: sectionRef.current,
           pin: true,
-          scrub: 1,
+          scrub: 0.2,
           invalidateOnRefresh: true,
           end: () => `+=${totalWidth - windowWidth}`,
         }
@@ -181,7 +181,7 @@ export function StoryJourney() {
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
-          scrub: 1,
+          scrub: 0.2,
           start: "top top",
           end: () => `+=${totalWidth - windowWidth}`,
         }
@@ -466,9 +466,9 @@ export function StoryJourney() {
                 <img 
                   src={MirrorFrame} 
                   alt="Decorative Mirror" 
-                  className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-110"
+                  className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-110 mix-blend-multiply"
                 />
-                <div className="relative z-10 p-8">
+                <div className="relative z-10 p-8 rounded-full bg-white/10 backdrop-blur-[2px]">
                   <div className="header-icon w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center bg-white shadow-xl mb-4 sm:mb-6 text-brand-orange border border-brand-orange/10 mx-auto">
                     <category.icon className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
