@@ -493,28 +493,21 @@ export function StoryJourney() {
                     <div className="filigree-corner filigree-bottom-left" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
                     <div className="filigree-corner filigree-bottom-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-green/90 via-brand-green/30 to-transparent opacity-80 z-10" />
+                    {/* Gradient Overlay for Text Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B3A0A] via-[#0B3A0A]/40 to-transparent opacity-90 z-10" />
                     
-                    <div className="absolute bottom-0 left-0 right-0 p-10 text-white z-20">
+                    <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-10 text-white z-20">
                       <motion.div>
-                        <p className="text-brand-orange font-montserrat text-[10px] tracking-[0.4em] uppercase mb-4 font-bold opacity-80">{nominee.role}</p>
-                        <h4 className="text-3xl sm:text-4xl font-cinzel mb-4 leading-tight drop-shadow-xl">{nominee.name}</h4>
-                        <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-brand-orange via-gold to-transparent transition-all duration-1000 mb-6" />
-                        <p className="text-sm text-parchment/80 leading-relaxed font-cormorant italic opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
+                        <p className="text-brand-orange font-montserrat text-[10px] tracking-[0.4em] uppercase mb-3 font-bold opacity-100">{nominee.role}</p>
+                        <h4 className="text-3xl sm:text-4xl font-cinzel mb-4 leading-tight drop-shadow-lg">{nominee.name}</h4>
+                        <div className="h-px w-0 group-hover:w-full bg-gradient-to-r from-brand-orange to-transparent transition-all duration-1000 mb-4" />
+                        <p className="text-sm text-white/90 leading-relaxed font-cormorant italic opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
                           "{nominee.description}"
                         </p>
                       </motion.div>
                     </div>
                   </div>
                 </div>
-                
-                {/* Floating Mirror Frame Effect */}
-                <img 
-                  src={MirrorFrame} 
-                  className="absolute -inset-8 w-[calc(100%+64px)] h-[calc(100%+64px)] object-fill z-30 pointer-events-none opacity-40 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-[1.02]" 
-                  alt=""
-                />
               </div>
             ))}
           </div>
