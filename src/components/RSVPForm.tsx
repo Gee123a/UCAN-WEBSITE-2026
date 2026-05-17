@@ -169,43 +169,43 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 0.6 }}
-            className="fairytale-frame p-10 md:p-24 text-center overflow-hidden flex flex-col items-center bg-white/90 backdrop-blur-md"
+            className="fairytale-frame p-8 md:p-12 text-center overflow-hidden flex flex-col items-center bg-white/90 backdrop-blur-md max-w-2xl mx-auto shadow-2xl"
           >
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-30" />
             
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="mb-12 relative"
+              className="mb-8 relative"
             >
-              <div className="w-40 h-40 sm:w-56 sm:h-56 relative flex items-center justify-center">
+              <div className="w-32 h-32 sm:w-48 sm:h-48 relative flex items-center justify-center">
                 <img 
                   src={MirrorFrame} 
                   alt="Magic Mirror Frame" 
-                  className="absolute inset-0 w-full h-full object-contain mix-blend-multiply z-20"
+                  className="absolute inset-0 w-full h-full object-contain mix-blend-multiply z-20 pointer-events-none"
                 />
-                <div className="w-[70%] h-[70%] rounded-full overflow-hidden bg-brand-gold/10 shadow-inner relative group">
+                <div className="w-[82%] h-[82%] rounded-full overflow-hidden bg-brand-gold/20 shadow-inner relative group">
                   <img 
                     src={DoorAsset} 
                     alt="Royal Door" 
-                    className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-110" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#D96A1D]/30 via-transparent to-transparent pointer-events-none" />
                 </div>
-                <Sparkles className="absolute -top-4 -right-4 w-10 h-10 text-brand-orange animate-twinkle z-30" />
+                <Sparkles className="absolute -top-2 -right-2 w-8 h-8 text-brand-orange animate-twinkle z-30" />
               </div>
             </motion.div>
 
-            <h2 className="font-cinzel text-5xl md:text-8xl text-brand-green mb-8 leading-[0.9]">
+            <h2 className="font-cinzel text-4xl md:text-6xl text-brand-green mb-6 leading-[0.9]">
               Enter the <br/><span className="text-brand-orange italic drop-shadow-sm font-black">Ballroom</span>
             </h2>
             
-            <p className="font-cormorant italic text-2xl md:text-4xl text-brand-green-accent mb-16 max-w-2xl leading-relaxed">
+            <p className="font-cormorant italic text-xl md:text-2xl text-brand-green-accent mb-10 max-w-lg leading-relaxed">
               "A magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook."
             </p>
             
-            <div className="relative p-1 rounded-full bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-[0_20px_50px_rgba(217,106,29,0.3)] hover:scale-105 transition-transform duration-500">
-              <div className="bg-white rounded-full px-2 py-2 overflow-hidden min-w-[300px]">
+            <div className="relative p-1 rounded-full bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-lg hover:scale-105 transition-transform duration-500">
+              <div className="bg-white rounded-full px-4 py-2 overflow-hidden flex justify-center items-center">
                 <GoogleLogin
                   onSuccess={(res) => {
                     if (res.credential) {
@@ -222,11 +222,10 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                     }
                   }}
                   onError={() => setError('Portal failed to open. Try again.')}
-                  theme="filled_blue"
+                  theme="outline"
                   shape="pill"
                   size="large"
                   text="signin_with"
-                  width="100%"
                 />
               </div>
             </div>
