@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
-import { Star, Sparkles, Trophy, Users, Lightbulb, ArrowRight } from 'lucide-react';
+import { Sparkles, Trophy, Users, ArrowRight } from 'lucide-react';
 import { ImageWithFallback } from './ImageWithFallback';
 
 // Assets
@@ -19,9 +19,7 @@ import Banner1 from '../assets/assets UCAN/nomination assets/Hallway/Banner/Bann
 import Banner2 from '../assets/assets UCAN/nomination assets/Hallway/Banner/Banner 2/AI Ver/Banner2.png';
 import Banner3 from '../assets/assets UCAN/nomination assets/Hallway/Banner/Banner 3/AI Ver/Banner3.png';
 import BannerNew from '../assets/assets UCAN/Chamber/New/BannerNew.png';
-import Plate from '../assets/assets UCAN/nomination assets/Hallway/Banner/Banner 1/AI Ver/Plate.png';
 import MasDes1 from '../assets/MasDes/MASDES UCAN 2026.png';
-import MasDes2 from '../assets/MasDes/MASDES UCAN 2026-2.png';
 import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
 import Ballroom1 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.png';
 import Ballroom2 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.png';
@@ -620,18 +618,16 @@ export function StoryJourney() {
                   />
                 </div>
                 
-                {/* 3. The Content Tablet */}
-                <div className="relative z-10 px-12 py-12 flex flex-col items-center max-w-2xl bg-white/5 backdrop-blur-[2px] rounded-[3rem] border border-white/10 shadow-inner">
-                  {/* Glowing Seal */}
-                  <div className="mb-10 relative">
-                    <div className="absolute inset-0 bg-brand-orange blur-[40px] opacity-30 animate-pulse" />
-                    <div className="w-20 h-20 rounded-full border-2 border-brand-orange/30 flex items-center justify-center bg-brand-orange/5 relative z-10">
-                      <category.icon className="w-10 h-10 text-brand-orange drop-shadow-[0_0_15px_rgba(217,106,29,0.8)]" />
-                    </div>
+                {/* 3. The Content Area */}
+                <div className="relative z-10 px-8 py-12 flex flex-col items-center max-w-2xl">
+                  {/* Future Org Logo / Current Icon Placeholder */}
+                  <div className="mb-8 relative flex items-center justify-center">
+                    <div className="absolute inset-0 bg-brand-orange blur-[50px] opacity-20 animate-pulse" />
+                    <category.icon className="w-16 h-16 text-brand-orange relative z-10 drop-shadow-[0_0_15px_rgba(217,106,29,0.6)]" />
                   </div>
 
                   {/* Dramatic Typography */}
-                  <h3 className="text-6xl sm:text-[7vw] text-brand-green font-bold mb-10 font-cinzel leading-[0.8] tracking-tighter">
+                  <h3 className="text-6xl sm:text-[8vw] text-brand-green font-bold mb-8 font-cinzel leading-[0.8] tracking-tighter">
                     {category.title.split(' ').map((word, idx) => (
                       <span key={idx} className="block last:text-brand-orange last:italic last:font-black">
                         {word}
@@ -640,18 +636,10 @@ export function StoryJourney() {
                   </h3>
 
                   {/* Ornate Divider Flourish */}
-                  <div className="flex items-center gap-8 mb-10 w-full px-12">
+                  <div className="flex items-center gap-8 w-full px-12">
                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-brand-orange/40 to-transparent" />
                     <img src={MasDes1} className="h-10 object-contain opacity-60 drop-shadow-md" alt="" />
                     <div className="h-px flex-1 bg-gradient-to-l from-transparent via-brand-orange/40 to-transparent" />
-                  </div>
-
-                  {/* Elevated Subtitle */}
-                  <div className="relative">
-                    <p className="font-montserrat text-xs sm:text-sm tracking-[0.6em] uppercase text-brand-orange font-black leading-relaxed">
-                      {category.subtitle}
-                    </p>
-                    <img src={MasDes2} className="absolute -bottom-8 left-1/2 -translate-x-1/2 h-4 object-contain opacity-30" alt="" />
                   </div>
                 </div>
 
@@ -673,35 +661,49 @@ export function StoryJourney() {
 
               {/* Nominee Cards */}
             {category.nominees.map((nominee, idx) => (
-              <div key={idx} className="nominee-card flex-shrink-0 w-[340px] sm:w-[450px] group relative" style={{ perspective: '2000px' }}>
-                <div className="storybook-card p-0 overflow-hidden border-none shadow-2xl transition-all duration-1000 bg-transparent rounded-2xl golden-bloom">
-                  <div className="aspect-[3/4.5] relative overflow-hidden bg-parchment-dark">
-                    <ImageWithFallback src={nominee.image} alt={nominee.name} className="card-image w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+              <div key={idx} className="nominee-card flex-shrink-0 w-[380px] sm:w-[500px] group relative" style={{ perspective: '2000px' }}>
+                <div className="storybook-card p-0 overflow-hidden border-none shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-1000 bg-[#0B1A0A] rounded-xl relative">
+                  {/* Ornate Frame Border */}
+                  <div className="absolute inset-0 border-[12px] border-[#D96A1D]/30 z-30 pointer-events-none rounded-xl" />
+                  <div className="absolute inset-[4px] border border-[#D96A1D]/50 z-30 pointer-events-none rounded-lg" />
+                  
+                  <div className="aspect-[3/4.5] relative overflow-hidden">
+                    <ImageWithFallback 
+                      src={nominee.image} 
+                      alt={nominee.name} 
+                      className="card-image w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 brightness-[0.8] group-hover:brightness-100" 
+                    />
 
                     {/* Mirror Sheen Overlay */}
-                    <div className="mirror-sheen" />
+                    <div className="mirror-sheen z-40" />
 
-                    {/* Filigree Corners */}
-                    <div className="filigree-corner filigree-top-left" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
-                    <div className="filigree-corner filigree-top-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
-                    <div className="filigree-corner filigree-bottom-left" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
-                    <div className="filigree-corner filigree-bottom-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+                    {/* Enhanced Filigree Corners */}
+                    <div className="filigree-corner filigree-top-left z-40 opacity-80 scale-125" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+                    <div className="filigree-corner filigree-top-right z-40 opacity-80 scale-125" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+                    <div className="filigree-corner filigree-bottom-left z-40 opacity-80 scale-125" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
+                    <div className="filigree-corner filigree-bottom-right z-40 opacity-80 scale-125" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
 
-                    {/* Gradient Overlay for Text Readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B3A0A] via-[#0B3A0A]/40 to-transparent opacity-90 z-10" />
+                    {/* Dark Royal Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1A0A] via-[#0B1A0A]/40 to-transparent opacity-90 z-20" />
 
-                    <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-10 text-white z-20">
+                    <div className="absolute bottom-0 left-0 right-0 p-10 sm:p-12 text-white z-50">
                       <motion.div>
-                        <p className="text-brand-orange font-montserrat text-[10px] tracking-[0.4em] uppercase mb-3 font-bold opacity-100">{nominee.role}</p>
-                        <h4 className="text-3xl sm:text-4xl font-cinzel mb-4 leading-tight drop-shadow-lg">{nominee.name}</h4>
-                        <div className="h-px w-0 group-hover:w-full bg-gradient-to-r from-brand-orange to-transparent transition-all duration-1000 mb-4" />
-                        <p className="text-sm text-white/90 leading-relaxed font-cormorant italic opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="h-px w-8 bg-brand-orange" />
+                          <p className="text-brand-orange font-montserrat text-[10px] tracking-[0.5em] uppercase font-black">{nominee.role}</p>
+                        </div>
+                        <h4 className="text-3xl sm:text-5xl font-cinzel mb-6 leading-[0.9] drop-shadow-2xl group-hover:text-brand-orange transition-colors duration-500">
+                          {nominee.name}
+                        </h4>
+                        <p className="text-sm sm:text-base text-white/80 leading-relaxed font-cormorant italic opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0 max-w-[90%]">
                           "{nominee.description}"
                         </p>
                       </motion.div>
                     </div>
                   </div>
                 </div>
+                {/* Outer Golden Glow */}
+                <div className="absolute -inset-4 bg-brand-orange/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 -z-10" />
               </div>
             ))}
           </div>

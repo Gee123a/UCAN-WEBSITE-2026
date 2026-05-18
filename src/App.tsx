@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   Calendar, MapPin, Clock, Users, Star,
-  Sparkles, Gift, ArrowRight, Heart, ArrowUp
+  Sparkles, Gift, ArrowRight, Heart, ArrowUp, Loader2
 } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { RSVPForm } from './components/RSVPForm';
@@ -10,11 +10,21 @@ import { StoryJourney } from './components/StoryJourney';
 import NavigationBar from './components/NavigationBar';
 import Particles from './components/magicui/particles';
 
-
+// Assets for Preloading
+import Wall1 from './assets/assets UCAN/Ballroom/wall /Wall1.png';
+import Wall2 from './assets/assets UCAN/Ballroom/wall /Wall2.png';
+import Ballroom1 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.png';
+import Ballroom2 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.png';
+import Ballroom3 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom3.png';
+import Banner1 from './assets/assets UCAN/nomination assets/Hallway/Banner/Banner 1/AI Ver/Banner.png';
+import BannerNew from './assets/assets UCAN/Chamber/New/BannerNew.png';
+import PillarArch1 from './assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.png';
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpening, setIsOpening] = useState(true);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef(null);
   const rsvpSectionRef = useRef<HTMLElement>(null);
@@ -22,6 +32,34 @@ export default function UCANWebsite() {
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
+    const assetsToLoad = [
+      Wall1, Wall2, Ballroom1, Ballroom2, Ballroom3, Banner1, BannerNew, PillarArch1
+    ];
+    let loadedCount = 0;
+
+    const loadImages = async () => {
+      const promises = assetsToLoad.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = () => {
+            loadedCount++;
+            setLoadProgress((loadedCount / assetsToLoad.length) * 100);
+            resolve(true);
+          };
+          img.onerror = () => {
+             loadedCount++;
+             setLoadProgress((loadedCount / assetsToLoad.length) * 100);
+             resolve(true);
+          };
+        });
+      });
+      await Promise.all(promises);
+      setTimeout(() => setAssetsLoaded(true), 800); 
+    };
+
+    loadImages();
+
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500);
     };
@@ -42,7 +80,9 @@ export default function UCANWebsite() {
   const decorationY = useTransform(smoothProgress, [0, 1], [0, -400]);
 
   const handleOpenBook = () => {
-    setIsOpening(false);
+    if (assetsLoaded) {
+      setIsOpening(false);
+    }
   };
 
   return (
@@ -78,16 +118,45 @@ export default function UCANWebsite() {
                 <div className="absolute left-0 top-0 bottom-0 w-4 bg-[#C93A1D] rounded-l-sm shadow-inner"></div>
               </div>
               
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(240, 138, 43, 0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleOpenBook}
-                className="mt-12 px-8 py-3 bg-white text-[#0B3A0A] font-montserrat text-xs tracking-[0.4em] uppercase font-bold rounded-full shadow-lg transition-all"
-              >
-                Open the Scroll
-              </motion.button>
+              <div className="mt-12 flex flex-col items-center min-h-[100px] justify-center">
+                {!assetsLoaded ? (
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="relative">
+                      <Loader2 className="w-8 h-8 text-[#D96A1D] animate-spin" />
+                      <Sparkles className="absolute -top-2 -right-2 w-4 h-4 text-white animate-twinkle" />
+                    </div>
+                    <div className="w-64 h-1.5 bg-white/10 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                      <motion.div 
+                        className="h-full bg-gradient-to-r from-[#D96A1D] to-[#F08A2B] shadow-[0_0_15px_rgba(217,106,29,0.5)]"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${loadProgress}%` }}
+                        transition={{ duration: 0.2 }}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="font-montserrat text-[10px] tracking-[0.4em] text-white/70 uppercase font-bold">
+                        Preparing the Ballroom
+                      </span>
+                      <span className="font-cinzel text-xs text-[#D96A1D] animate-pulse">
+                        {Math.round(loadProgress)}%
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <motion.button
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(217, 106, 29, 0.4)" }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleOpenBook}
+                    className="px-10 py-4 bg-white text-[#0B3A0A] font-montserrat text-xs tracking-[0.4em] uppercase font-black rounded-full shadow-2xl transition-all border-2 border-[#D96A1D]/20 hover:border-[#D96A1D]/50"
+                  >
+                    Open the Scroll
+                  </motion.button>
+                )}
+              </div>
               
-              <p className="mt-6 font-cormorant text-white/60 italic text-lg">A magical evening awaits...</p>
+              <p className="mt-8 font-cormorant text-white/50 italic text-xl">A magical evening awaits...</p>
             </motion.div>
 
             <Particles

@@ -16,9 +16,9 @@ const ADMIN_EXPORT_PASSWORD = process.env.ADMIN_EXPORT_PASSWORD;
 app.use(cors());
 app.use(express.json());
 
-// Validate email domain
+// Validate email domain (supports subdomains like @student.ciputra.ac.id)
 function isValidCiputraEmail(email: string): boolean {
-  return email.endsWith('.ciputra.ac.id');
+  return email.endsWith('ciputra.ac.id');
 }
 
 function escapeCsvValue(value: unknown): string {

@@ -210,7 +210,8 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                     if (res.credential) {
                       const decoded = jwtDecode(res.credential) as any;
                       const email = decoded.email;
-                      if (!email?.endsWith('.ciputra.ac.id')) {
+                      // Validates both @ciputra.ac.id and subdomains like @student.ciputra.ac.id
+                      if (!email?.endsWith('ciputra.ac.id')) {
                         setError('Only Ciputra magical accounts may pass');
                         return;
                       }
