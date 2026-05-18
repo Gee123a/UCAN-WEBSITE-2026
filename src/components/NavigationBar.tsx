@@ -33,7 +33,6 @@ const NavigationBar: React.FC = () => {
   const navLinks = [
     { name: 'HOME', href: '#hero', id: 'hero' },
     { name: 'NOMINEES', href: '#nominees', id: 'nominees' },
-    { name: 'RSVP', href: '#rsvp', id: 'rsvp' },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -64,7 +63,7 @@ const NavigationBar: React.FC = () => {
           className="flex items-center gap-3 group"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="w-12 h-12 border-2 border-[#D96A1D] rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform bg-white/40 backdrop-blur-sm">
+          <div className="w-12 h-12 border-2 border-[#D96A1D] rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform bg-white/80">
             <span className="font-cinzel text-2xl font-bold text-[#D96A1D]">U</span>
           </div>
           <div className="flex flex-col">

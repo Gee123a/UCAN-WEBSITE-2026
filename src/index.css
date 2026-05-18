@@ -299,9 +299,7 @@
 
   /* Navigation Bar Styles */
   .nav-glass {
-    background: rgba(244, 231, 203, 0.7);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    background: #F4E7CB;
     border-bottom: 1px solid rgba(217, 106, 29, 0.15);
   }
 
