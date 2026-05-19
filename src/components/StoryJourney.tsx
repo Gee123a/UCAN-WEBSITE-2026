@@ -129,13 +129,13 @@ const nomineeCategories = [
         name: "Outstanding Student Representative Member in Leadership",
         role: "Rural Empowerment",
         image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800",
-        description: ""
+        description: "This award honors a leader who consistently takes initiative, anticipates challenges, and drives progress by proactively identifying opportunities, making informed decisions, and inspiring others to take action."
       },
       {
         name: "Outstanding Student Representative in Interpersonal Skill",
         role: "Rural Empowerment",
         image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800",
-        description: "This award honors a leader who consistently takes initiative, anticipates challenges, and drives progress by proactively identifying opportunities, making informed decisions, and inspiring others to take action."
+        description: "This award recognizes an individual who excels in building relationships, fostering collaboration, and creating a positive, inclusive environment through empathy, communication, and teamwork."
       },
       {
         name: "Outstanding Student Representative Member in Strategic Thinking",
@@ -168,7 +168,7 @@ const nomineeCategories = [
         name: "Outstanding Student Council Member in Interpersonal Skill",
         role: "Rural Empowerment",
         image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800",
-        description: ""
+        description: "This award recognizes an individual who excels in building relationships, fostering collaboration, and creating a positive, inclusive environment through empathy, communication, and teamwork."
       },
       {
         name: "Outstanding Student Council Member in Strategic Thinking",
@@ -270,7 +270,7 @@ const nomineeCategories = [
         name: "Best Dress",
         role: "Rural Empowerment",
         image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800",
-        description: ""
+        description: "Dress Your best, this award goes to the person who is the most well-dressed at the event."
       }
     ]
   },

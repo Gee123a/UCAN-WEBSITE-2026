@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Star, Heart, Sparkles, ArrowRight, ShieldCheck, Mail, User, GraduationCap, Building2 } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
+import { useGoogleLogin } from '@react-oauth/google';
 import { motion, AnimatePresence } from 'framer-motion';
 import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
 import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
@@ -25,6 +24,52 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  
+  // Google Calendar Integration States
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [calendarAdded, setCalendarAdded] = useState(false);
+  const [calendarError, setCalendarError] = useState(false);
+  const [isLoadingCalendar, setIsLoadingCalendar] = useState(false);
+
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const token = tokenResponse.access_token;
+      setAccessToken(token);
+      setIsLoading(true);
+      setError('');
+      try {
+        const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!userInfoResponse.ok) {
+          throw new Error('Failed to fetch user info');
+        }
+        const userInfo = await userInfoResponse.json();
+        
+        // Validate email domain (must be @ciputra.ac.id)
+        if (!userInfo.email?.endsWith('ciputra.ac.id')) {
+          setError('Only Ciputra magical accounts may pass');
+          return;
+        }
+
+        setUserEmail(userInfo.email);
+        if (userInfo.name) {
+          setFormData(prev => ({ ...prev, name: userInfo.name }));
+        }
+        onLogin();
+      } catch (err) {
+        console.error('Google profile fetch error:', err);
+        setError('Portal failed to open. Try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: (err) => {
+      console.error('Google login error:', err);
+      setError('Portal failed to open. Try again.');
+    },
+    scope: 'https://www.googleapis.com/auth/calendar.events'
+  });
 
   const organizations = [
     'BEM UC',
@@ -78,7 +123,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       const response = await fetch('/api/rsvp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, email: userEmail })
+        body: JSON.stringify({ ...formData, email: userEmail, accessToken })
       });
 
       const data = await response.json();
@@ -89,6 +134,13 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       }
 
       setIsSubmitted(true);
+
+      // Set calendar status from backend response
+      if (data.calendarAdded) {
+        setCalendarAdded(true);
+      } else if (accessToken) {
+        setCalendarError(true);
+      }
     } catch (err) {
       console.error('RSVP error:', err);
       setError('Connection lost. Please try again.');
@@ -96,6 +148,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       setIsLoading(false);
     }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -150,6 +203,58 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                 <p className="font-cinzel text-sm">Dian Auditorium</p>
               </div>
             </div>
+
+            {/* Google Calendar Status */}
+            {calendarAdded ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mt-6 p-4 bg-brand-green/5 border border-brand-green/10 rounded-2xl max-w-sm mx-auto flex items-center justify-center gap-3"
+              >
+                <Sparkles className="w-5 h-5 text-brand-orange animate-twinkle shrink-0" />
+                <p className="font-cormorant text-base text-brand-green italic text-center">
+                  Event added to your Google Calendar!
+                </p>
+              </motion.div>
+            ) : (
+              accessToken && (
+                <div className="mt-6">
+                  <button
+                    onClick={async () => {
+                      setIsLoadingCalendar(true);
+                      try {
+                        const res = await fetch('/api/rsvp/calendar', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ accessToken })
+                        });
+                        const resData = await res.json();
+                        if (res.ok && resData.success) {
+                          setCalendarAdded(true);
+                          setCalendarError(false);
+                        } else {
+                          setCalendarError(true);
+                        }
+                      } catch (err) {
+                        console.error('Calendar retry error:', err);
+                        setCalendarError(true);
+                      } finally {
+                        setIsLoadingCalendar(false);
+                      }
+                    }}
+                    disabled={isLoadingCalendar}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange font-cinzel text-xs tracking-wider rounded-full transition-all duration-300 disabled:opacity-50 hover:scale-105"
+                  >
+                    {isLoadingCalendar ? 'Adding Event...' : 'Add to Google Calendar'}
+                  </button>
+                  {calendarError && (
+                    <p className="mt-2 text-red-500 font-montserrat text-[10px]">
+                      Failed to add automatically. Click button above to retry.
+                    </p>
+                  )}
+                </div>
+              )
+            )}
           </div>
 
           <Sparkles className="absolute top-10 right-10 w-8 h-8 text-brand-orange/30 animate-twinkle" />
@@ -209,31 +314,26 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
               please login with a ciputra account
             </p>
 
-            <div className="relative p-1 rounded-full bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-lg hover:scale-105 transition-transform duration-500">
-              <div className="bg-white rounded-full px-4 py-2 overflow-hidden flex justify-center items-center">
-                <GoogleLogin
-                  onSuccess={(res) => {
-                    if (res.credential) {
-                      const decoded = jwtDecode(res.credential) as any;
-                      const email = decoded.email;
-                      // Validates both @ciputra.ac.id and subdomains like @student.ciputra.ac.id
-                      if (!email?.endsWith('ciputra.ac.id')) {
-                        setError('Only Ciputra magical accounts may pass');
-                        return;
-                      }
-                      setUserEmail(email);
-                      setFormData(prev => ({ ...prev, name: decoded.name || '' }));
-                      setError('');
-                      onLogin();
-                    }
-                  }}
-                  onError={() => setError('Portal failed to open. Try again.')}
-                  theme="outline"
-                  shape="pill"
-                  size="large"
-                  text="signin_with"
+            {/* Google useGoogleLogin Trigger */}
+            <div className="w-full max-w-sm">
+              <button
+                type="button"
+                onClick={() => login()}
+                disabled={isLoading}
+                className="w-full relative group py-4 px-8 font-cinzel text-xs tracking-[0.2em] text-white bg-gradient-to-r from-[#C93A1D] via-brand-orange to-[#C93A1D] rounded-full shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-brand-orange/30 disabled:opacity-50"
+              >
+                <span className="relative z-10 flex items-center justify-center gap-3 font-bold uppercase">
+                  <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.435 0-6.223-2.77-6.223-6.185 0-3.414 2.788-6.185 6.223-6.185 1.506 0 2.88.536 3.96 1.43l3.076-3.075C19.167 2.08 15.932 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c5.898 0 10.82-4.148 10.82-10.24 0-.668-.063-1.309-.176-1.955H12.24z" />
+                  </svg>
+                  {isLoading ? 'Presenting Crest...' : 'Present Royal Crest'}
+                </span>
+                <motion.div 
+                  animate={{ x: ['-100%', '100%'] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
                 />
-              </div>
+              </button>
             </div>
 
             {error && (

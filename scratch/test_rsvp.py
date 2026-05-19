@@ -1,7 +1,7 @@
 import requests
 import json
 
-URL = "http://localhost:3001/api/rsvp"
+URL = "http://localhost:3003/api/rsvp"
 
 def test_rsvp_success():
     payload = {

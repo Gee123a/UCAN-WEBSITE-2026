@@ -256,10 +256,8 @@ export default function UCANWebsite() {
                 aria-hidden="true"
                 className="absolute w-12 h-12 flex items-center justify-center opacity-30"
                 style={{
-                  x: `${(i * 137) % 100}%`,
-                  y: `${(i * 223) % 100}%`,
-                  top: 0,
-                  left: 0,
+                  left: `${5 + ((i * 137) % 90)}%`,
+                  top: `${5 + ((i * 223) % 90)}%`,
                 }}
                 animate={{
                   y: [0, -40, 40, 0],
@@ -361,15 +359,18 @@ export default function UCANWebsite() {
               <Sparkles className="absolute -bottom-3 -right-3 w-6 h-6 text-[#F08A2B] animate-twinkle [animation-delay:0.7s]" />
 
               <span className="font-cinzel text-xs tracking-[0.25em] text-[#C93A1D] font-bold block mb-4">
-                THE CHRONICLE OF UCAN
+                THE History OF UCAN
               </span>
 
-              <div className="font-eb-garamond text-base sm:text-lg md:text-xl text-[#0B3A0A] italic leading-relaxed space-y-4 mb-6">
-                <p>
-                  "Once every year, on a night filled with light and wonder, the Universitas Ciputra Awarding Night is held. It is a special gathering where students who have shown dedication and excellence in academics, leadership, entrepreneurship, and creativity are recognized for their journeys."
+              <div className="font-eb-garamond text-base sm:text-lg md:text-xl text-[#0B3A0A] italic leading-relaxed space-y-6 mb-6">
+                <p className="text-left md:text-justify indent-0 clear-both">
+                  <span className="font-blackletter text-5xl sm:text-6xl md:text-7xl text-[#C93A1D] mr-2 select-none drop-shadow-[2px_2px_0px_rgba(240,138,43,0.3)] inline-block align-middle leading-none">
+                    Once
+                  </span>
+                  {" "}every year, on a night filled with light and wonder, the Universitas Ciputra Awarding Night is held. It is a special gathering where students who have shown dedication and excellence in academics, leadership, entrepreneurship, and creativity are recognized for their journeys.
                 </p>
-                <p>
-                  "And as these stories are shared, they don’t end on that stage. Instead, they spark something new that encourages others to believe in their own path, to keep trying, and to create their own story worth telling."
+                <p className="text-left md:text-justify clear-both">
+                  And as these stories are shared, they don’t end on that stage. Instead, they spark something new that encourages others to believe in their own path, to keep trying, and to create their own story worth telling.
                 </p>
               </div>
 
@@ -650,7 +651,7 @@ export default function UCANWebsite() {
             <div className="grid md:grid-cols-2 gap-12 mb-12">
               <div className="text-center md:text-left">
                 <h4 className="text-4xl sm:text-6xl mb-3 text-[#0B3A0A] font-cinzel">Universitas Ciputra</h4>
-                <p className="font-script text-2xl sm:text-4xl text-[#D96A1D]">Shaping Dreams, Honoring Excellence</p>
+                <p className="font-cinzel text-2xl sm:text-4xl text-[#D96A1D]">Shaping Dreams, Honoring Excellence</p>
               </div>
 
               <div className="flex flex-col items-center md:items-end text-center md:text-right gap-4 font-montserrat text-sm text-[#4C7A1A]">

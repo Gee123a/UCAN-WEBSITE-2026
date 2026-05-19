@@ -49,10 +49,53 @@ function isAuthorizedAdminRequest(authHeader?: string): boolean {
   }
 }
 
+async function addEventToCalendar(token: string): Promise<boolean> {
+  try {
+    const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        summary: 'UCAN Awarding Night 2026',
+        location: 'Dian Auditorium, Floor 7, UC Main Building, Universitas Ciputra, Surabaya',
+        description: 'Congratulations! You have successfully RSVP\'d for the UCAN 2026 Awarding Night.\n\nA magical evening awaits you at the ballroom. Let the magic begin!',
+        start: {
+          dateTime: '2026-05-29T16:30:00+07:00',
+          timeZone: 'Asia/Jakarta'
+        },
+        end: {
+          dateTime: '2026-05-29T22:00:00+07:00',
+          timeZone: 'Asia/Jakarta'
+        },
+        reminders: {
+          useDefault: false,
+          overrides: [
+            { method: 'popup', minutes: 30 },
+            { method: 'email', minutes: 1440 }
+          ]
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.warn('Google Calendar API returned error:', errorData);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error('Error adding to Google Calendar:', err);
+    return false;
+  }
+}
+
 // Endpoint to handle RSVP submission
 app.post('/api/rsvp', async (req, res) => {
   try {
-    const { name, nim, major, organization, email } = req.body;
+    const { name, nim, major, organization, email, accessToken } = req.body;
 
     if (!name || !nim || !major || !organization || !email) {
       return res.status(400).json({ error: 'All fields are required' });
@@ -88,7 +131,12 @@ app.post('/api/rsvp', async (req, res) => {
       }
     });
 
-    return res.status(201).json({ success: true, rsvp });
+    let calendarAdded = false;
+    if (accessToken) {
+      calendarAdded = await addEventToCalendar(accessToken);
+    }
+
+    return res.status(201).json({ success: true, rsvp, calendarAdded });
   } catch (error: any) {
     // Enhanced logging to surface Prisma errors in production logs
     console.error('Error saving RSVP:', {
@@ -106,6 +154,27 @@ app.post('/api/rsvp', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error while saving RSVP' });
   }
 });
+
+// Endpoint to handle Google Calendar event retry
+app.post('/api/rsvp/calendar', async (req, res) => {
+  try {
+    const { accessToken } = req.body;
+    if (!accessToken) {
+      return res.status(400).json({ error: 'Access token is required' });
+    }
+
+    const success = await addEventToCalendar(accessToken);
+    if (success) {
+      return res.status(200).json({ success: true });
+    } else {
+      return res.status(500).json({ error: 'Failed to add event to Google Calendar' });
+    }
+  } catch (err: any) {
+    console.error('Error in calendar retry endpoint:', err);
+    return res.status(500).json({ error: 'Internal server error during calendar update' });
+  }
+});
+
 
 
 
