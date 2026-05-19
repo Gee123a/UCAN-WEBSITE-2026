@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+
+// Organization Logos
+import UCANLogo from '../assets/ucanLogos/UCAN.png';
 
 const NavigationBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,113 +48,90 @@ const NavigationBar: React.FC = () => {
         behavior: 'smooth',
       });
     }
-    setIsMenuOpen(false);
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-500 ${
-        isScrolled ? 'nav-glass py-4 shadow-xl' : 'bg-transparent py-8'
-      }`}
-    >
-      <div className="container mx-auto px-6 flex justify-between items-center relative">
-        <motion.a
-          href="#hero"
-          onClick={(e) => scrollToSection(e, '#hero')}
-          className="flex items-center gap-3 group"
-          whileHover={{ scale: 1.05 }}
-        >
-          <div className="w-12 h-12 border-2 border-[#D96A1D] rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform bg-white/80">
-            <span className="font-cinzel text-2xl font-bold text-[#D96A1D]">U</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-cinzel text-xl font-bold tracking-[0.2em] text-[#0B3A0A] leading-none">UCAN 2026</span>
-            <span className="font-montserrat text-[10px] tracking-[0.4em] text-[#D96A1D] mt-1 uppercase font-semibold">Awarding Night</span>
-          </div>
-        </motion.a>
+    <>
+      {/* Desktop Nav - Hidden on Mobile */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-500 hidden md:block ${
+          isScrolled ? 'nav-glass py-4 shadow-xl' : 'bg-transparent py-8'
+        }`}
+      >
+        <div className="container mx-auto px-6 flex justify-between items-center relative">
+          <motion.a
+            href="#hero"
+            onClick={(e) => scrollToSection(e, '#hero')}
+            className="flex items-center gap-4 group"
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="w-14 h-14 relative flex items-center justify-center">
+              <div className="absolute inset-0 bg-brand-orange blur-2xl opacity-0 group-hover:opacity-20 transition-opacity" />
+              <img src={UCANLogo} className="w-full h-full object-contain relative z-10" alt="UCAN 2026" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-cinzel text-xl font-bold tracking-[0.2em] text-[#0B3A0A] leading-none">UCAN 2026</span>
+              <span className="font-script text-lg text-[#D96A1D] mt-0.5 leading-none">Awarding Night</span>
+            </div>
+          </motion.a>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-12">
-          {navLinks.map((link) => (
+          {/* Desktop Nav Links */}
+          <div className="flex items-center gap-12">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => scrollToSection(e, link.href)}
+                className={`nav-link font-bold text-[11px] tracking-[0.3em] ${activeSection === link.id ? 'active' : ''}`}
+              >
+                {link.name}
+              </a>
+            ))}
             <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => scrollToSection(e, link.href)}
-              className={`nav-link font-bold text-[11px] tracking-[0.3em] ${activeSection === link.id ? 'active' : ''}`}
+              href="#rsvp"
+              onClick={(e) => scrollToSection(e, '#rsvp')}
+              className="vintage-button !px-8 !py-3 !text-[11px] !bg-[#0B3A0A] !text-white hover:!bg-[#D96A1D] transition-colors shadow-lg border-2 border-white/20"
             >
-              {link.name}
+              JOIN THE ROYALTY
             </a>
-          ))}
+          </div>
+        </div>
+
+        {/* Ornamental Bottom Border */}
+        {isScrolled && (
+          <div className="absolute bottom-0 left-0 w-full h-px overflow-hidden opacity-30">
+            <div className="w-[200%] h-full flex">
+              {[...Array(20)].map((_, i) => (
+                <div key={i} className="flex-1 border-b-[3px] border-dashed border-[#D96A1D] mx-1" />
+              ))}
+            </div>
+          </div>
+        )}
+      </motion.nav>
+
+      {/* Mobile Floating CTA - Visible only on Mobile */}
+      <div className="fixed bottom-8 left-0 right-0 z-[1000] px-6 md:hidden pointer-events-none">
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          className="max-w-md mx-auto pointer-events-auto"
+        >
           <a
             href="#rsvp"
             onClick={(e) => scrollToSection(e, '#rsvp')}
-            className="vintage-button !px-8 !py-3 !text-[11px] !bg-[#0B3A0A] !text-white hover:!bg-[#D96A1D] transition-colors shadow-lg border-2 border-white/20"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-[#0B3A0A] text-white rounded-full shadow-[0_10px_30px_rgba(11,58,10,0.4)] border-2 border-[#D96A1D]/30 backdrop-blur-md active:scale-95 transition-all group"
           >
-            JOIN THE ROYALTY
-          </a>
-        </div>
-
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-[#0B3A0A] p-2"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16m-7 6h7" />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Ornamental Bottom Border */}
-      {isScrolled && (
-        <div className="absolute bottom-0 left-0 w-full h-px overflow-hidden opacity-30">
-          <div className="w-[200%] h-full flex">
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className="flex-1 border-b-[3px] border-dashed border-[#D96A1D] mx-1" />
-            ))}
-          </div>
-        </div>
-      )}
-
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden nav-glass border-t border-[#D96A1D]/10 overflow-hidden"
-          >
-            <div className="px-6 py-8 flex flex-col gap-6 items-center">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => scrollToSection(e, link.href)}
-                  className={`nav-link text-base ${activeSection === link.id ? 'active font-bold' : ''}`}
-                >
-                  {link.name}
-                </a>
-              ))}
-              <a
-                href="#rsvp"
-                onClick={(e) => scrollToSection(e, '#rsvp')}
-                className="vintage-button-primary w-full justify-center"
-              >
-                JOIN THE ROYALTY
-              </a>
+            <span className="font-montserrat text-xs tracking-[0.4em] font-black uppercase">Join the Royalty</span>
+            <div className="w-6 h-6 rounded-full bg-[#D96A1D] flex items-center justify-center group-active:translate-x-2 transition-transform">
+              <ArrowRight className="w-3 h-3 text-white" />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+          </a>
+        </motion.div>
+      </div>
+    </>
   );
 };
 

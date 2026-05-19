@@ -40,6 +40,9 @@ export default {
         cinzel: ['Cinzel', 'serif'],
         cormorant: ['Cormorant Garamond', 'serif'],
         montserrat: ['Montserrat', 'sans-serif'],
+        blackletter: ['UnifrakturMaguntia', 'cursive'],
+        'eb-garamond': ['EB Garamond', 'serif'],
+        script: ['Mrs Saint Delafield', 'cursive'],
       },
       animation: {
         'twinkle': 'twinkle 3s ease-in-out infinite',

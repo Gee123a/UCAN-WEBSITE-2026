@@ -109,9 +109,9 @@ export default function UCANWebsite() {
                   style={{ transformOrigin: "left", rotateY: 0 }}
                 >
                   <Star className="w-12 h-12 text-white mb-4 animate-twinkle" />
-                  <h2 className="font-cinzel text-2xl text-white font-bold">UCAN 2026</h2>
+                  <h2 className="font-cinzel text-4xl text-white font-bold tracking-widest">UCAN 2026</h2>
                   <div className="w-12 h-0.5 bg-white/40 my-4"></div>
-                  <p className="font-montserrat text-[10px] tracking-[0.3em] text-white/80 uppercase">The Royal Invitation</p>
+                  <p className="font-script text-xl tracking-widest text-white/90">The Royal Invitation</p>
                 </motion.div>
                 
                 {/* Book Spine */}
@@ -134,10 +134,10 @@ export default function UCANWebsite() {
                       />
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <span className="font-montserrat text-[10px] tracking-[0.4em] text-white/70 uppercase font-bold">
+                      <span className="font-eb-garamond text-xs tracking-wider text-white/70 font-bold italic">
                         Preparing the Ballroom
                       </span>
-                      <span className="font-cinzel text-xs text-[#D96A1D] animate-pulse">
+                      <span className="font-cinzel text-xl text-[#D96A1D] animate-pulse">
                         {Math.round(loadProgress)}%
                       </span>
                     </div>
@@ -156,7 +156,7 @@ export default function UCANWebsite() {
                 )}
               </div>
               
-              <p className="mt-8 font-cormorant text-white/50 italic text-xl">A magical evening awaits...</p>
+              <p className="mt-8 font-eb-garamond text-white/60 italic text-2xl">A magical evening awaits...</p>
             </motion.div>
 
             <Particles
@@ -300,10 +300,10 @@ export default function UCANWebsite() {
               transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
               className="relative mb-12"
             >
-              <h1 className="text-[12vw] sm:text-8xl md:text-9xl lg:text-[12rem] tracking-tight sm:tracking-tighter leading-[0.85] sm:leading-[0.8] mb-4 text-[#0B3A0A] font-extrabold drop-shadow-[4px_4px_0px_rgba(217,106,29,0.1)] font-cinzel">
+              <h1 className="text-[12vw] sm:text-8xl md:text-9xl lg:text-[11rem] tracking-tight leading-[0.85] sm:leading-[0.8] mb-4 text-[#0B3A0A] font-cinzel font-black drop-shadow-[4px_4px_0px_rgba(217,106,29,0.1)]">
                 AWARDING
               </h1>
-              <h2 className="text-[10vw] sm:text-7xl md:text-8xl lg:text-[9rem] tracking-tight sm:tracking-tighter leading-none text-[#D96A1D] font-bold italic drop-shadow-[2px_2px_0px_rgba(11,58,10,0.05)] font-cinzel">
+              <h2 className="text-[10vw] sm:text-7xl md:text-8xl lg:text-[10rem] tracking-tight leading-none text-[#D96A1D] font-cinzel font-bold italic drop-shadow-[2px_2px_0px_rgba(11,58,10,0.05)]">
                 NIGHT 2026
               </h2>
 
@@ -319,7 +319,7 @@ export default function UCANWebsite() {
               transition={{ duration: 1, delay: 0.9 }}
               className="mb-8 relative"
             >
-              <p className="font-cormorant text-xl min-[375px]:text-2xl md:text-4xl tracking-wide italic mb-3 text-[#0B3A0A]">
+              <p className="font-script text-3xl min-[375px]:text-4xl md:text-6xl tracking-wide mb-3 text-[#0B3A0A]">
                 Universitas Ciputra
               </p>
               <svg className="mx-auto w-[120px] md:w-[180px]" height="8" viewBox="0 0 180 8">
@@ -436,7 +436,7 @@ export default function UCANWebsite() {
                   Event Details
                 </span>
               </div>
-              <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl leading-tight mb-5 text-[#0B3A0A] font-cinzel">
+              <h3 className="text-3xl md:text-5xl lg:text-7xl leading-tight mb-5 text-[#0B3A0A] font-cinzel">
                 Everything You Need to Know
               </h3>
               <svg className="mx-auto" width="200" height="8" viewBox="0 0 200 8">
@@ -595,8 +595,8 @@ export default function UCANWebsite() {
           <div className="max-w-7xl mx-auto relative">
             <div className="grid md:grid-cols-2 gap-12 mb-12">
               <div className="text-center md:text-left">
-                <h4 className="text-3xl sm:text-4xl mb-3 text-[#0B3A0A] font-cinzel">Universitas Ciputra</h4>
-                <p className="font-cormorant text-xl sm:text-2xl italic text-[#D96A1D]">Shaping Dreams, Honoring Excellence</p>
+                <h4 className="text-4xl sm:text-6xl mb-3 text-[#0B3A0A] font-cinzel">Universitas Ciputra</h4>
+                <p className="font-script text-2xl sm:text-4xl text-[#D96A1D]">Shaping Dreams, Honoring Excellence</p>
               </div>
 
               <div className="flex flex-col items-center md:items-end text-center md:text-right gap-4 font-montserrat text-sm text-[#4C7A1A]">
