@@ -10,6 +10,7 @@ import { ImageWithFallback } from './components/ImageWithFallback';
 import { StoryJourney } from './components/StoryJourney';
 import NavigationBar from './components/NavigationBar';
 import Particles from './components/magicui/particles';
+import { Meteors } from './components/magicui/meteors';
 
 // Assets for Preloading
 import Wall1 from './assets/assets UCAN/Ballroom/wall /Wall1.png';
@@ -20,7 +21,8 @@ import Ballroom3 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom
 import Banner1 from './assets/assets UCAN/nomination assets/Hallway/Banner/Banner 1/AI Ver/Banner.png';
 import BannerNew from './assets/assets UCAN/Chamber/New/BannerNew.png';
 import PillarArch1 from './assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.png';
-import Performance from './assets/Special Performance.png'
+import Performance from './assets/Special Performance.png';
+import UcanwLogo from './assets/ucanLogos/UCANW.png';
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,7 +37,7 @@ export default function UCANWebsite() {
 
   useEffect(() => {
     const assetsToLoad = [
-      Wall1, Wall2, Ballroom1, Ballroom2, Ballroom3, Banner1, BannerNew, PillarArch1
+      Wall1, Wall2, Ballroom1, Ballroom2, Ballroom3, Banner1, BannerNew, PillarArch1, UcanwLogo
     ];
     let loadedCount = 0;
 
@@ -95,9 +97,11 @@ export default function UCANWebsite() {
             key="book-loader"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B3A0A] overflow-hidden"
+            className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, #273961, #090A11)' }}
           >
             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/p6.png')]"></div>
+            <Meteors number={30} />
             
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -110,7 +114,7 @@ export default function UCANWebsite() {
                   className="absolute inset-0 bg-[#D96A1D] rounded-r-lg shadow-2xl border-2 border-white/20 flex flex-col items-center justify-center p-6 text-center"
                   style={{ transformOrigin: "left", rotateY: 0 }}
                 >
-                  <Star className="w-12 h-12 text-white mb-4 animate-twinkle" />
+                  <img src={UcanwLogo} alt="UCANW Logo" className="w-32 h-32 object-contain mb-4 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] animate-pulse" />
                   <h2 className="font-cinzel text-4xl text-white font-bold tracking-widest">UCAN 2026</h2>
                   <div className="w-12 h-0.5 bg-white/40 my-4"></div>
                   <p className="font-lora text-lg italic tracking-widest text-white/90">Let the story begin</p>
