@@ -998,7 +998,7 @@ export default function UCANWebsite() {
           <div className="grid md:grid-cols-2 gap-12 mb-12">
             <div>
               <h4 className="font-cinzel text-4xl mb-3" style={{ color: '#0B3A0A' }}>Universitas Ciputra</h4>
-              <p className="font-cormorant text-2xl italic" style={{ color: '#D96A1D' }}>Shaping Dreams, Honoring Excellence</p>
+              <p className="font-lora text-2xl italic" style={{ color: '#D96A1D' }}>Shaping Dreams, Honoring Excellence</p>
             </div>
             
             <div className="flex flex-col md:items-end gap-4 font-montserrat text-sm" style={{ color: '#6D8F2B' }}>

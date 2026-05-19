@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   Calendar, MapPin, Clock, Users, Star,
-  Sparkles, Gift, ArrowRight, Heart, ArrowUp, Loader2
+  Sparkles, Gift, ArrowRight, Heart, ArrowUp, Loader2,
+  Video
 } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { RSVPForm } from './components/RSVPForm';
@@ -111,7 +112,7 @@ export default function UCANWebsite() {
                   <Star className="w-12 h-12 text-white mb-4 animate-twinkle" />
                   <h2 className="font-cinzel text-4xl text-white font-bold tracking-widest">UCAN 2026</h2>
                   <div className="w-12 h-0.5 bg-white/40 my-4"></div>
-                  <p className="font-script text-xl tracking-widest text-white/90">The Royal Invitation</p>
+                  <p className="font-lora text-lg italic tracking-widest text-white/90">Let the story begin</p>
                 </motion.div>
                 
                 {/* Book Spine */}
@@ -503,21 +504,49 @@ export default function UCANWebsite() {
                 </div>
               </motion.div>
 
+              {/* UCAN Trailer Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.15 }}
+                className="lg:col-span-5 storybook-card rotate-[0.2deg] border-[#D96A1D] border-dashed flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#D96A1D]/10 border-2 border-dotted border-[#D96A1D]">
+                      <Video className="w-6 h-6 text-[#D96A1D]" />
+                    </div>
+                    <div>
+                      <h4 className="text-2xl text-[#0B3A0A] font-cinzel">Event Trailer</h4>
+                      <p className="font-montserrat text-xs tracking-wide text-[#6D8F2B]">A sneak peek into the magic</p>
+                    </div>
+                  </div>
+                  <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-[#D96A1D]/20 bg-black/5">
+                    <iframe
+                      src="https://drive.google.com/file/d/1cJN_3MM3a5KlI-rRS7988o8YXAV6Ps6t/preview"
+                      className="absolute inset-0 w-full h-full border-none"
+                      allow="autoplay"
+                    ></iframe>
+                  </div>
+                </div>
+              </motion.div>
+
               {/* Dress Code Card */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="lg:col-span-5 storybook-card rotate-[0.5deg] border-[#D96A1D] border-dashed"
+                className="lg:col-span-4 storybook-card rotate-[0.5deg] border-[#D96A1D] border-dashed"
               >
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-[#4C7A1A]/10 border-[3px] border-dotted border-[#4C7A1A]">
                   <Users className="w-8 h-8 text-[#4C7A1A]" />
                 </div>
                 <h4 className="text-4xl mb-4 text-[#0B3A0A] font-cinzel">Dress Code</h4>
-                <p className="font-cormorant text-3xl mb-3 italic text-[#D96A1D]">Formal Earth Tone</p>
+                <p className="font-cormorant text-3xl mb-3 italic text-[#D96A1D]">Royal Attire</p>
                 <p className="font-montserrat text-sm tracking-wide leading-relaxed text-[#6D8F2B]">
-                  Browns · Beiges · Creams · Terracotta · Olive
+                  Dress in your most elegant, regal garments to fit the magical evening.
                 </p>
                 <Heart className="absolute -bottom-4 -right-4 w-10 h-10 text-[#C93A1D] fill-[#C93A1D] -rotate-[20deg]" />
               </motion.div>
@@ -528,7 +557,7 @@ export default function UCANWebsite() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.3 }}
-                className="lg:col-span-5 storybook-card group cursor-pointer -rotate-[0.4deg] border-[#F08A2B] border-dashed"
+                className="lg:col-span-4 storybook-card group cursor-pointer -rotate-[0.4deg] border-[#F08A2B] border-dashed"
               >
                 <div className="absolute inset-0">
                   <ImageWithFallback
@@ -556,23 +585,16 @@ export default function UCANWebsite() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.4 }}
-                className="lg:col-span-7 storybook-card rotate-[0.3deg] border-[#C93A1D] border-dashed"
+                className="lg:col-span-4 storybook-card rotate-[0.3deg] border-[#C93A1D] border-dashed"
               >
-                <div className="grid md:grid-cols-2 gap-8 items-center">
-                  <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 bg-[#C93A1D]/10 border-[3px] border-dotted border-[#C93A1D]">
-                      <Gift className="w-10 h-10 text-[#C93A1D]" />
-                    </div>
-                    <div>
-                      <h4 className="text-3xl mb-1 text-[#0B3A0A] font-cinzel">Door Prize & Souvenirs</h4>
-                      <p className="font-montserrat text-xs tracking-wider uppercase text-[#D96A1D]">Exclusive Rewards</p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 font-montserrat text-sm leading-relaxed text-[#4C7A1A]">
-                    <p>All attendees receive exclusive UCAN 2026 souvenirs to commemorate this special evening.</p>
-                    <p className="text-[#6D8F2B]">Stay until the end for a chance to win exciting door prizes announced during the event.</p>
-                  </div>
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-[#C93A1D]/10 border-[3px] border-dotted border-[#C93A1D]">
+                  <Gift className="w-8 h-8 text-[#C93A1D]" />
                 </div>
+                <h4 className="text-4xl mb-4 text-[#0B3A0A] font-cinzel">Door Prize</h4>
+                <p className="font-cormorant text-3xl mb-3 italic text-[#D96A1D]">Exclusive Souvenirs</p>
+                <p className="font-montserrat text-sm tracking-wide leading-relaxed text-[#4C7A1A]">
+                  Receive exclusive UCAN 2026 souvenirs and stand a chance to win exciting door prizes.
+                </p>
                 <div className="absolute -top-4 -left-4 w-12 h-12 organic-blob bg-[#F08A2B] opacity-60" />
                 <Star className="absolute -bottom-4 -right-4 w-10 h-10 text-[#4C7A1A] fill-[#4C7A1A] rotate-[35deg]" />
               </motion.div>
@@ -583,7 +605,6 @@ export default function UCANWebsite() {
         {/* RSVP Section */}
         <section id="rsvp" ref={rsvpSectionRef} className="relative py-12 md:py-24 px-4 md:px-6">
           <div className="max-w-3xl mx-auto relative">
-            <p className="font-montserrat tracking-wide text-[#0B3A0A] mb-8">Login with your student account to reserve your seat</p>
             <RSVPForm isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} containerRef={rsvpContainerRef} />
           </div>
         </section>

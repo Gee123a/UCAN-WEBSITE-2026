@@ -43,6 +43,7 @@ export default {
         blackletter: ['UnifrakturMaguntia', 'cursive'],
         'eb-garamond': ['EB Garamond', 'serif'],
         script: ['Mrs Saint Delafield', 'cursive'],
+        lora: ['Lora', 'serif'],
       },
       animation: {
         'twinkle': 'twinkle 3s ease-in-out infinite',
