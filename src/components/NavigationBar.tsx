@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 
 // Organization Logos
 import UCANLogo from '../assets/ucanLogos/UCAN.png';
@@ -110,27 +109,6 @@ const NavigationBar: React.FC = () => {
           </div>
         )}
       </motion.nav>
-
-      {/* Mobile Floating CTA - Visible only on Mobile */}
-      <div className="fixed bottom-8 left-0 right-0 z-[1000] px-6 md:hidden pointer-events-none">
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="max-w-md mx-auto pointer-events-auto"
-        >
-          <a
-            href="#rsvp"
-            onClick={(e) => scrollToSection(e, '#rsvp')}
-            className="flex items-center justify-center gap-3 w-full py-4 bg-[#0B3A0A] text-white rounded-full shadow-[0_10px_30px_rgba(11,58,10,0.4)] border-2 border-[#D96A1D]/30 backdrop-blur-md active:scale-95 transition-all group"
-          >
-            <span className="font-montserrat text-xs tracking-[0.4em] font-black uppercase">Join the Royalty</span>
-            <div className="w-6 h-6 rounded-full bg-[#D96A1D] flex items-center justify-center group-active:translate-x-2 transition-transform">
-              <ArrowRight className="w-3 h-3 text-white" />
-            </div>
-          </a>
-        </motion.div>
-      </div>
     </>
   );
 };

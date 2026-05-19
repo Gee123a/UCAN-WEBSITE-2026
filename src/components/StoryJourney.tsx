@@ -468,20 +468,24 @@ export function StoryJourney() {
 
         {nomineeCategories.map((category, i) => {
           const ArchImg = [PillarArch1, PillarArch2, PillarArch3][i % 3];
+          const archOffsets = ['-1.76%', '0%', '-3.19%'];
+          const archOffset = archOffsets[i % 3];
           return (
             <div key={category.id} className={`category-section-${i} flex-shrink-0 flex flex-col lg:flex-row items-center gap-16 lg:gap-[5vw] lg:pr-[5vw] lg:border-l border-dashed border-brand-orange/20 lg:pl-[5vw] w-full lg:w-auto mb-40 lg:mb-0`}>
               <div className="category-header w-full lg:w-[65vw] flex flex-col justify-center items-center text-center relative group min-h-[45vh] lg:min-h-[80vh] px-4">
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <img src={ArchImg} alt="" className="h-[100%] lg:h-[110%] w-auto object-contain transition-transform duration-1000 group-hover:scale-105 opacity-90 drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)]" />
+                  <div style={{ transform: `translateX(${archOffset})` }} className="h-[100%] lg:h-[110%] flex items-center justify-center">
+                    <img src={ArchImg} alt="" className="h-full w-auto object-contain transition-transform duration-1000 group-hover:scale-105 opacity-90 drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)]" />
+                  </div>
                 </div>
                 
-                <div className="relative z-10 px-4 lg:px-8 py-12 flex flex-col items-center max-w-2xl">
-                  <div className="mb-8 lg:mb-12 relative flex items-center justify-center">
+                <div className="relative z-10 px-4 lg:px-8 py-6 flex flex-col items-center w-full">
+                  <div className="mb-4 lg:mb-6 relative flex items-center justify-center">
                     <div className="w-24 h-24 lg:w-32 lg:h-32 flex items-center justify-center relative z-10">
                        <img src={category.logo} className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]" alt="" />
                     </div>
                   </div>
-                  <h3 className="text-3xl sm:text-5xl lg:text-[8vw] text-brand-green font-cinzel font-bold leading-normal lg:leading-[0.8] tracking-tighter break-words text-center overflow-wrap-anywhere px-4">
+                  <h3 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl text-brand-green font-cinzel font-bold leading-tight tracking-tighter break-words text-center w-full px-4">
                     {category.title.split(' ').map((word, idx) => (
                       <span key={idx} className="block last:text-brand-orange last:italic">{word}</span>
                     ))}

@@ -20,6 +20,7 @@ import Ballroom3 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom
 import Banner1 from './assets/assets UCAN/nomination assets/Hallway/Banner/Banner 1/AI Ver/Banner.png';
 import BannerNew from './assets/assets UCAN/Chamber/New/BannerNew.png';
 import PillarArch1 from './assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.png';
+import Performance from './assets/Special Performance.png'
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -548,7 +549,7 @@ export default function UCANWebsite() {
                     </div>
                   </div>
                   <div 
-                    className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border-2 border-[#D96A1D]/20 bg-black/5"
+                    className="relative w-full aspect-[4/3] md:aspect-[16/10] rounded-2xl overflow-hidden border-2 border-[#D96A1D]/20 bg-black/5"
                     style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)', maskImage: 'radial-gradient(white, black)', WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
                   >
                     <iframe
@@ -589,7 +590,7 @@ export default function UCANWebsite() {
               >
                 <div className="absolute inset-0">
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1514525253344-f81bad393c0d?auto=format&fit=crop&q=80&w=1000"
+                    src={Performance}
                     alt="Performance"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 vintage-image"
                   />

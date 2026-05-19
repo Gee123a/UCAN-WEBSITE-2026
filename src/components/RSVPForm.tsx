@@ -205,6 +205,10 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
               magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook.
             </p>
             
+            <p className="font-montserrat text-xs text-gray-500 mb-3 tracking-wide">
+              please login with a ciputra account
+            </p>
+
             <div className="relative p-1 rounded-full bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-lg hover:scale-105 transition-transform duration-500">
               <div className="bg-white rounded-full px-4 py-2 overflow-hidden flex justify-center items-center">
                 <GoogleLogin
