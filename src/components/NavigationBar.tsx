@@ -57,17 +57,17 @@ const NavigationBar: React.FC = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-500 hidden md:block ${
-          isScrolled ? 'nav-glass py-4 shadow-xl' : 'bg-transparent py-8'
+          isScrolled ? 'nav-glass py-2 shadow-xl' : 'bg-transparent py-4'
         }`}
       >
         <div className="container mx-auto px-6 flex justify-between items-center relative">
           <motion.a
             href="#hero"
             onClick={(e) => scrollToSection(e, '#hero')}
-            className="flex items-center gap-4 group"
+            className="flex items-center gap-3 group"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="w-14 h-14 relative flex items-center justify-center">
+            <div className="w-10 h-10 relative flex items-center justify-center">
               <div className="absolute inset-0 bg-brand-orange blur-2xl opacity-0 group-hover:opacity-20 transition-opacity" />
               <img src={UCANLogo} className="w-full h-full object-contain relative z-10" alt="UCAN 2026" />
             </div>

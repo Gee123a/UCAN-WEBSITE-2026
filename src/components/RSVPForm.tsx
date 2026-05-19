@@ -135,8 +135,9 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             <div className="h-px w-32 bg-brand-orange/30 mx-auto mb-8" />
             
             <p className="font-montserrat text-sm tracking-widest text-brand-green-accent mb-4">YOUR SCROLL HAS BEEN RECORDED</p>
-            <p className="font-cormorant text-xl text-brand-green-accent/80 italic mb-10">
-              "We await your arrival at the grand celebration of excellence."
+            <p className="font-cormorant text-xl text-brand-green-accent/80 italic mb-10 text-left max-w-xs mx-auto px-2">
+              <span className="text-5xl md:text-6xl font-cinzel text-brand-orange mr-0.5 font-bold drop-shadow-sm leading-none align-baseline">W</span>
+              e await your arrival at the grand celebration of excellence.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-sm mx-auto p-6 bg-white/40 rounded-2xl border border-brand-orange/10">
@@ -199,8 +200,9 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
               Enter the <br/><span className="text-brand-orange italic drop-shadow-sm font-black">Ballroom</span>
             </h2>
             
-            <p className="font-cormorant italic text-lg md:text-xl text-brand-green-accent mb-8 max-w-md leading-relaxed">
-              "A magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook."
+            <p className="font-cormorant italic text-lg md:text-xl text-brand-green-accent mb-8 max-w-md leading-relaxed text-left px-2">
+              <span className="text-5xl md:text-6xl font-cormorant text-brand-orange mr-1.5 font-bold drop-shadow-sm leading-none align-baseline">A</span>
+              magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook.
             </p>
             
             <div className="relative p-1 rounded-full bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange shadow-lg hover:scale-105 transition-transform duration-500">

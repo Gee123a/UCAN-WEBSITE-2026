@@ -345,16 +345,41 @@ export default function UCANWebsite() {
               </div>
             </motion.div>
 
-            <motion.button
-              onClick={() => document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-              className="vintage-button mx-auto group"
-              initial={{ opacity: 0, y: 20 }}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1.3 }}
+              transition={{ duration: 1.2, delay: 1.3 }}
+              className="relative max-w-2xl mx-auto my-12 px-6 sm:px-10 pt-8 pb-14 fairytale-frame bg-[#fffcf5] text-center shadow-[10px_10px_0px_rgba(217,106,29,0.15)] -rotate-1 hover:rotate-0 transition-transform duration-500 z-30"
             >
-              <span className="relative z-10">RESERVE YOUR SEAT</span>
-              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-2 transition-transform" />
-            </motion.button>
+              {/* Corner Sparkle Ornaments */}
+              <Sparkles className="absolute -top-3 -left-3 w-6 h-6 text-[#F08A2B] animate-twinkle" />
+              <Sparkles className="absolute -bottom-3 -right-3 w-6 h-6 text-[#F08A2B] animate-twinkle [animation-delay:0.7s]" />
+
+              <span className="font-cinzel text-xs tracking-[0.25em] text-[#C93A1D] font-bold block mb-4">
+                THE CHRONICLE OF UCAN
+              </span>
+
+              <div className="font-eb-garamond text-base sm:text-lg md:text-xl text-[#0B3A0A] italic leading-relaxed space-y-4 mb-6">
+                <p>
+                  "Once every year, on a night filled with light and wonder, the Universitas Ciputra Awarding Night is held. It is a special gathering where students who have shown dedication and excellence in academics, leadership, entrepreneurship, and creativity are recognized for their journeys."
+                </p>
+                <p>
+                  "And as these stories are shared, they don’t end on that stage. Instead, they spark something new that encourages others to believe in their own path, to keep trying, and to create their own story worth telling."
+                </p>
+              </div>
+
+              <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 z-35">
+                <button
+                  onClick={() => document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="vintage-button vintage-button-primary group shadow-lg"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    RESERVE YOUR SEAT
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                  </span>
+                </button>
+              </div>
+            </motion.div>
 
             <motion.p
               initial={{ opacity: 0 }}
@@ -522,10 +547,13 @@ export default function UCANWebsite() {
                       <p className="font-montserrat text-xs tracking-wide text-[#6D8F2B]">A sneak peek into the magic</p>
                     </div>
                   </div>
-                  <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-[#D96A1D]/20 bg-black/5">
+                  <div 
+                    className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border-2 border-[#D96A1D]/20 bg-black/5"
+                    style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)', maskImage: 'radial-gradient(white, black)', WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
+                  >
                     <iframe
                       src="https://drive.google.com/file/d/1cJN_3MM3a5KlI-rRS7988o8YXAV6Ps6t/preview"
-                      className="absolute inset-0 w-full h-full border-none"
+                      className="absolute inset-0 w-full h-full border-none rounded-2xl"
                       allow="autoplay"
                     ></iframe>
                   </div>

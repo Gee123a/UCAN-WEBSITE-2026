@@ -445,20 +445,20 @@ export function StoryJourney() {
       <div ref={horizontalRef} className="relative z-30 flex flex-col lg:flex-row h-auto lg:h-screen w-full lg:w-max items-center px-4 lg:px-[5vw] gap-16 lg:gap-[8vw] py-24 lg:py-0 overflow-x-hidden lg:overflow-visible">
         {/* Intro */}
         <div className="flex-shrink-0 w-full lg:w-[60vw] flex flex-col justify-center relative items-center text-center py-10 lg:py-0 mb-12 lg:mb-0">
-          <div className="relative z-10 lg:p-12 flex flex-col items-center">
-            <div className="relative mb-8 group">
-              <img src={BannerNew} className="w-48 h-64 sm:w-64 sm:h-80 lg:w-80 lg:h-96 object-contain drop-shadow-2xl animate-float-slow group-hover:scale-105 transition-transform duration-700" alt="Royal Banner" />
+          <div className="relative z-10 lg:p-6 flex flex-col items-center">
+            <div className="relative mb-6 group">
+              <img src={BannerNew} className="w-48 h-64 sm:w-64 sm:h-80 lg:w-64 lg:h-80 object-contain drop-shadow-2xl animate-float-slow group-hover:scale-105 transition-transform duration-700" alt="Royal Banner" />
               <div className="absolute inset-0 flex items-center justify-center -translate-y-8"><Sparkles className="w-12 h-12 lg:w-16 lg:h-16 text-brand-orange animate-twinkle" /></div>
             </div>
             <div className="relative px-2 text-center">
-              <span className="px-6 py-2 inline-block font-montserrat text-[10px] tracking-[0.6em] uppercase text-brand-orange bg-brand-orange/5 backdrop-blur-md border border-brand-orange/20 mb-8 rounded-full font-bold">The Gallery of Excellence</span>
-              <h2 className="text-[12vw] sm:text-[10vw] lg:text-[10vw] leading-[0.8] text-brand-green font-cinzel font-black drop-shadow-sm mb-8">THE <br /> <span className="text-brand-orange italic">LEGENDS</span></h2>
-              <div className="h-1 w-24 lg:w-32 bg-brand-orange/20 mx-auto mb-8 rounded-full" />
-              <p className="font-eb-garamond text-xl sm:text-2xl lg:text-4xl italic text-brand-green-accent max-w-xl leading-relaxed font-medium">"Walk through the royal halls to discover those who carved their names in the university's legacy."</p>
+              <span className="px-6 py-2 inline-block font-montserrat text-[10px] tracking-[0.6em] uppercase text-brand-orange bg-brand-orange/5 backdrop-blur-md border border-brand-orange/20 mb-6 rounded-full font-bold">The Gallery of Excellence</span>
+              <h2 className="text-[12vw] sm:text-[10vw] lg:text-[7.5vw] leading-[0.8] text-brand-green font-cinzel font-black drop-shadow-sm mb-6">THE <br /> <span className="text-brand-orange italic">LEGENDS</span></h2>
+              <div className="h-1 w-24 lg:w-32 bg-brand-orange/20 mx-auto mb-6 rounded-full" />
+              <p className="font-eb-garamond text-xl sm:text-2xl lg:text-3xl italic text-brand-green-accent max-w-xl leading-relaxed font-medium">"Walk through the royal halls to discover those who carved their names in the university's legacy."</p>
             </div>
           </div>
           
-          <div className="mt-12 flex flex-col items-center gap-4 text-brand-orange group cursor-pointer">
+          <div className="mt-8 flex flex-col items-center gap-4 text-brand-orange group cursor-pointer">
              <span className="font-script text-2xl tracking-wide opacity-80">{window.innerWidth < 1024 ? 'Scroll down to begin' : 'Scroll to explore'}</span>
              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="flex flex-col items-center gap-4">
                <div className="h-24 lg:h-px w-px lg:w-24 bg-current opacity-20" /><ArrowRight className="w-6 h-6 rotate-90 lg:rotate-0" />
@@ -507,7 +507,7 @@ export function StoryJourney() {
                   <div key={idx} className="nominee-card flex-shrink-0 w-[240px] sm:w-[280px] lg:w-[360px] group relative mx-auto" style={{ perspective: '2000px' }}>
                     <motion.div 
                       className="relative w-full aspect-[3/4] transition-all duration-600 ease-out cursor-pointer"
-                      style={{ transformStyle: 'preserve-3d' }}
+                      style={{ transformStyle: 'preserve-3d', WebkitTransformStyle: 'preserve-3d' }}
                       whileHover={{ rotateY: window.innerWidth >= 1024 ? 180 : 0 }}
                       onClick={(e) => {
                         if (window.innerWidth < 1024) {
@@ -518,37 +518,51 @@ export function StoryJourney() {
                       }}
                     >
                       {/* FRONT */}
-                      <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] bg-[#0B1A0A] border-2 border-[#D96A1D]/30 flex flex-col items-center justify-center p-6 lg:p-8"
-                           style={{ backfaceVisibility: 'hidden' }}>
+                      <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] bg-[#0B1A0A] border-2 border-[#D96A1D]/30 flex flex-col justify-between items-center p-6 lg:p-8"
+                           style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}>
                         <div className="absolute inset-[10px] border border-[#D96A1D]/15 rounded-xl pointer-events-none" />
                         <div className="filigree-corner top-0 left-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(1.1)' }} />
                         <div className="filigree-corner top-0 right-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(-1.1) scaleY(1.1)' }} />
                         <div className="filigree-corner bottom-0 left-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(1.1) scaleY(-1.1)' }} />
                         <div className="filigree-corner bottom-0 right-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(-1.1)' }} />
-                        <div className="relative mb-8 lg:mb-12 flex items-center justify-center">
-                           <div className="w-24 h-24 lg:w-28 lg:h-28 flex items-center justify-center relative z-10">
+                        <div className="w-full flex justify-center pt-2 lg:pt-4">
+                           <div className="w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center relative z-10">
                               <img src={category.logo} className="w-full h-full object-contain" alt="" />
                            </div>
                         </div>
-                        <div className="relative z-10 text-center px-2 lg:px-4">
-                          <h4 className="text-lg sm:text-xl lg:text-3xl font-cinzel text-white leading-[1] tracking-tight mb-6 lg:mb-8 font-bold">{nominee.name}</h4>
-                          <div className="inline-flex items-center gap-2 text-brand-orange/70 font-script text-xl tracking-wide"><span>Tap to reveal</span><ArrowRight className="w-3 h-3" /></div>
+                        <div className="flex-1 flex items-center justify-center my-3 px-2 lg:px-4 overflow-hidden">
+                          <h4 className={`${
+                            nominee.name.length > 55
+                              ? 'text-xs sm:text-sm lg:text-lg'
+                              : nominee.name.length > 35
+                                ? 'text-sm sm:text-base lg:text-xl'
+                                : 'text-base sm:text-lg lg:text-2xl'
+                          } font-cinzel text-white leading-snug tracking-tight font-bold text-center`}>{nominee.name}</h4>
+                        </div>
+                        <div className="pb-2 lg:pb-4">
+                          <div className="inline-flex items-center gap-2 text-brand-orange/70 font-script text-lg lg:text-xl tracking-wide"><span>Tap to reveal</span><ArrowRight className="w-3 h-3" /></div>
                         </div>
                       </div>
                       {/* BACK */}
-                      <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] bg-[#0B1A0A] border-2 border-brand-orange/40 p-6 lg:p-10 flex flex-col items-center justify-center"
-                           style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}>
+                      <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] bg-[#0B1A0A] border-2 border-brand-orange/40 p-6 lg:p-8 flex flex-col justify-between items-center text-center"
+                           style={{ transform: 'rotateY(180deg) translateZ(0)', WebkitTransform: 'rotateY(180deg) translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
                         <div className="absolute inset-[10px] border border-brand-orange/10 rounded-xl pointer-events-none" />
                         <div className="filigree-corner top-0 left-0 opacity-30" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(1)' }} />
                         <div className="filigree-corner top-0 right-0 opacity-30" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(-1) scaleY(1)' }} />
                         <div className="filigree-corner bottom-0 left-0 opacity-30" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(1) scaleY(-1)' }} />
                         <div className="filigree-corner bottom-0 right-0 opacity-30" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(-1)' }} />
-                        <h5 className="font-cinzel text-brand-orange text-lg mb-4 lg:mb-6 tracking-widest uppercase opacity-70 font-bold">{nominee.name}</h5>
-                        <div className="relative">
-                          <div className="absolute -inset-6 bg-brand-orange/5 blur-2xl rounded-full" />
-                          <p className="relative z-10 font-eb-garamond text-base lg:text-2xl italic text-white/90 leading-relaxed text-center font-medium px-2 lg:px-4">"{nominee.description}"</p>
+                        <div className="w-full pt-2 lg:pt-4 px-2">
+                          <h5 className="font-cinzel text-brand-orange text-xs sm:text-sm lg:text-base tracking-widest uppercase opacity-70 font-bold line-clamp-2">{nominee.name}</h5>
                         </div>
-                        <img src={MasDes1} className="mt-6 lg:mt-10 h-6 object-contain opacity-20" alt="" />
+                        <div className="flex-1 flex items-center justify-center my-3 overflow-y-auto no-scrollbar overflow-x-hidden max-h-[60%]">
+                          <div className="relative">
+                            <div className="absolute -inset-6 bg-brand-orange/5 blur-2xl rounded-full pointer-events-none" />
+                            <p className="relative z-10 font-eb-garamond text-xs sm:text-sm lg:text-lg italic text-white/90 leading-relaxed text-center font-medium px-2">"{nominee.description}"</p>
+                          </div>
+                        </div>
+                        <div className="pb-2 lg:pb-4">
+                          <img src={MasDes1} className="h-5 lg:h-6 object-contain opacity-20" alt="" />
+                        </div>
                       </div>
                     </motion.div>
                     <div className="absolute -inset-4 bg-brand-orange/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
