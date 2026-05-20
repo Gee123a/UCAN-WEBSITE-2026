@@ -1,9 +1,187 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Star, Heart, Sparkles, ArrowRight, ShieldCheck, Mail, User, GraduationCap, Building2 } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { motion, AnimatePresence } from 'framer-motion';
-import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.png';
-import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
+import DoorAsset from '../assets/assets UCAN/Ballroom/Mirror/Door.webp';
+import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.webp';
+
+interface CustomSelectProps {
+  name: string;
+  value: string;
+  placeholder: string;
+  options: string[];
+  onChange: (name: string, value: string) => void;
+  error?: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+function CustomSelect({
+  name,
+  value,
+  placeholder,
+  options,
+  onChange,
+  error,
+  label,
+  icon
+}: CustomSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const optionsRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setFocusedIndex(-1);
+    } else {
+      const selectedIdx = options.indexOf(value);
+      setFocusedIndex(selectedIdx >= 0 ? selectedIdx : 0);
+    }
+  }, [isOpen, value, options]);
+
+  useEffect(() => {
+    if (focusedIndex >= 0 && optionsRefs.current[focusedIndex]) {
+      optionsRefs.current[focusedIndex]?.scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [focusedIndex]);
+
+  const handleSelect = (optionValue: string) => {
+    onChange(name, optionValue);
+    setIsOpen(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!isOpen) {
+        setIsOpen(true);
+      } else if (focusedIndex >= 0 && focusedIndex < options.length) {
+        handleSelect(options[focusedIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!isOpen) {
+        setIsOpen(true);
+      } else {
+        setFocusedIndex(prev => (prev + 1) % options.length);
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!isOpen) {
+        setIsOpen(true);
+      } else {
+        setFocusedIndex(prev => (prev - 1 + options.length) % options.length);
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsOpen(false);
+    } else if (e.key === 'Tab') {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div
+      className="relative group"
+      ref={containerRef}
+      onKeyDown={handleKeyDown}
+    >
+      <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
+        {icon} {label}
+      </label>
+      
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none cursor-pointer flex items-center justify-between text-left ${
+          error ? 'border-red-400 font-bold' : 'border-brand-orange/10 focus:border-brand-orange'
+        }`}
+      >
+        <span className={value ? 'text-brand-green' : 'text-gray-400/80'}>
+          {value || placeholder}
+        </span>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="opacity-40 group-hover:opacity-100 transition-opacity"
+        >
+          <Star className="w-4 h-4 text-brand-orange fill-current" />
+        </motion.div>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute left-0 right-0 mt-2 z-50 bg-[#FBF6EB] border-2 border-brand-orange/30 shadow-2xl rounded-2xl overflow-hidden max-h-60 overflow-y-auto"
+            role="listbox"
+          >
+            {options.map((option, index) => {
+              const isSelected = value === option;
+              const isFocused = focusedIndex === index;
+              return (
+                <div
+                  key={option}
+                  ref={el => optionsRefs.current[index] = el}
+                  onClick={() => handleSelect(option)}
+                  onMouseEnter={() => setFocusedIndex(index)}
+                  role="option"
+                  aria-selected={isSelected}
+                  className={`px-6 py-4 cursor-pointer font-cormorant text-xl transition-all duration-200 flex items-center justify-between outline-none ${
+                    isSelected
+                      ? 'bg-brand-orange/10 text-brand-orange font-bold font-cormorant shadow-[0_0_12px_rgba(217,106,29,0.1)]'
+                      : isFocused
+                      ? 'bg-brand-orange/5 text-brand-orange font-bold shadow-[inset_0_0_8px_rgba(217,106,29,0.08)]'
+                      : 'text-brand-green hover:bg-brand-orange/5 hover:text-brand-orange'
+                  }`}
+                >
+                  <span className={isFocused ? 'drop-shadow-[0_0_8px_rgba(217,106,29,0.2)]' : ''}>
+                    {option}
+                  </span>
+                  {(isSelected || isFocused) && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="text-brand-orange"
+                    >
+                      {isSelected ? (
+                        <Sparkles className="w-4 h-4 fill-current animate-pulse" />
+                      ) : (
+                        <Star className="w-3 h-3 fill-current opacity-50" />
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {error && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{error}</p>}
+    </div>
+  );
+}
+
 
 interface RSVPFormProps {
   isLoggedIn: boolean;
@@ -25,16 +203,9 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   
-  // Google Calendar Integration States
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [calendarAdded, setCalendarAdded] = useState(false);
-  const [calendarError, setCalendarError] = useState(false);
-  const [isLoadingCalendar, setIsLoadingCalendar] = useState(false);
-
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const token = tokenResponse.access_token;
-      setAccessToken(token);
       setIsLoading(true);
       setError('');
       try {
@@ -67,21 +238,19 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     onError: (err) => {
       console.error('Google login error:', err);
       setError('Portal failed to open. Try again.');
-    },
-    scope: 'https://www.googleapis.com/auth/calendar.events'
+    }
   });
 
   const organizations = [
-    'BEM UC',
-    'HMPS Akuntansi',
-    'HMPS Manajemen',
-    'HMPS Psikologi',
-    'HMPS Teknik Informatika',
-    'HMPS Desain Komunikasi Visual',
-    'HIMAFE',
-    'KMK',
-    'PMK',
-    'Other'
+    'SC',
+    'SRB',
+    'MD',
+    'SU',
+    'UKM'
+  ];
+
+  const majors = [
+    'IBM RC', 'IBM IC', 'ACC', 'MEM', 'VCD', 'ARS', 'FDB', 'HTEB', 'CB', 'FTP', 'IMT', 'ISB', 'MED', 'DEM', 'PSY', 'COM'
   ];
 
   const validateField = (name: string, value: string) => {
@@ -90,8 +259,8 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       errorMsg = 'Your name must be at least 3 characters';
     } else if (name === 'nim' && !/^\d{8,12}$/.test(value)) {
       errorMsg = 'NIM must be 8-12 digits';
-    } else if (name === 'major' && value.trim().length < 2) {
-      errorMsg = 'Please specify your major';
+    } else if (name === 'major' && !value) {
+      errorMsg = 'Please select your major';
     } else if (name === 'organization' && !value) {
       errorMsg = 'Please select your organization';
     }
@@ -123,7 +292,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       const response = await fetch('/api/rsvp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, email: userEmail, accessToken })
+        body: JSON.stringify({ ...formData, email: userEmail })
       });
 
       const data = await response.json();
@@ -134,13 +303,6 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       }
 
       setIsSubmitted(true);
-
-      // Set calendar status from backend response
-      if (data.calendarAdded) {
-        setCalendarAdded(true);
-      } else if (accessToken) {
-        setCalendarError(true);
-      }
     } catch (err) {
       console.error('RSVP error:', err);
       setError('Connection lost. Please try again.');
@@ -157,6 +319,14 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       setValidationErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
+
+  const handleCustomSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
 
   if (isSubmitted) {
     return (
@@ -204,57 +374,24 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
               </div>
             </div>
 
-            {/* Google Calendar Status */}
-            {calendarAdded ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mt-6 p-4 bg-brand-green/5 border border-brand-green/10 rounded-2xl max-w-sm mx-auto flex items-center justify-center gap-3"
+            {/* Manual Google Calendar Addition */}
+            <div className="mt-8">
+              <a
+                href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+                  'UCAN Awarding Night 2026'
+                )}&dates=20260529T163000/20260529T220000&details=${encodeURIComponent(
+                  "Congratulations! You have successfully RSVP'd for the UCAN 2026 Awarding Night.\n\nA magical evening awaits you at the ballroom. Let the magic begin!"
+                )}&location=${encodeURIComponent(
+                  'Dian Auditorium, Floor 7, UC Main Building, Universitas Ciputra, Surabaya'
+                )}&ctz=Asia/Jakarta`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange font-cinzel text-sm tracking-wider rounded-full transition-all duration-300 hover:scale-105 font-bold shadow-[0_4px_12px_rgba(217,106,29,0.1)]"
               >
-                <Sparkles className="w-5 h-5 text-brand-orange animate-twinkle shrink-0" />
-                <p className="font-cormorant text-base text-brand-green italic text-center">
-                  Event added to your Google Calendar!
-                </p>
-              </motion.div>
-            ) : (
-              accessToken && (
-                <div className="mt-6">
-                  <button
-                    onClick={async () => {
-                      setIsLoadingCalendar(true);
-                      try {
-                        const res = await fetch('/api/rsvp/calendar', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ accessToken })
-                        });
-                        const resData = await res.json();
-                        if (res.ok && resData.success) {
-                          setCalendarAdded(true);
-                          setCalendarError(false);
-                        } else {
-                          setCalendarError(true);
-                        }
-                      } catch (err) {
-                        console.error('Calendar retry error:', err);
-                        setCalendarError(true);
-                      } finally {
-                        setIsLoadingCalendar(false);
-                      }
-                    }}
-                    disabled={isLoadingCalendar}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange font-cinzel text-xs tracking-wider rounded-full transition-all duration-300 disabled:opacity-50 hover:scale-105"
-                  >
-                    {isLoadingCalendar ? 'Adding Event...' : 'Add to Google Calendar'}
-                  </button>
-                  {calendarError && (
-                    <p className="mt-2 text-red-500 font-montserrat text-[10px]">
-                      Failed to add automatically. Click button above to retry.
-                    </p>
-                  )}
-                </div>
-              )
-            )}
+                <Sparkles className="w-4 h-4 text-brand-orange fill-current animate-pulse" />
+                Add to Google Calendar
+              </a>
+            </div>
           </div>
 
           <Sparkles className="absolute top-10 right-10 w-8 h-8 text-brand-orange/30 animate-twinkle" />
@@ -356,7 +493,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             style={{ borderRadius: '2px' }}
           >
             {/* Background Texture Layers */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }} />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.webp")' }} />
             
             <div className="text-center mb-16 relative">
               <span className="inline-block px-4 py-1 mb-6 font-montserrat text-[10px] tracking-[0.5em] uppercase text-brand-orange border border-brand-orange/20 rounded-full bg-brand-orange/5">
@@ -395,33 +532,27 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
               </div>
 
               <div className="space-y-8">
-                <div className="relative group">
-                  <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
-                    <GraduationCap className="w-3 h-3" /> Major / Study
-                  </label>
-                  <input
-                    type="text" name="major" value={formData.major} onChange={handleChange} required
-                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none ${validationErrors.major ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
-                    placeholder="Field of pursuit..."
-                  />
-                  {validationErrors.major && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{validationErrors.major}</p>}
-                </div>
+                <CustomSelect
+                  name="major"
+                  value={formData.major}
+                  placeholder="Select Your Major"
+                  options={majors}
+                  onChange={handleCustomSelectChange}
+                  error={validationErrors.major}
+                  label="Major / Study"
+                  icon={<GraduationCap className="w-3.5 h-3.5" />}
+                />
 
-                <div className="relative group">
-                  <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
-                    <Building2 className="w-3 h-3" /> Organization
-                  </label>
-                  <select
-                    name="organization" value={formData.organization} onChange={handleChange} required
-                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none cursor-pointer appearance-none ${validationErrors.organization ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
-                  >
-                    <option value="">Select thy guild...</option>
-                    {organizations.map(org => <option key={org} value={org}>{org}</option>)}
-                  </select>
-                  <div className="absolute right-4 bottom-5 pointer-events-none opacity-20 group-focus-within:opacity-100 transition-opacity">
-                    <Star className="w-4 h-4 text-brand-orange" />
-                  </div>
-                </div>
+                <CustomSelect
+                  name="organization"
+                  value={formData.organization}
+                  placeholder="Select Your Organization"
+                  options={organizations}
+                  onChange={handleCustomSelectChange}
+                  error={validationErrors.organization}
+                  label="Organization"
+                  icon={<Building2 className="w-3.5 h-3.5" />}
+                />
               </div>
 
               <div className="md:col-span-2 pt-10">

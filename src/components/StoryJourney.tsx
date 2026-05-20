@@ -5,28 +5,28 @@ import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
 // Assets
-import WallTransp1 from '../assets/assets UCAN/Ballroom/wall /WallTransp1.png';
-import WallTransp2 from '../assets/assets UCAN/Ballroom/wall /WallTransp2.png';
-import Wall1 from '../assets/assets UCAN/Ballroom/wall /Wall1.png';
-import Wall2 from '../assets/assets UCAN/Ballroom/wall /Wall2.png';
-import Pillar1 from '../assets/assets UCAN/Ballroom/Pillar/Pillar.png';
-import Pillar2 from '../assets/assets UCAN/Ballroom/Pillar/Pillar (1).png';
-import PillarArch1 from '../assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.png';
-import PillarArch2 from '../assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch2.png';
-import PillarArch3 from '../assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch3.png';
-import BannerNew from '../assets/assets UCAN/Chamber/New/BannerNew.png';
-import MasDes1 from '../assets/MasDes/MASDES UCAN 2026.png';
-import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.png';
-import Ballroom1 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.png';
-import Ballroom2 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.png';
-import Ballroom3 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom3.png';
+import WallTransp1 from '../assets/assets UCAN/Ballroom/wall /WallTransp1.webp';
+import WallTransp2 from '../assets/assets UCAN/Ballroom/wall /WallTransp2.webp';
+import Wall1 from '../assets/assets UCAN/Ballroom/wall /Wall1.webp';
+import Wall2 from '../assets/assets UCAN/Ballroom/wall /Wall2.webp';
+import Pillar1 from '../assets/assets UCAN/Ballroom/Pillar/Pillar.webp';
+import Pillar2 from '../assets/assets UCAN/Ballroom/Pillar/Pillar (1).webp';
+import PillarArch1 from '../assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.webp';
+import PillarArch2 from '../assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch2.webp';
+import PillarArch3 from '../assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch3.webp';
+import BannerNew from '../assets/assets UCAN/Chamber/New/BannerNew.webp';
+import MasDes1 from '../assets/MasDes/MASDES UCAN 2026.webp';
+import FiligreeBorder from '../assets/assets UCAN/invitation filigri/filigri_invitation card.webp';
+import Ballroom1 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.webp';
+import Ballroom2 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.webp';
+import Ballroom3 from '../assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom3.webp';
 
 // Organization Logos
-import MDLogo from '../assets/ucanLogos/MD.png';
-import SCLogo from '../assets/ucanLogos/SC.png';
-import SRBLogo from '../assets/ucanLogos/SRB.png';
-import UCLogo from '../assets/ucanLogos/UC.png';
-import UCANLogo from '../assets/ucanLogos/UCAN.png';
+import MDLogo from '../assets/ucanLogos/MD.webp';
+import SCLogo from '../assets/ucanLogos/SC.webp';
+import SRBLogo from '../assets/ucanLogos/SRB.webp';
+import UCLogo from '../assets/ucanLogos/UC.webp';
+import UCANLogo from '../assets/ucanLogos/UCAN.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 

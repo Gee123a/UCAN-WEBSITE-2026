@@ -13,19 +13,24 @@ import Particles from './components/magicui/particles';
 import { Meteors } from './components/magicui/meteors';
 
 // Assets for Preloading
-import Wall1 from './assets/assets UCAN/Ballroom/wall /Wall1.png';
-import Wall2 from './assets/assets UCAN/Ballroom/wall /Wall2.png';
-import Ballroom1 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.png';
-import Ballroom2 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.png';
-import Ballroom3 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom3.png';
-import Banner1 from './assets/assets UCAN/nomination assets/Hallway/Banner/Banner 1/AI Ver/Banner.png';
-import BannerNew from './assets/assets UCAN/Chamber/New/BannerNew.png';
-import PillarArch1 from './assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.png';
-import Performance from './assets/Special Performance.png';
-import UcanwLogo from './assets/ucanLogos/UCANW.png';
+import Wall1 from './assets/assets UCAN/Ballroom/wall /Wall1.webp';
+import Wall2 from './assets/assets UCAN/Ballroom/wall /Wall2.webp';
+import Ballroom1 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom1.webp';
+import Ballroom2 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom2.webp';
+import Ballroom3 from './assets/assets UCAN/Ballroom/Ballroom Full View/Ballroom3.webp';
+import Banner1 from './assets/assets UCAN/nomination assets/Hallway/Banner/Banner 1/AI Ver/Banner.webp';
+import BannerNew from './assets/assets UCAN/Chamber/New/BannerNew.webp';
+import PillarArch1 from './assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.webp';
+import Performance from './assets/Special Performance.webp';
+import UcanwLogo from './assets/ucanLogos/UCANW.webp';
 
 export default function UCANWebsite() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return new URLSearchParams(window.location.search).get('mock_login') === 'true';
+    }
+    return false;
+  });
   const [isOpening, setIsOpening] = useState(true);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -100,7 +105,7 @@ export default function UCANWebsite() {
             className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden"
             style={{ background: 'linear-gradient(135deg, #273961, #090A11)' }}
           >
-            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/p6.png')]"></div>
+            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/p6.webp')]"></div>
             <Meteors number={30} />
             
             <motion.div

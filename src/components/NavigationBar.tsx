@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // Organization Logos
-import UCANLogo from '../assets/ucanLogos/UCAN.png';
+import UCANLogo from '../assets/ucanLogos/UCAN.webp';
 
 const NavigationBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);

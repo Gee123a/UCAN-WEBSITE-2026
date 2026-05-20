@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 // Premium local fairytale illustrations
-import ExcellenceHall from '../assets/ucan_excellence_hall_1778252558379.png';
-import MusicalStage from '../assets/ucan_musical_stage_1778252614593.png';
-import DisneyFlorals from '../assets/vintage_disney_florals_1778230091006.png';
+import ExcellenceHall from '../assets/ucan_excellence_hall_1778252558379.webp';
+import MusicalStage from '../assets/ucan_musical_stage_1778252614593.webp';
+import DisneyFlorals from '../assets/vintage_disney_florals_1778230091006.webp';
 
 interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
