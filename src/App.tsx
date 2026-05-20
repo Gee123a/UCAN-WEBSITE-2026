@@ -23,6 +23,12 @@ import BannerNew from './assets/assets UCAN/Chamber/New/BannerNew.webp';
 import PillarArch1 from './assets/assets UCAN/nomination assets/Hallway/Pillars/AI Ver/PillarArch.webp';
 import Performance from './assets/Special Performance.webp';
 import UcanwLogo from './assets/ucanLogos/UCANW.webp';
+import BookCover from './assets/Book.jpeg';
+
+// Dress Code Images Dynamic Import
+const dresscodeModules = import.meta.glob('./assets/Dresscode/*.{png,PNG,jpeg,jpg,webp}', { eager: true });
+const dresscodeImages = Object.values(dresscodeModules).map((mod: any) => mod.default);
+
 
 export default function UCANWebsite() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -35,6 +41,7 @@ export default function UCANWebsite() {
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [currentDresscodeIndex, setCurrentDresscodeIndex] = useState(0);
   const heroRef = useRef(null);
   const rsvpSectionRef = useRef<HTMLElement>(null);
   const rsvpContainerRef = useRef<HTMLDivElement>(null);
@@ -42,7 +49,9 @@ export default function UCANWebsite() {
 
   useEffect(() => {
     const assetsToLoad = [
-      Wall1, Wall2, Ballroom1, Ballroom2, Ballroom3, Banner1, BannerNew, PillarArch1, UcanwLogo
+      Wall1, Wall2, Ballroom1, Ballroom2, Ballroom3, Banner1, BannerNew, PillarArch1, UcanwLogo,
+      BookCover,
+      ...dresscodeImages
     ];
     let loadedCount = 0;
 
@@ -75,6 +84,26 @@ export default function UCANWebsite() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (dresscodeImages.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentDresscodeIndex((prev) => (prev + 1) % dresscodeImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Lock scroll during book loading
+  useEffect(() => {
+    if (isOpening) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpening]);
 
   // Hero content fade and parallax
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
@@ -114,19 +143,42 @@ export default function UCANWebsite() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="relative z-10 flex flex-col items-center"
             >
-              <div className="w-64 h-80 relative perspective-1000 group">
+              <div className="w-64 aspect-[686/982] relative perspective-1000 group">
                 <motion.div 
-                  className="absolute inset-0 bg-[#D96A1D] rounded-r-lg shadow-2xl border-2 border-white/20 flex flex-col items-center justify-center p-6 text-center"
-                  style={{ transformOrigin: "left", rotateY: 0 }}
+                  className="absolute inset-0 bg-cover bg-center rounded-lg shadow-2xl border-2 border-white/20 overflow-hidden flex items-center justify-center"
+                  style={{ 
+                    transformOrigin: "left", 
+                    rotateY: 0,
+                    backgroundImage: `url(${BookCover})`
+                  }}
                 >
-                  <img src={UcanwLogo} alt="UCANW Logo" className="w-32 h-32 object-contain mb-4 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] animate-pulse" />
-                  <h2 className="font-cinzel text-4xl text-white font-bold tracking-widest">UCAN 2026</h2>
-                  <div className="w-12 h-0.5 bg-white/40 my-4"></div>
-                  <p className="font-lora text-lg italic tracking-widest text-white/90">Let the story begin</p>
+                  {/* Centered Content within the inner red area */}
+                  <div className="flex flex-col items-center justify-between h-[56%] w-[75%] text-center">
+                    {/* Top: Logo */}
+                    <div className="flex items-center justify-center">
+                      <img 
+                        src={UcanwLogo} 
+                        alt="UCANW Logo" 
+                        className="w-28 h-28 object-contain filter drop-shadow-[0_2px_8px_rgba(255,255,255,0.4)]" 
+                      />
+                    </div>
+
+                    {/* Middle: Title */}
+                    <div className="flex flex-col items-center">
+                      <h2 className="font-cinzel text-3.5xl text-white font-bold tracking-[0.12em] leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                        UCAN
+                        <span className="block mt-0.5">2026</span>
+                      </h2>
+                    </div>
+
+                    {/* Bottom: Subtitle */}
+                    <div className="w-full">
+                      <p className="font-lora text-sm italic tracking-widest text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+                        Let the story begin
+                      </p>
+                    </div>
+                  </div>
                 </motion.div>
-                
-                {/* Book Spine */}
-                <div className="absolute left-0 top-0 bottom-0 w-4 bg-[#C93A1D] rounded-l-sm shadow-inner"></div>
               </div>
               
               <div className="mt-12 flex flex-col items-center min-h-[100px] justify-center">
@@ -577,17 +629,39 @@ export default function UCANWebsite() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="lg:col-span-4 storybook-card rotate-[0.5deg] border-[#D96A1D] border-dashed"
+                className="lg:col-span-4 storybook-card group cursor-pointer rotate-[0.5deg] border-[#D96A1D] border-dashed overflow-hidden relative"
               >
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-[#4C7A1A]/10 border-[3px] border-dotted border-[#4C7A1A]">
-                  <Users className="w-8 h-8 text-[#4C7A1A]" />
+                <div className="absolute inset-0">
+                  {dresscodeImages.map((src, idx) => (
+                    <motion.img
+                      key={src || idx}
+                      src={src}
+                      alt={`Dress Code option ${idx + 1}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: idx === currentDresscodeIndex ? 1 : 0 }}
+                      transition={{ duration: 1.2, ease: "easeInOut" }}
+                      className="absolute inset-0 w-full h-full object-cover vintage-image"
+                      style={{ pointerEvents: idx === currentDresscodeIndex ? 'auto' : 'none' }}
+                    />
+                  ))}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#F4E7CB]/95 via-[#F4E7CB]/60 to-transparent pointer-events-none" />
                 </div>
-                <h4 className="text-4xl mb-4 text-[#0B3A0A] font-cinzel">Dress Code</h4>
-                <p className="font-cormorant text-3xl mb-3 italic text-[#D96A1D]">Royal Attire</p>
-                <p className="font-montserrat text-sm tracking-wide leading-relaxed text-[#6D8F2B]">
-                  Dress in your most elegant, regal garments to fit the magical evening.
-                </p>
-                <Heart className="absolute -bottom-4 -right-4 w-10 h-10 text-[#C93A1D] fill-[#C93A1D] -rotate-[20deg]" />
+                
+                <div className="relative z-10 h-full flex flex-col justify-end pt-20 sm:pt-32">
+                  <div className="mb-4">
+                    <div className="hand-drawn-border-sm px-4 py-2 inline-block bg-white/95 -rotate-1 text-[#D96A1D]">
+                      <span className="font-montserrat text-xs tracking-wider uppercase flex items-center gap-1.5">
+                        <Users className="w-4 h-4 text-[#D96A1D]" />
+                        Royal Attire
+                      </span>
+                    </div>
+                  </div>
+                  <h4 className="text-3xl mb-2 text-[#0B3A0A] font-cinzel">Dress Code</h4>
+                  <p className="font-montserrat text-sm text-[#4C7A1A]">
+                    Dress in your most elegant, regal garments to fit the magical evening.
+                  </p>
+                </div>
+                <Sparkles className="absolute top-6 right-6 w-10 h-10 text-[#F08A2B] animate-twinkle -rotate-[30deg]" />
               </motion.div>
 
               {/* Performance Card */}
