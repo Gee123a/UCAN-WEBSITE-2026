@@ -110,11 +110,11 @@ function CustomSelect({
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none cursor-pointer flex items-center justify-between text-left ${
+        className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-xl focus:outline-none cursor-pointer flex items-center justify-between text-left ${
           error ? 'border-red-400 font-bold' : 'border-brand-orange/10 focus:border-brand-orange'
         }`}
       >
-        <span className={value ? 'text-brand-green' : 'text-gray-400/80'}>
+        <span className={`whitespace-nowrap overflow-hidden text-ellipsis mr-2 ${value ? 'text-brand-green' : 'text-gray-400/80'}`}>
           {value || placeholder}
         </span>
         <motion.div
@@ -512,7 +512,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                   </label>
                   <input
                     type="text" name="name" value={formData.name} onChange={handleChange} required
-                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none ${validationErrors.name ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
+                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-xl focus:outline-none ${validationErrors.name ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
                     placeholder="Thy true name..."
                   />
                   {validationErrors.name && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{validationErrors.name}</p>}
@@ -524,7 +524,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                   </label>
                   <input
                     type="text" name="nim" value={formData.nim} onChange={handleChange} required
-                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-2xl focus:outline-none ${validationErrors.nim ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
+                    className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-xl focus:outline-none ${validationErrors.nim ? 'border-red-400' : 'border-brand-orange/10 focus:border-brand-orange'}`}
                     placeholder="The royal identifier..."
                   />
                   {validationErrors.nim && <p className="text-[10px] text-red-500 mt-2 font-montserrat">{validationErrors.nim}</p>}
