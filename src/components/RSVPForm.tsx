@@ -30,6 +30,7 @@ function CustomSelect({
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const optionsRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isKeyboardRef = useRef(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,12 +49,13 @@ function CustomSelect({
       setFocusedIndex(-1);
     } else {
       const selectedIdx = options.indexOf(value);
+      isKeyboardRef.current = true;
       setFocusedIndex(selectedIdx >= 0 ? selectedIdx : 0);
     }
-  }, [isOpen, value, options]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (focusedIndex >= 0 && optionsRefs.current[focusedIndex]) {
+    if (isKeyboardRef.current && focusedIndex >= 0 && optionsRefs.current[focusedIndex]) {
       optionsRefs.current[focusedIndex]?.scrollIntoView({
         block: 'nearest',
       });
@@ -75,6 +77,7 @@ function CustomSelect({
       }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
+      isKeyboardRef.current = true;
       if (!isOpen) {
         setIsOpen(true);
       } else {
@@ -82,6 +85,7 @@ function CustomSelect({
       }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
+      isKeyboardRef.current = true;
       if (!isOpen) {
         setIsOpen(true);
       } else {
@@ -143,7 +147,10 @@ function CustomSelect({
                   key={option}
                   ref={el => optionsRefs.current[index] = el}
                   onClick={() => handleSelect(option)}
-                  onMouseEnter={() => setFocusedIndex(index)}
+                  onMouseEnter={() => {
+                    isKeyboardRef.current = false;
+                    setFocusedIndex(index);
+                  }}
                   role="option"
                   aria-selected={isSelected}
                   className={`px-6 py-4 cursor-pointer font-cormorant text-xl transition-all duration-200 flex items-center justify-between outline-none ${isSelected
@@ -180,6 +187,65 @@ function CustomSelect({
   );
 }
 
+
+const organizations = [
+  'SC',
+  'SRB',
+  'MD',
+  'SU',
+  'UKM',
+  'Mapres',
+  'Advisor',
+  'Head of Faculty',
+  'Head of Study Program',
+  'Rectorate'
+];
+
+const majors = [
+  'IBM RC', 'IBM IC', 'ACC', 'VCD', 'ARS', 'FDB', 'HTEB', 'CB', 'FTP', 'IMT', 'ISB', 'MED', 'DEM', 'PSY', 'COM'
+];
+
+const ukms = [
+  'BDC',
+  'CANVAS',
+  'CHOIR',
+  'RESONANCE',
+  'TARI TRADISIONAL',
+  'TEATER GEMINTANG',
+  'ARTUPIC',
+  'BALAWARTA',
+  'MAHATRA',
+  'TABLE TOP',
+  'TASK FORCE SAKURA',
+  'UCDS',
+  'UCIC',
+  'PMK',
+  'KMK',
+  'UCBC',
+  'KMHD',
+  'MCUC',
+  'BASKET',
+  'ESPORT',
+  'TAEKWONDO'
+];
+
+const studentUnions = [
+  'SU ACC',
+  'SU ARS',
+  'SU CB',
+  'SU COM',
+  'SU DEM',
+  'SU FDB',
+  'SU FTP',
+  'SU HTEB',
+  'SU IBM IC',
+  'SU IBM RC',
+  'SU IMT',
+  'SU ISB',
+  'SU MED',
+  'SU PSY',
+  'SU VCD'
+];
 
 interface RSVPFormProps {
   isLoggedIn: boolean;
@@ -248,68 +314,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     }
   });
 
-  const organizations = [
-    'SC',
-    'SRB',
-    'MD',
-    'SU',
-    'UKM',
-    'Advisor',
-    'Head of Faculty',
-    'Head of Study Program',
-    'Rectorate'
-  ];
 
-  const majors = [
-    'IBM RC', 'IBM IC', 'ACC', 'VCD', 'ARS', 'FDB', 'HTEB', 'CB', 'FTP', 'IMT', 'ISB', 'MED', 'DEM', 'PSY', 'COM'
-  ];
-
-  const ukms = [
-    'Artupic (Photography)',
-    'Badminton',
-    'Balawarta (Journalism)',
-    'Basket',
-    'Big Dance Crew (BDC)',
-    'Boxing',
-    'Choir',
-    'E-sport',
-    'Futsal',
-    'Hindu Dharma',
-    'Kanvas (Art/Illustration)',
-    'Karate',
-    'KMK (Catholic Community)',
-    'Mahatra (Nature Lovers)',
-    'MCUC (Moslem Community)',
-    'Perisai Diri',
-    'PMK (Christian Community)',
-    'Resonance (Music)',
-    'Tabletop (Board games)',
-    'Taekwondo',
-    'Tari Tradisional',
-    'Teater',
-    'UCBC (Buddhist Community)',
-    'UCDS (Debate Society)',
-    'UCIC (International Community)',
-    'Wing Chun'
-  ];
-
-  const studentUnions = [
-    'SU ACC',
-    'SU ARS',
-    'SU CB',
-    'SU COM',
-    'SU DEM',
-    'SU FDB',
-    'SU FTP',
-    'SU HTEB',
-    'SU IBM IC',
-    'SU IBM RC',
-    'SU IMT',
-    'SU ISB',
-    'SU MED',
-    'SU PSY',
-    'SU VCD'
-  ];
 
   const validateField = (name: string, value: string, currentOrg?: string) => {
     let errorMsg = '';
