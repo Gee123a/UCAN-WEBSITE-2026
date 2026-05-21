@@ -193,9 +193,18 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     name: '',
     nim: '',
     major: '',
-    organization: ''
+    organization: '',
+    subOrganization: ''
   });
-  const [userEmail, setUserEmail] = useState('');
+  const [userEmail, setUserEmail] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const isMock = new URLSearchParams(window.location.search).get('mock_login') === 'true';
+      if (isMock) {
+        return 'mock.student@ciputra.ac.id';
+      }
+    }
+    return '';
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -255,8 +264,56 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     'IBM RC', 'IBM IC', 'ACC', 'VCD', 'ARS', 'FDB', 'HTEB', 'CB', 'FTP', 'IMT', 'ISB', 'MED', 'DEM', 'PSY', 'COM'
   ];
 
-  const validateField = (name: string, value: string) => {
+  const ukms = [
+    'Artupic (Photography)',
+    'Badminton',
+    'Balawarta (Journalism)',
+    'Basket',
+    'Big Dance Crew (BDC)',
+    'Boxing',
+    'Choir',
+    'E-sport',
+    'Futsal',
+    'Hindu Dharma',
+    'Kanvas (Art/Illustration)',
+    'Karate',
+    'KMK (Catholic Community)',
+    'Mahatra (Nature Lovers)',
+    'MCUC (Moslem Community)',
+    'Perisai Diri',
+    'PMK (Christian Community)',
+    'Resonance (Music)',
+    'Tabletop (Board games)',
+    'Taekwondo',
+    'Tari Tradisional',
+    'Teater',
+    'UCBC (Buddhist Community)',
+    'UCDS (Debate Society)',
+    'UCIC (International Community)',
+    'Wing Chun'
+  ];
+
+  const studentUnions = [
+    'SU ACC',
+    'SU ARS',
+    'SU CB',
+    'SU COM',
+    'SU DEM',
+    'SU FDB',
+    'SU FTP',
+    'SU HTEB',
+    'SU IBM IC',
+    'SU IBM RC',
+    'SU IMT',
+    'SU ISB',
+    'SU MED',
+    'SU PSY',
+    'SU VCD'
+  ];
+
+  const validateField = (name: string, value: string, currentOrg?: string) => {
     let errorMsg = '';
+    const org = currentOrg !== undefined ? currentOrg : formData.organization;
     if (name === 'name' && value.trim().length < 3) {
       errorMsg = 'Your name must be at least 3 characters';
     } else if (name === 'nim' && !/^\d{8,12}$/.test(value)) {
@@ -265,6 +322,8 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
       errorMsg = 'Please select your major';
     } else if (name === 'organization' && !value) {
       errorMsg = 'Please select your organization';
+    } else if (name === 'subOrganization' && (org === 'SU' || org === 'UKM') && !value) {
+      errorMsg = `Please select your specific ${org}`;
     }
     setValidationErrors(prev => ({ ...prev, [name]: errorMsg }));
     return !errorMsg;
@@ -281,8 +340,9 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     const isNimValid = validateField('nim', formData.nim);
     const isMajorValid = validateField('major', formData.major);
     const isOrgValid = validateField('organization', formData.organization);
+    const isSubOrgValid = validateField('subOrganization', formData.subOrganization);
 
-    if (!isNameValid || !isNimValid || !isMajorValid || !isOrgValid) {
+    if (!isNameValid || !isNimValid || !isMajorValid || !isOrgValid || !isSubOrgValid) {
       setError('Please fill all fields correctly');
       return;
     }
@@ -291,10 +351,20 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     setIsLoading(true);
 
     try {
+      const finalOrg = (formData.organization === 'SU' || formData.organization === 'UKM') && formData.subOrganization
+        ? `${formData.organization} - ${formData.subOrganization}`
+        : formData.organization;
+
       const response = await fetch('/api/rsvp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, email: userEmail })
+        body: JSON.stringify({
+          name: formData.name,
+          nim: formData.nim,
+          major: formData.major,
+          organization: finalOrg,
+          email: userEmail
+        })
       });
 
       const data = await response.json();
@@ -323,9 +393,25 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
   };
 
   const handleCustomSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [name]: value };
+      if (name === 'organization' && value !== 'SU' && value !== 'UKM') {
+        updated.subOrganization = '';
+      }
+      return updated;
+    });
+
     if (validationErrors[name]) {
       setValidationErrors(prev => ({ ...prev, [name]: '' }));
+    }
+
+    if (name === 'organization') {
+      setValidationErrors(prev => ({ ...prev, subOrganization: '' }));
+      validateField('organization', value, value);
+    } else if (name === 'subOrganization') {
+      validateField('subOrganization', value);
+    } else {
+      validateField(name, value);
     }
   };
 
@@ -555,6 +641,29 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                   label="Organization"
                   icon={<Building2 className="w-3.5 h-3.5" />}
                 />
+
+                <AnimatePresence>
+                  {(formData.organization === 'SU' || formData.organization === 'UKM') && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                      animate={{ opacity: 1, height: 'auto', marginTop: 32 }}
+                      exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-visible"
+                    >
+                      <CustomSelect
+                        name="subOrganization"
+                        value={formData.subOrganization}
+                        placeholder={formData.organization === 'SU' ? "Select Your Student Union" : "Select Your UKM"}
+                        options={formData.organization === 'SU' ? studentUnions : ukms}
+                        onChange={handleCustomSelectChange}
+                        error={validationErrors.subOrganization}
+                        label={formData.organization === 'SU' ? "Specific Student Union" : "Specific UKM"}
+                        icon={<Sparkles className="w-3.5 h-3.5" />}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <div className="md:col-span-2 pt-10">
