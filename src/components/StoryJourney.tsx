@@ -60,7 +60,7 @@ const nomineeCategories = [
         name: "Student Achievement Award",
         role: "Academic Excellence",
         image: "",
-        description: ""
+        description: "This award is given to whomever has achieved the best of the best and is always improving and evolving to be a better version of themselves"
       }
     ]
   },
@@ -210,7 +210,7 @@ const nomineeCategories = [
         description: "This award recognizes an individual or group that has successfully implemented innovative and effective active learning strategies, enhancing student engagement, critical thinking, and hands-on learning experiences."
       }
     ]
-  }, 
+  },
   {
     id: "su",
     title: "Student Union",
@@ -274,7 +274,7 @@ const nomineeCategories = [
       }
     ]
   },
-  
+
 ];
 
 
@@ -457,12 +457,12 @@ export function StoryJourney() {
               <p className="font-eb-garamond text-xl sm:text-2xl lg:text-3xl italic text-brand-green-accent max-w-xl leading-relaxed font-medium">"Walk through the royal halls to discover those who carved their names in the university's legacy."</p>
             </div>
           </div>
-          
+
           <div className="mt-8 flex flex-col items-center gap-4 text-brand-orange group cursor-pointer">
-             <span className="font-script text-2xl tracking-wide opacity-80">{window.innerWidth < 1024 ? 'Scroll down to begin' : 'Scroll to explore'}</span>
-             <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="flex flex-col items-center gap-4">
-               <div className="h-24 lg:h-px w-px lg:w-24 bg-current opacity-20" /><ArrowRight className="w-6 h-6 rotate-90 lg:rotate-0" />
-             </motion.div>
+            <span className="font-script text-2xl tracking-wide opacity-80">{window.innerWidth < 1024 ? 'Scroll down to begin' : 'Scroll to explore'}</span>
+            <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="flex flex-col items-center gap-4">
+              <div className="h-24 lg:h-px w-px lg:w-24 bg-current opacity-20" /><ArrowRight className="w-6 h-6 rotate-90 lg:rotate-0" />
+            </motion.div>
           </div>
         </div>
 
@@ -478,11 +478,11 @@ export function StoryJourney() {
                     <img src={ArchImg} alt="" className="h-full w-auto object-contain transition-transform duration-1000 group-hover:scale-105 opacity-90 drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)]" />
                   </div>
                 </div>
-                
+
                 <div className="relative z-10 px-4 lg:px-8 py-6 flex flex-col items-center w-full">
                   <div className="mb-4 lg:mb-6 relative flex items-center justify-center">
                     <div className="w-24 h-24 lg:w-32 lg:h-32 flex items-center justify-center relative z-10">
-                       <img src={category.logo} className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]" alt="" />
+                      <img src={category.logo} className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]" alt="" />
                     </div>
                   </div>
                   <h3 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl text-brand-green font-cinzel font-bold leading-tight tracking-tighter break-words text-center w-full px-4">
@@ -498,18 +498,18 @@ export function StoryJourney() {
                 </div>
 
                 <div className="absolute inset-0 pointer-events-none">
-                   {[...Array(6)].map((_, i) => (
-                     <div key={i} className="absolute w-2 h-2 rounded-full bg-brand-orange opacity-40 animate-twinkle"
-                       style={{ top: `${30 + Math.random() * 40}%`, left: `${30 + Math.random() * 40}%`, animationDelay: `${i * 0.5}s` }}
-                     />
-                   ))}
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="absolute w-2 h-2 rounded-full bg-brand-orange opacity-40 animate-twinkle"
+                      style={{ top: `${30 + Math.random() * 40}%`, left: `${30 + Math.random() * 40}%`, animationDelay: `${i * 0.5}s` }}
+                    />
+                  ))}
                 </div>
               </div>
 
               <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-[5vw] px-4 lg:px-0 w-full">
                 {category.nominees.map((nominee, idx) => (
                   <div key={idx} className="nominee-card flex-shrink-0 w-[240px] sm:w-[280px] lg:w-[360px] group relative mx-auto" style={{ perspective: '2000px' }}>
-                    <motion.div 
+                    <motion.div
                       className="relative w-full aspect-[3/4] transition-all duration-600 ease-out cursor-pointer"
                       style={{ transformStyle: 'preserve-3d', WebkitTransformStyle: 'preserve-3d' }}
                       whileHover={{ rotateY: window.innerWidth >= 1024 ? 180 : 0 }}
@@ -523,25 +523,24 @@ export function StoryJourney() {
                     >
                       {/* FRONT */}
                       <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] bg-[#0B1A0A] border-2 border-[#D96A1D]/30 flex flex-col justify-between items-center p-6 lg:p-8"
-                           style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}>
+                        style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}>
                         <div className="absolute inset-[10px] border border-[#D96A1D]/15 rounded-xl pointer-events-none" />
                         <div className="filigree-corner top-0 left-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(1.1)' }} />
                         <div className="filigree-corner top-0 right-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(-1.1) scaleY(1.1)' }} />
                         <div className="filigree-corner bottom-0 left-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(1.1) scaleY(-1.1)' }} />
                         <div className="filigree-corner bottom-0 right-0 opacity-40 scale-110" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(-1.1)' }} />
                         <div className="w-full flex justify-center pt-2 lg:pt-4">
-                           <div className="w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center relative z-10">
-                              <img src={category.logo} className="w-full h-full object-contain" alt="" />
-                           </div>
+                          <div className="w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center relative z-10">
+                            <img src={category.logo} className="w-full h-full object-contain" alt="" />
+                          </div>
                         </div>
                         <div className="flex-1 flex items-center justify-center my-3 px-2 lg:px-4 overflow-hidden">
-                          <h4 className={`${
-                            nominee.name.length > 55
-                              ? 'text-xs sm:text-sm lg:text-lg'
-                              : nominee.name.length > 35
-                                ? 'text-sm sm:text-base lg:text-xl'
-                                : 'text-base sm:text-lg lg:text-2xl'
-                          } font-cinzel text-white leading-snug tracking-tight font-bold text-center`}>{nominee.name}</h4>
+                          <h4 className={`${nominee.name.length > 55
+                            ? 'text-xs sm:text-sm lg:text-lg'
+                            : nominee.name.length > 35
+                              ? 'text-sm sm:text-base lg:text-xl'
+                              : 'text-base sm:text-lg lg:text-2xl'
+                            } font-cinzel text-white leading-snug tracking-tight font-bold text-center`}>{nominee.name}</h4>
                         </div>
                         <div className="pb-2 lg:pb-4">
                           <div className="inline-flex items-center gap-2 text-brand-orange/70 font-script text-lg lg:text-xl tracking-wide"><span>Tap to reveal</span><ArrowRight className="w-3 h-3" /></div>
@@ -549,7 +548,7 @@ export function StoryJourney() {
                       </div>
                       {/* BACK */}
                       <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] bg-[#0B1A0A] border-2 border-brand-orange/40 p-6 lg:p-8 flex flex-col justify-between items-center text-center"
-                           style={{ transform: 'rotateY(180deg) translateZ(0)', WebkitTransform: 'rotateY(180deg) translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+                        style={{ transform: 'rotateY(180deg) translateZ(0)', WebkitTransform: 'rotateY(180deg) translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
                         <div className="absolute inset-[10px] border border-brand-orange/10 rounded-xl pointer-events-none" />
                         <div className="filigree-corner top-0 left-0 opacity-30" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scale(1)' }} />
                         <div className="filigree-corner top-0 right-0 opacity-30" style={{ backgroundImage: `url(${FiligreeBorder})`, transform: 'scaleX(-1) scaleY(1)' }} />
@@ -581,18 +580,18 @@ export function StoryJourney() {
           <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
             <div className="bg-white/10 backdrop-blur-md p-8 lg:p-10 rounded-[2.5rem] border border-white/20 shadow-2xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-              
+
               <h3 className="text-4xl lg:text-6xl text-brand-green font-cinzel font-bold mb-6 tracking-tight leading-tight">
                 The Journey <br />
                 <span className="text-brand-orange italic drop-shadow-md">Continues</span>
               </h3>
-              
+
               <p className="font-eb-garamond text-xl lg:text-2xl italic text-brand-green-accent max-w-lg mx-auto mb-10 leading-relaxed font-medium">
                 "Your presence is the final brushstroke in this masterpiece of achievement."
               </p>
 
-              <button 
-                onClick={() => document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })} 
+              <button
+                onClick={() => document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })}
                 className="vintage-button scale-110 group overflow-hidden"
               >
                 <div className="absolute inset-0 bg-brand-orange opacity-0 group-hover:opacity-10 transition-opacity" />

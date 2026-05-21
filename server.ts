@@ -3,6 +3,7 @@ import cors from 'cors';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
@@ -214,8 +215,19 @@ app.get('/api/admin/rsvp/export.csv', async (req, res) => {
 });
 
 if (!process.env.VERCEL) {
-  app.listen(Number(PORT), '127.0.0.1', () => {
-    console.log(`Backend API Server running on http://127.0.0.1:${PORT}`);
+  const distPath = path.join(process.cwd(), 'dist');
+  app.use(express.static(distPath));
+
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+
+  const serverPort = process.env.PORT || PORT;
+  app.listen(serverPort, () => {
+    console.log(`Server running on ${serverPort}`);
   });
 }
 

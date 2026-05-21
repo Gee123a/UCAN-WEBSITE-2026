@@ -104,15 +104,14 @@ function CustomSelect({
       <label className="block font-montserrat text-[10px] tracking-[0.3em] uppercase mb-3 text-brand-orange font-bold flex items-center gap-2">
         {icon} {label}
       </label>
-      
+
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-xl focus:outline-none cursor-pointer flex items-center justify-between text-left ${
-          error ? 'border-red-400 font-bold' : 'border-brand-orange/10 focus:border-brand-orange'
-        }`}
+        className={`w-full px-6 py-4 bg-white/40 border-b-2 transition-all font-cormorant text-xl focus:outline-none cursor-pointer flex items-center justify-between text-left ${error ? 'border-red-400 font-bold' : 'border-brand-orange/10 focus:border-brand-orange'
+          }`}
       >
         <span className={`whitespace-nowrap overflow-hidden text-ellipsis mr-2 ${value ? 'text-brand-green' : 'text-gray-400/80'}`}>
           {value || placeholder}
@@ -147,13 +146,12 @@ function CustomSelect({
                   onMouseEnter={() => setFocusedIndex(index)}
                   role="option"
                   aria-selected={isSelected}
-                  className={`px-6 py-4 cursor-pointer font-cormorant text-xl transition-all duration-200 flex items-center justify-between outline-none ${
-                    isSelected
-                      ? 'bg-brand-orange/10 text-brand-orange font-bold font-cormorant shadow-[0_0_12px_rgba(217,106,29,0.1)]'
-                      : isFocused
+                  className={`px-6 py-4 cursor-pointer font-cormorant text-xl transition-all duration-200 flex items-center justify-between outline-none ${isSelected
+                    ? 'bg-brand-orange/10 text-brand-orange font-bold font-cormorant shadow-[0_0_12px_rgba(217,106,29,0.1)]'
+                    : isFocused
                       ? 'bg-brand-orange/5 text-brand-orange font-bold shadow-[inset_0_0_8px_rgba(217,106,29,0.08)]'
                       : 'text-brand-green hover:bg-brand-orange/5 hover:text-brand-orange'
-                  }`}
+                    }`}
                 >
                   <span className={isFocused ? 'drop-shadow-[0_0_8px_rgba(217,106,29,0.2)]' : ''}>
                     {option}
@@ -202,7 +200,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-  
+
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const token = tokenResponse.access_token;
@@ -216,7 +214,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
           throw new Error('Failed to fetch user info');
         }
         const userInfo = await userInfoResponse.json();
-        
+
         // Validate email domain (must be @ciputra.ac.id)
         if (!userInfo.email?.endsWith('ciputra.ac.id')) {
           setError('Only Ciputra magical accounts may pass');
@@ -246,11 +244,15 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     'SRB',
     'MD',
     'SU',
-    'UKM'
+    'UKM',
+    'Advisor',
+    'Head of Faculty',
+    'Head of Study Program',
+    'Rectorate'
   ];
 
   const majors = [
-    'IBM RC', 'IBM IC', 'ACC', 'MEM', 'VCD', 'ARS', 'FDB', 'HTEB', 'CB', 'FTP', 'IMT', 'ISB', 'MED', 'DEM', 'PSY', 'COM'
+    'IBM RC', 'IBM IC', 'ACC', 'VCD', 'ARS', 'FDB', 'HTEB', 'CB', 'FTP', 'IMT', 'ISB', 'MED', 'DEM', 'PSY', 'COM'
   ];
 
   const validateField = (name: string, value: string) => {
@@ -343,26 +345,26 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
           <div className="filigree-corner filigree-top-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
           <div className="filigree-corner filigree-bottom-left" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
           <div className="filigree-corner filigree-bottom-right" style={{ backgroundImage: `url(${FiligreeBorder})` }} />
-          
+
           <div className="relative z-10">
-            <motion.div 
+            <motion.div
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, type: "spring" }}
               className="w-24 h-24 rounded-full bg-brand-orange/10 border-2 border-dashed border-brand-orange flex items-center justify-center mx-auto mb-10"
             >
               <Star className="w-12 h-12 text-brand-orange fill-brand-orange animate-twinkle" />
             </motion.div>
-            
+
             <h2 className="font-cinzel text-5xl sm:text-6xl mb-6 text-brand-green leading-tight">Seal of Approval</h2>
             <p className="font-cormorant text-3xl mb-8 italic text-brand-orange">Honored guest, {formData.name}</p>
-            
+
             <div className="h-px w-32 bg-brand-orange/30 mx-auto mb-8" />
-            
+
             <p className="font-montserrat text-sm tracking-widest text-brand-green-accent mb-4">YOUR SCROLL HAS BEEN RECORDED</p>
             <p className="font-cormorant text-xl text-brand-green-accent/80 italic mb-10 text-left max-w-xs mx-auto px-2">
               <span className="text-5xl md:text-6xl font-cinzel text-brand-orange mr-0.5 font-bold drop-shadow-sm leading-none align-baseline">W</span>
               e await your arrival at the grand celebration of excellence.
             </p>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-sm mx-auto p-6 bg-white/40 rounded-2xl border border-brand-orange/10">
               <div>
                 <p className="text-[10px] uppercase tracking-tighter text-brand-orange mb-1">Date</p>
@@ -405,7 +407,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     <div className="relative mx-auto max-w-5xl px-4" ref={containerRef}>
       <AnimatePresence mode="wait">
         {!isLoggedIn ? (
-          <motion.div 
+          <motion.div
             key="login-view"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -414,7 +416,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             className="fairytale-frame p-6 md:p-10 text-center overflow-hidden flex flex-col items-center bg-white/90 backdrop-blur-md max-w-xl mx-auto shadow-2xl"
           >
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-30" />
-            
+
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -424,13 +426,13 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                 {/* Magical Arched Frame */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange to-brand-gold rounded-t-full rounded-b-xl opacity-20 group-hover:opacity-30 transition-opacity" />
                 <div className="absolute inset-[2px] border-2 border-dashed border-brand-orange rounded-t-full rounded-b-lg opacity-50" />
-                
+
                 {/* Door Container */}
                 <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden relative shadow-inner bg-brand-orange/5">
-                  <img 
-                    src={DoorAsset} 
-                    alt="Royal Door" 
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" 
+                  <img
+                    src={DoorAsset}
+                    alt="Royal Door"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-green/40 via-transparent to-transparent pointer-events-none" />
                 </div>
@@ -439,14 +441,14 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             </motion.div>
 
             <h2 className="font-cinzel text-3xl md:text-5xl text-brand-green mb-4 leading-[0.9]">
-              Enter the <br/><span className="text-brand-orange italic drop-shadow-sm font-black">Ballroom</span>
+              Enter the <br /><span className="text-brand-orange italic drop-shadow-sm font-black">Ballroom</span>
             </h2>
-            
+
             <p className="font-cormorant italic text-lg md:text-xl text-brand-green-accent mb-8 max-w-md leading-relaxed text-left px-2">
               <span className="text-5xl md:text-6xl font-cormorant text-brand-orange mr-1.5 font-bold drop-shadow-sm leading-none align-baseline">A</span>
               magical invitation awaits those of Ciputra blood. Present your royal crest to reveal the guestbook.
             </p>
-            
+
             <p className="font-montserrat text-xs text-gray-500 mb-3 tracking-wide">
               please login with a ciputra account
             </p>
@@ -465,7 +467,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                   </svg>
                   {isLoading ? 'Presenting Crest...' : 'Present Royal Crest'}
                 </span>
-                <motion.div 
+                <motion.div
                   animate={{ x: ['-100%', '100%'] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
@@ -474,7 +476,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             </div>
 
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 className="mt-10 px-8 py-3 bg-red-50 text-red-600 border border-red-100 rounded-full text-xs font-montserrat flex items-center gap-3"
               >
@@ -484,7 +486,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
             )}
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             key="form-view"
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
@@ -494,7 +496,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
           >
             {/* Background Texture Layers */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.webp")' }} />
-            
+
             <div className="text-center mb-16 relative">
               <span className="inline-block px-4 py-1 mb-6 font-montserrat text-[10px] tracking-[0.5em] uppercase text-brand-orange border border-brand-orange/20 rounded-full bg-brand-orange/5">
                 Identity Verified
@@ -570,23 +572,22 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={isLoading}
-                  className={`w-full py-6 font-cinzel text-xl tracking-widest transition-all duration-500 relative overflow-hidden rounded-2xl shadow-xl ${
-                    isLoading ? 'bg-brand-green/40 text-white/50 cursor-not-allowed' : 'bg-brand-green text-white hover:bg-brand-green-accent'
-                  }`}
+                  className={`w-full py-6 font-cinzel text-xl tracking-widest transition-all duration-500 relative overflow-hidden rounded-2xl shadow-xl ${isLoading ? 'bg-brand-green/40 text-white/50 cursor-not-allowed' : 'bg-brand-green text-white hover:bg-brand-green-accent'
+                    }`}
                 >
                   <span className="relative z-10 flex items-center justify-center gap-4">
                     {isLoading ? 'Sealing the Scroll...' : 'Sign the Guestbook'}
                     {!isLoading && <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />}
                   </span>
-                  
+
                   {/* Subtle shimmer effect on button */}
-                  <motion.div 
+                  <motion.div
                     animate={{ x: ['-100%', '100%'] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none"
                   />
                 </motion.button>
-                
+
                 {error && (
                   <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-6 text-center text-red-500 font-montserrat text-xs tracking-wide">
                     {error}
@@ -594,7 +595,7 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
                 )}
               </div>
             </form>
-            
+
             {/* Corner Details */}
             <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-brand-orange/20 rounded-tl-2xl" />
             <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-brand-orange/20 rounded-br-2xl" />
