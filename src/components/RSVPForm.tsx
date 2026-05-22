@@ -321,8 +321,8 @@ export function RSVPForm({ isLoggedIn, onLogin, containerRef }: RSVPFormProps) {
     const org = currentOrg !== undefined ? currentOrg : formData.organization;
     if (name === 'name' && value.trim().length < 3) {
       errorMsg = 'Your name must be at least 3 characters';
-    } else if (name === 'nim' && !/^\d{8,12}$/.test(value)) {
-      errorMsg = 'NIM must be 8-12 digits';
+    } else if (name === 'nim' && !/^\d{8,16}$/.test(value)) {
+      errorMsg = 'NIM must be 8-16 digits';
     } else if (name === 'major' && !value) {
       errorMsg = 'Please select your major';
     } else if (name === 'organization' && !value) {
